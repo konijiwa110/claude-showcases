@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude 作品陈列</title>
+<style>
+:root {
+  --bg: #10151a;
+  --panel: #151b21;
+  --ink: #e9e6df;
+  --ink-dim: rgba(233, 230, 223, .58);
+  --line: rgba(233, 230, 223, .14);
+  --signal: #ffb347;
+  --f-cjk: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", "Cascadia Code", Consolas, Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-cjk);
+  display: flex;
+  justify-content: center;
+}
+.wrap {
+  width: min(720px, 100%);
+  padding: clamp(48px, 12vh, 112px) clamp(20px, 6vw, 48px) 96px;
+  position: relative;
+}
+.mark {
+  position: absolute;
+  top: clamp(-8px, 2vh, 16px);
+  right: -0.12em;
+  font-size: clamp(140px, 34vw, 300px);
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--line);
+  user-select: none;
+  pointer-events: none;
+}
+header { position: relative; }
+h1 {
+  margin: 0;
+  font-size: clamp(28px, 6vw, 44px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.sub {
+  margin: 14px 0 0;
+  color: var(--ink-dim);
+  font-size: 15px;
+  line-height: 1.7;
+}
+.entries {
+  margin-top: clamp(40px, 8vh, 72px);
+  display: flex;
+  flex-direction: column;
+}
+.entry {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  padding: 26px 0;
+  border-top: 1px solid var(--line);
+}
+.entry:last-child { border-bottom: 1px solid var(--line); }
+.entry h2 {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  transition: color .15s ease;
+}
+.entry p {
+  margin: 8px 0 0;
+  color: var(--ink-dim);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.entry .path {
+  display: inline-block;
+  margin-top: 12px;
+  font-family: var(--f-mono);
+  font-size: 12px;
+  color: var(--ink-dim);
+  overflow-wrap: anywhere;
+}
+.entry:hover h2, .entry:focus-visible h2 { color: var(--signal); }
+.entry:focus-visible { outline: 2px solid var(--signal); outline-offset: 4px; }
+footer {
+  margin-top: 56px;
+  color: var(--ink-dim);
+  font-size: 13px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .entry h2 { transition: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="mark" aria-hidden="true">几猫</div>
+    <h1>Claude 作品陈列</h1>
+    <p class="sub">Claude Code 做出的可运行作品，每件都是单个 HTML 文件，打开即玩。</p>
+  </header>
+  <div class="entries">
+    <a class="entry" href="./fable-5-2/jimao-3a-v1.html">
+      <h2>几猫国产3A大作</h2>
+      <p>Three.js 浏览器游戏：程序化建模与贴图、实时阴影与后期，离线可玩。</p>
+      <span class="path">fable-5-2/jimao-3a-v1.html</span>
+    </a>
+  </div>
+  <footer>源码仓库：konijiwa110/claude-showcases</footer>
+</div>
+</body>
+</html>
