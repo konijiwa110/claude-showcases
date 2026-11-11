@@ -3,17 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#07070b">
 <title>Claude 作品陈列</title>
 <style>
+@font-face {
+  font-family: "Acid Display";
+  src: url("fonts/barlow-condensed-600.woff2") format("woff2");
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Acid Display";
+  src: url("fonts/barlow-condensed-700.woff2") format("woff2");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Chakra Petch";
+  src: url("fonts/chakra-petch-400.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Chakra Petch";
+  src: url("fonts/chakra-petch-700.woff2") format("woff2");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
 :root {
-  --bg: #10151a;
-  --panel: #151b21;
-  --ink: #e9e6df;
-  --ink-dim: rgba(233, 230, 223, .58);
-  --line: rgba(233, 230, 223, .14);
-  --signal: #ffb347;
-  --f-cjk: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", system-ui, sans-serif;
-  --f-mono: "JetBrains Mono", "Cascadia Code", Consolas, Menlo, monospace;
+  color-scheme: dark;
+  --bg: #07070b;
+  --plate: #101116;
+  --plate-2: #14161c;
+  --ink: #e8ebf0;
+  --dim: rgba(232, 235, 240, .52);
+  --line: rgba(232, 235, 240, .12);
+  --acid: #b6ff3b;
+  --acid-hover: #c9ff6b;
+  --acid-ink: #07070b;
+  --acid-soft: #b6ff3b1f;
+  --acid-line: #b6ff3b8c;
+  --hazard: #ff3d6e;
+  --cyan: #33e1ff;
+  --cut: 18px;
+  --cut-lg: 28px;
+  --skew: 12px;
+  --f-display: "Acid Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  --f-body: "Chakra Petch", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  --f-mono: ui-monospace, "Cascadia Code", "JetBrains Mono", Consolas, Menlo, monospace;
 }
 * { box-sizing: border-box; }
 html, body { height: 100%; }
@@ -21,102 +54,286 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font-family: var(--f-cjk);
-  display: flex;
-  justify-content: center;
-}
-.wrap {
-  width: min(720px, 100%);
-  padding: clamp(48px, 12vh, 112px) clamp(20px, 6vw, 48px) 96px;
-  position: relative;
-}
-.mark {
-  position: absolute;
-  top: clamp(-8px, 2vh, 16px);
-  right: -0.12em;
-  font-size: clamp(140px, 34vw, 300px);
-  line-height: 1;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  color: transparent;
-  -webkit-text-stroke: 1px var(--line);
-  user-select: none;
-  pointer-events: none;
-}
-header { position: relative; }
-h1 {
-  margin: 0;
-  font-size: clamp(28px, 6vw, 44px);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-.sub {
-  margin: 14px 0 0;
-  color: var(--ink-dim);
+  font-family: var(--f-body);
   font-size: 15px;
   line-height: 1.7;
 }
-.entries {
-  margin-top: clamp(40px, 8vh, 72px);
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, #ffffff05 0 1px, transparent 1px 4px);
+}
+.wrap {
+  width: min(960px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(16px, 4vw, 40px);
+}
+.hazard-tape {
+  height: 6px;
+  background: repeating-linear-gradient(115deg, var(--acid) 0 14px, var(--acid-ink) 14px 28px);
+}
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+.brand {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.brand b { color: var(--acid); font-weight: 700; }
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  color: var(--acid);
+  background: var(--acid-soft);
+  padding: 5px 12px;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%);
+}
+.status::before {
+  content: "";
+  width: 7px; height: 7px;
+  background: var(--acid);
+  animation: blink 1.6s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: .25; } }
+.hero {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: end;
+  padding: clamp(48px, 9vh, 96px) 0 clamp(36px, 7vh, 72px);
+}
+.hero .latin {
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: clamp(13px, 2vw, 15px);
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin: 0 0 10px;
+}
+.hero h1 {
+  margin: 0;
+  font-size: clamp(40px, 8.5vw, 76px);
+  font-weight: 800;
+  letter-spacing: .04em;
+  line-height: 1.12;
+}
+.hero .sub {
+  margin: 14px 0 0;
+  color: var(--dim);
+  max-width: 34em;
+}
+.stats {
   display: flex;
   flex-direction: column;
+  gap: 10px;
+  font-family: var(--f-mono);
+  font-size: 12px;
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.stats b { color: var(--acid); font-weight: 400; }
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  color: var(--dim);
+  margin-bottom: 22px;
+}
+.section-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+.entries {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-bottom: 72px;
 }
 .entry {
   display: block;
   text-decoration: none;
   color: inherit;
-  padding: 26px 0;
-  border-top: 1px solid var(--line);
+  background: var(--acid-line);
+  clip-path: polygon(var(--cut-lg) 0, 100% 0, 100% calc(100% - var(--cut-lg)), calc(100% - var(--cut-lg)) 100%, 0 100%, 0 var(--cut-lg));
+  padding: 1px;
+  transition: background .15s ease;
 }
-.entry:last-child { border-bottom: 1px solid var(--line); }
+.entry-in {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 22px;
+  align-items: center;
+  background: var(--plate);
+  clip-path: polygon(calc(var(--cut-lg) - 2px) 0, 100% 0, 100% calc(100% - var(--cut-lg)), calc(100% - var(--cut-lg)) 100%, 0 100%, 0 calc(var(--cut-lg) - 2px));
+  padding: 26px clamp(18px, 4vw, 34px);
+}
+.entry:hover, .entry:focus-visible { background: var(--acid); }
+.entry:hover .entry-in, .entry:focus-visible .entry-in { background: var(--plate-2); }
+.entry:focus-visible { outline: 2px solid var(--acid); outline-offset: 3px; }
+.entry .no {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: clamp(34px, 6vw, 52px);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--acid-line);
+  transition: -webkit-text-stroke-color .15s ease;
+}
+.entry:hover .no, .entry:focus-visible .no { -webkit-text-stroke-color: var(--acid); }
 .entry h2 {
   margin: 0;
   font-size: 21px;
   font-weight: 700;
-  letter-spacing: 0.01em;
-  transition: color .15s ease;
+  letter-spacing: .02em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.ver {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: .14em;
+  color: var(--acid-ink);
+  background: var(--hazard);
+  padding: 2px 7px;
 }
 .entry p {
   margin: 8px 0 0;
-  color: var(--ink-dim);
+  color: var(--dim);
   font-size: 14px;
-  line-height: 1.7;
 }
-.entry .path {
-  display: inline-block;
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.tags span {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  border: 1px solid rgba(51, 225, 255, .35);
+  padding: 2px 8px;
+}
+.entry .go {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--acid-ink);
+  background: var(--acid);
+  padding: 11px 24px calc(11px + 0px) calc(24px - var(--skew));
+  clip-path: polygon(0 0, calc(100% - var(--skew)) 0, 100% 100%, 0 100%);
+  transition: background .15s ease;
+  white-space: nowrap;
+}
+.entry:hover .go, .entry:focus-visible .go { background: var(--acid-hover); }
+.path {
+  display: block;
   margin-top: 12px;
   font-family: var(--f-mono);
-  font-size: 12px;
-  color: var(--ink-dim);
+  font-size: 11px;
+  color: var(--dim);
   overflow-wrap: anywhere;
 }
-.entry:hover h2, .entry:focus-visible h2 { color: var(--signal); }
-.entry:focus-visible { outline: 2px solid var(--signal); outline-offset: 4px; }
 footer {
-  margin-top: 56px;
-  color: var(--ink-dim);
-  font-size: 13px;
+  border-top: 1px solid var(--line);
+  padding: 22px 0 34px;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  color: var(--dim);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+footer a { color: var(--acid); text-decoration: none; }
+footer a:hover { color: var(--acid-hover); }
+footer a:focus-visible { outline: 2px solid var(--acid); outline-offset: 2px; }
+@media (max-width: 720px) {
+  .hero { grid-template-columns: 1fr; align-items: start; }
+  .stats { text-align: left; }
+  .entry-in { grid-template-columns: auto 1fr; }
+  .entry .go { grid-column: 2; justify-self: start; margin-top: 4px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .entry h2 { transition: none; }
+  .status::before { animation: none; }
+  .entry, .entry .no, .entry .go { transition: none; }
 }
 </style>
 </head>
 <body>
+<div class="hazard-tape" aria-hidden="true"></div>
 <div class="wrap">
-  <header>
-    <div class="mark" aria-hidden="true">几猫</div>
-    <h1>Claude 作品陈列</h1>
-    <p class="sub">Claude Code 做出的可运行作品，每件都是单个 HTML 文件，打开即玩。</p>
-  </header>
+  <div class="topbar">
+    <div class="brand">CLAUDE <b>SHOWCASES</b></div>
+    <span class="status">ONLINE</span>
+  </div>
+
+  <div class="hero">
+    <div>
+      <p class="latin">Built by Claude · Runs in browser</p>
+      <h1>作品陈列</h1>
+      <p class="sub">Claude Code 做出的可运行作品。每件都是单个 HTML 文件，引擎、模型、音效全部内置，打开即玩。</p>
+    </div>
+    <div class="stats">
+      <span>作品总数 <b>01</b></span>
+      <span>发布方式 <b>GITHUB PAGES</b></span>
+      <span>运行要求 <b>浏览器 ×1</b></span>
+    </div>
+  </div>
+
+  <div class="section-label">ARSENAL / 作品列表</div>
   <div class="entries">
     <a class="entry" href="./fable-5-2/jimao-3a-v1.html">
-      <h2>几猫国产3A大作</h2>
-      <p>Three.js 浏览器游戏：程序化建模与贴图、实时阴影与后期，离线可玩。</p>
-      <span class="path">fable-5-2/jimao-3a-v1.html</span>
+      <div class="entry-in">
+        <span class="no" aria-hidden="true">01</span>
+        <div>
+          <h2>几猫国产3A大作 <span class="ver">V1</span></h2>
+          <p>Three.js 浏览器动作游戏：程序化建模与贴图、实时阴影与后期调色，全部装进一个 HTML。</p>
+          <div class="tags"><span>Three.js</span><span>WebGL</span><span>单文件</span><span>离线可玩</span></div>
+          <span class="path">fable-5-2/jimao-3a-v1.html</span>
+        </div>
+        <span class="go">进入作品 ▶</span>
+      </div>
     </a>
   </div>
-  <footer>源码仓库：konijiwa110/claude-showcases</footer>
+
+  <footer>
+    <span>konijiwa110 / claude-showcases</span>
+    <a href="https://github.com/konijiwa110/claude-showcases">GitHub 仓库 ↗</a>
+  </footer>
 </div>
 </body>
 </html>
