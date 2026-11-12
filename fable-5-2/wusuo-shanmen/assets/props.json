@@ -1,0 +1,14 @@
+{
+ "gate": "tripo2/p_gate/tripo-out/p-gate-61868987/model.glb",
+ "hall": "tripo/hall/tripo-out/hall-ef4c9f14/model.glb",
+ "lantern": "tripo2/p_lantern/tripo-out/p-lantern-fb0f5f21/model.glb",
+ "statue": "tripo2/p_statue/tripo-out/p-statue-95d5b69c/model.glb",
+ "tree": "tripo2/p_tree/tripo-out/p-tree-f55ea30c/model.glb",
+ "rock": "tripo2/p_rock/tripo-out/p-rock-d04412d4/model.glb",
+ "censer": "tripo2/p_censer/tripo-out/p-censer-dc07f429/model.glb",
+ "pillar": "tripo2/p_pillar/tripo-out/p-pillar-050a31db/model.glb",
+ "shrine": "tripo2/p_shrine/tripo-out/p-shrine-61cca51c/model.glb",
+ "stele": "tripo2/p_stele/tripo-out/p-stele-bf769c9d/model.glb",
+ "post": "tripo2/p_post/tripo-out/p-post-cd184371/model.glb",
+ "beast": "tripo2/p_beast/tripo-out/p-beast-70a65380/model.glb"
+}

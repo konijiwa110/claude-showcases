@@ -1,0 +1,46 @@
+{
+ "hero": {
+  "files": [
+   "chars/hero/out/tripo-out/hero2-retarget-1ade0cd5/model.glb",
+   "chars/hero/anim/tripo-out/retarget-5-e23ca217/model.glb"
+  ],
+  "height": 1.82,
+  "weapon": "sword"
+ },
+ "boss": {
+  "files": [
+   "chars/boss/out/tripo-out/boss2-retarget-af2c1f2e/model.glb",
+   "chars/boss/anim/tripo-out/retarget-7-bb11e6f6/model.glb"
+  ],
+  "height": 3.9,
+  "weapon": "glaive"
+ },
+ "walker": {
+  "files": [
+   "chars/walker/out/tripo-out/walker2-retarget-1f6cce07/model.glb",
+   "chars/walker/anim/tripo-out/retarget-6-169b0eb4/model.glb"
+  ],
+  "height": 1.8,
+  "weapon": null
+ },
+ "caster": {
+  "files": [
+   "chars/caster/out/tripo-out/caster2-retarget-5993c3cc/model.glb",
+   "chars/caster/anim/tripo-out/retarget-9-01f05bf0/model.glb"
+  ],
+  "height": 1.9,
+  "weapon": "staff"
+ },
+ "spear": {
+  "files": [
+   "chars/spear/out/tripo-out/spear2-retarget-39908036/model.glb",
+   "chars/spear/anim/tripo-out/retarget-8-5b6b1551/model.glb"
+  ],
+  "height": 2.15,
+  "weapon": "halberd"
+ },
+ "weapons": {
+  "sword": "tripo2/w_sword/tripo-out/w-sword-f3667b28/model.glb",
+  "glaive": "tripo2/w_glaive/tripo-out/w-glaive-c63c85db/model.glb"
+ }
+}

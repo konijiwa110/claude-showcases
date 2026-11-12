@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<!--
+  雾锁山门 · 歸藏作品
+  作者：歸藏（Guizang） https://x.com/op7418
+  制作方式：AI 按 guizang-game-skill 的流程完成  https://github.com/op7418/guizang-game-skill
+  © 2026 歸藏。游戏内容（美术、模型、配音、配乐、文案）版权归作者所有，未经许可不得转载、改名再发布或用于商业用途。
+  Mist-Locked Gate, a work by Guizang (https://x.com/op7418). All game content © 2026 Guizang. Do not re-host, rebrand or redistribute without permission.
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="author" content="歸藏 Guizang (https://x.com/op7418)">
+<meta name="copyright" content="© 2026 歸藏 Guizang">
+<title>雾锁山门</title>
+<link rel="icon" type="image/png" href="assets/ui/favicon.png">
+<link rel="apple-touch-icon" href="assets/ui/favicon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="雾锁山门">
+<meta name="theme-color" content="#0b0a10">
+<style>
+  :root { --sat:0px; --sab:0px; --sar:0px; --sal:0px; --ink:#e9e4d6; --dim:#9a958a; --red:#b3261e; --gold:#c9a45c; }
+  * { box-sizing:border-box; }
+  html,body { margin:0; height:100%; background:#0b0a10; overflow:hidden; color:var(--ink); touch-action:none; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent;
+    font-family:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC",serif; user-select:none; -webkit-user-select:none; cursor:crosshair; }
+  canvas { display:block; position:fixed; inset:0; width:100%; height:100%; }
+  #hud { position:fixed; inset:0; pointer-events:none; transition:opacity .6s; }
+  .bar { position:relative; height:3px; background:rgba(233,228,214,.16); }
+  .bar > i, .ink > i { position:absolute; left:0; top:0; bottom:0; width:100%; transform-origin:left; }
+  .ink { position:relative; -webkit-mask:url(assets/ui/bar.png) left center/100% 100% no-repeat; mask:url(assets/ui/bar.png) left center/100% 100% no-repeat; background:rgba(6,5,9,.6); }
+  .ink > i.lag { background:#d8cfae; opacity:.8; transition:transform .5s .3s ease-out; }
+  /* bars are drawn, not pasted: bevelled frame, lit fill with a bright leading edge, quarter ticks, pale lag bar */
+  .hbw { position:relative; padding:1px; background:linear-gradient(90deg,rgba(201,164,92,.95),rgba(201,164,92,.35) 60%,rgba(201,164,92,.12)); clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 50%,calc(100% - 7px) 100%,7px 100%,0 50%); }
+  .hb { position:relative; height:100%; background:linear-gradient(#07060a,#15121b); clip-path:polygon(6.5px 0,calc(100% - 6.5px) 0,100% 50%,calc(100% - 6.5px) 100%,6.5px 100%,0 50%); overflow:hidden; }
+  .hb > i { position:absolute; left:0; top:0; bottom:0; width:100%; transform-origin:left; }
+  .hb > i.lag { background:#e6dcc0; opacity:.85; transition:transform .45s .35s cubic-bezier(.3,0,.2,1); }
+  .hb > i.v { transition:transform .08s linear; }
+  .hb > i.v::after { content:""; position:absolute; right:0; top:0; bottom:0; width:5px; background:linear-gradient(90deg,transparent,rgba(255,235,220,.9)); }
+  .hb::before { content:""; position:absolute; inset:0; z-index:2; background:repeating-linear-gradient(90deg,transparent 0 calc(25% - 1px),rgba(0,0,0,.5) calc(25% - 1px) 25%),linear-gradient(rgba(255,255,255,.22),transparent 45%,rgba(0,0,0,.35)); pointer-events:none; }
+  #pl { position:absolute; left:30px; bottom:30px; width:min(30vw,380px); filter:drop-shadow(0 2px 5px rgba(0,0,0,.8)); padding-left:34px; }
+  #pl::before { content:""; position:absolute; left:2px; top:1px; width:22px; height:22px; transform:rotate(45deg); border:1px solid rgba(201,164,92,.9); background:radial-gradient(circle at 50% 35%,#3a1512,#0b0a10 70%); box-shadow:inset 0 0 0 3px #0b0a10,inset 0 0 0 4px rgba(201,164,92,.4); }
+  #hpw { height:14px; } #hp > i.v { background:linear-gradient(#e2563f,#b12a1e 45%,#74140f); }
+  #stw { height:7px; width:72%; margin-top:5px; background:linear-gradient(90deg,rgba(169,207,224,.8),rgba(169,207,224,.15)); } #st > i.v { background:linear-gradient(#d6eef6,#7fb4c9); }
+  #soulrow { margin-top:7px; font-size:12px; letter-spacing:.18em; color:var(--dim); } #soulrow b { color:#9fe0c0; font-weight:normal; margin-left:6px; }
+  #boss { position:absolute; left:50%; top:30px; width:min(54vw,760px); transform:translateX(-50%); opacity:0; transition:opacity 1s; text-align:center; filter:drop-shadow(0 2px 6px rgba(0,0,0,.7)); }
+  #boss .name { font-family:"Kaiti SC","STKaiti","KaiTi",serif; font-size:26px; letter-spacing:.35em; padding-left:.35em; }
+  #boss .bt { font-size:12px; letter-spacing:.5em; padding-left:.5em; color:var(--dim); margin:2px 0 0; }
+  #bhpw { height:12px; margin-top:8px; background:linear-gradient(90deg,rgba(201,164,92,.25),rgba(201,164,92,.95) 50%,rgba(201,164,92,.25)); } #bhp > i.v { background:linear-gradient(#d24a2c,#8e1d14 50%,#5a0f0b); }
+  #bpo { width:36%; margin:5px auto 0; } #bpo > i.v { background:#d9c27a; }
+  #obj { position:absolute; left:30px; top:26px; font-size:13px; letter-spacing:.2em; color:#c9c4b6; text-shadow:0 1px 4px #000; transition:opacity .8s; padding-left:12px; border-left:1px solid rgba(201,164,92,.7); }
+  #skills { position:absolute; left:50%; bottom:22px; transform:translateX(-50%); display:flex; gap:14px; align-items:flex-end; }
+  .sk { position:relative; width:50px; text-align:center; transition:opacity .2s, filter .2s; }
+  .sk img { width:50px; height:50px; border-radius:50%; display:block; box-shadow:0 2px 10px rgba(0,0,0,.7); }
+  .sk span { display:block; margin-top:5px; font-size:10px; letter-spacing:.1em; color:var(--dim); font-family:ui-monospace,Menlo,monospace; text-shadow:0 1px 3px #000; }
+  .sk.off { opacity:.38; filter:grayscale(1); }
+  .sk.rip img { box-shadow:0 0 0 2px #f0cf7a, 0 0 22px 6px rgba(240,207,122,.85); animation:ripp .28s infinite alternate; } .sk.rip span { color:#f0cf7a; } .sk.rip::after { content:"反击"; position:absolute; left:50%; top:-22px; transform:translateX(-50%); font-size:13px; letter-spacing:.2em; color:#f0cf7a; white-space:nowrap; text-shadow:0 0 8px #000; } @keyframes ripp { to { transform:scale(1.14); } }
+  .sk .glyph { width:50px; height:50px; border-radius:50%; line-height:48px; font-family:"Kaiti SC","STKaiti","KaiTi",serif; font-size:24px; color:#dfe9ee; background:radial-gradient(circle at 50% 40%,#2a3440,#0a0b10 72%); border:2px solid rgba(214,232,240,.75); box-shadow:0 2px 10px rgba(0,0,0,.7); }
+  #sk1::after { content:""; position:absolute; left:0; top:0; width:50px; height:50px; border-radius:50%; background:conic-gradient(rgba(0,0,0,.72) calc(var(--cd,0)*1turn),transparent 0); }
+  #toasts { position:absolute; right:28px; top:34%; display:flex; flex-direction:column; gap:8px; align-items:flex-end; }
+  .toast { position:relative; padding:9px 26px 9px 44px; font-size:14px; letter-spacing:.14em; animation:tin .35s cubic-bezier(.2,.8,.2,1); transition:opacity .5s, transform .5s; text-shadow:0 1px 3px #000; }
+  .toast::before { content:""; position:absolute; inset:-6px -10px; z-index:-1; background:rgba(6,5,10,.82); -webkit-mask:url(assets/ui/bar.png) center/100% 100% no-repeat; mask:url(assets/ui/bar.png) center/100% 100% no-repeat; transform:scaleX(-1); }
+  .toast i { position:absolute; left:20px; top:50%; width:9px; height:9px; transform:translateY(-50%) rotate(45deg); box-shadow:0 0 10px currentColor; }
+  .toast b { font-weight:normal; } .toast span { margin-left:8px; color:var(--dim); } .toast.out { opacity:0; transform:translateX(30px); }
+  #bag { position:absolute; right:30px; bottom:26px; width:54px; text-align:center; }
+  #bag img.glyph { display:block; border:none !important; }
+  #bag .glyph { width:54px; height:54px; line-height:52px; border-radius:50%; font-family:"Kaiti SC","STKaiti","KaiTi",serif; font-size:25px; color:#e9dcb4; background:radial-gradient(circle at 50% 38%,#3a2c1c,#0b0a10 72%); border:2px solid rgba(201,164,92,.8); box-shadow:0 2px 10px rgba(0,0,0,.7); }
+  #bag.bump .glyph { animation:bump .45s cubic-bezier(.2,1.6,.4,1); } @keyframes bump { 30% { transform:scale(1.28); box-shadow:0 0 26px var(--c,#f0cf7a); border-color:var(--c,#f0cf7a); } }
+  #bag em { position:absolute; right:-5px; top:-5px; min-width:18px; height:18px; line-height:18px; border-radius:9px; background:#0c0a10; border:1px solid rgba(233,228,214,.4); font-style:normal; font-size:11px; }
+  #bag > span { display:block; margin-top:5px; font-size:10px; color:var(--dim); font-family:ui-monospace,Menlo,monospace; }
+  #baglist { position:absolute; right:0; bottom:84px; min-width:170px; padding:12px 16px; text-align:left; font-size:13px; letter-spacing:.14em; line-height:2; background:rgba(8,7,12,.86); border-top:1px solid rgba(201,164,92,.7); border-bottom:1px solid rgba(201,164,92,.25); opacity:0; transform:translateY(8px); transition:opacity .25s, transform .25s; }
+  #baglist div { display:flex; justify-content:space-between; gap:24px; } #baglist b { font-weight:normal; color:#e9dcb4; } body.bagopen #baglist { opacity:1; transform:none; }
+  .mote { position:fixed; z-index:7; width:12px; height:12px; border-radius:50%; pointer-events:none; box-shadow:0 0 14px 4px currentColor, 0 0 34px 10px currentColor; }
+  @keyframes tin { from { opacity:0; transform:translateX(40px); } }
+  .sk em { position:absolute; right:-4px; top:-4px; min-width:17px; height:17px; line-height:17px; border-radius:9px; background:#0c0a10; border:1px solid rgba(233,228,214,.4); font-style:normal; font-size:11px; }
+  #sk4 { width:60px; } #sk4 img { width:60px; height:60px; filter:grayscale(1) brightness(.55); } #sk4.ready img { filter:none; box-shadow:0 0 18px rgba(242,220,154,.75); }
+  #sk4::before { content:""; position:absolute; left:-4px; top:-4px; width:68px; height:68px; border-radius:50%; background:conic-gradient(#e9cf8a calc(var(--p,0)*1turn),rgba(233,228,214,.14) 0); -webkit-mask:radial-gradient(circle,transparent 31px,#000 32px); mask:radial-gradient(circle,transparent 31px,#000 32px); }
+  .lb { position:fixed; left:0; right:0; height:0; background:#000; transition:height .9s cubic-bezier(.6,0,.2,1); z-index:5; }
+  #lbt { top:0; } #lbb { bottom:0; } body.cine .lb { height:11.5vh; } body.cine #hud { opacity:0; }
+  #sub { position:fixed; left:0; right:0; bottom:15vh; text-align:center; font-size:18px; letter-spacing:.16em; text-shadow:0 0 10px #000,0 0 3px #000; opacity:0; transition:opacity .7s; z-index:6; }
+  #banner { position:fixed; left:0; right:0; top:36%; text-align:center; opacity:0; transition:opacity 1.2s; z-index:6; pointer-events:none; }
+  #banner .t { font-family:"Kaiti SC","STKaiti","KaiTi",serif; font-size:clamp(30px,4.6vw,60px); letter-spacing:.3em; padding-left:.3em; text-shadow:0 0 30px rgba(0,0,0,.9),0 0 6px #000; }
+  #banner .s { margin-top:14px; font-size:13px; letter-spacing:.6em; padding-left:.6em; color:var(--dim); text-shadow:0 0 8px #000; }
+  #banner .rule { width:min(22vw,260px); height:1px; margin:18px auto 0; background:linear-gradient(90deg,transparent,var(--ink),transparent); opacity:.6; }
+  #banner.dead .t { color:#c22d22; } #banner.win .t { color:#e6cf8e; }
+  #fade { position:fixed; inset:0; background:#000; opacity:1; transition:opacity 1.6s; z-index:8; pointer-events:none; }
+  #title { position:fixed; inset:0; z-index:9; display:flex; flex-direction:column; align-items:center; justify-content:center; background:radial-gradient(ellipse at 50% 42%,rgba(10,9,18,.05) 0%,rgba(5,4,10,.55) 60%,rgba(3,2,6,.9) 100%); transition:opacity 1.2s; cursor:pointer; }
+  #title .logo { width:min(58vw,820px); filter:drop-shadow(0 4px 30px rgba(0,0,0,.8)); margin-top:-6vh; }
+  #title h1 { font-size:clamp(46px,9vw,120px); letter-spacing:.42em; padding-left:.42em; margin:0; font-weight:normal; text-shadow:0 0 40px rgba(150,140,220,.35); }
+  #title .s { margin-top:22px; letter-spacing:1em; padding-left:1em; color:var(--gold); font-size:15px; }
+  #title .go { margin-top:7vh; letter-spacing:.6em; padding-left:.6em; color:var(--dim); font-size:14px; animation:pulse 2.4s infinite; }
+  #title .k { margin-top:40px; font-size:12px; line-height:2.1; letter-spacing:.14em; color:#77736b; text-align:center; }
+  @keyframes pulse { 50% { opacity:.35; } }
+  #title .made { position:absolute; right:22px; bottom:18px; font-size:12px; letter-spacing:.08em; color:#8f8463; text-decoration:none; border-bottom:1px solid rgba(143,132,99,.35); padding-bottom:2px; } #title .made:hover { color:#e9dcae; }
+  #title .go, #title .k { visibility:hidden; } body.ready #title .go, body.ready #title .k { visibility:visible; } body:not(.ready) #title { cursor:default; }
+  #load { position:fixed; left:50%; bottom:11vh; transform:translateX(-50%); z-index:10; width:min(360px,70vw); text-align:center; transition:opacity .6s; pointer-events:none; }
+  #load .track { height:1px; background:rgba(216,200,150,.18); position:relative; }
+  #load .track::before, #load .track::after { content:''; position:absolute; top:-2px; width:5px; height:5px; background:#8f8463; transform:rotate(45deg); } #load .track::before { left:-9px; } #load .track::after { right:-9px; }
+  #lbar { height:1px; background:linear-gradient(90deg,rgba(216,200,150,.2),#e9dcae); transform-origin:0 50%; transform:scaleX(.03); transition:transform .5s cubic-bezier(.2,.7,.2,1); box-shadow:0 0 8px rgba(233,220,174,.7); }
+  #ltxt { margin-top:16px; font-size:14px; letter-spacing:.5em; padding-left:.5em; color:#cfc6ad; min-height:1.4em; }
+  #load .sub { margin-top:7px; font:11px ui-monospace,Menlo,monospace; letter-spacing:.08em; color:#6f6b62; } #lpct { margin-left:.8em; color:#8f8463; }
+  body.ready #load { opacity:0; }
+  #credit { position:fixed; right:18px; top:14px; top:calc(14px + var(--sat)); z-index:11; font-family:"Kaiti SC","STKaiti","KaiTi",serif; font-size:14px; letter-spacing:.3em; color:#b9ad88; text-decoration:none; padding:4px 0 4px 10px; border-left:1px solid rgba(201,164,92,.7); text-shadow:0 1px 4px #000; opacity:.85; } #credit:hover { color:#f0e4bd; opacity:1; } body.cine #credit { opacity:0; }
+  #fs { display:none; position:fixed; right:112px; top:14px; top:calc(14px + var(--sat)); z-index:11; font-size:12px; letter-spacing:.2em; color:#b9ad88; padding:4px 10px; border:1px solid rgba(201,164,92,.55); border-radius:2px; background:rgba(8,7,12,.45); text-shadow:0 1px 3px #000; } body.canfs #fs { display:block; } body.cine #fs { opacity:0; }
+  #gear { position:fixed; right:112px; top:14px; top:calc(14px + var(--sat)); z-index:21; font-size:12px; letter-spacing:.2em; color:#b9ad88; padding:4px 10px; border:1px solid rgba(201,164,92,.55); border-radius:2px; background:rgba(8,7,12,.45); text-shadow:0 1px 3px #000; cursor:pointer; } #gear:hover { color:#f0e4bd; } body.cine #gear { opacity:0; pointer-events:none; } body.canfs #fs { right:172px; }
+  #set { position:fixed; left:0; top:0; right:0; bottom:0; z-index:20; display:none; align-items:center; justify-content:center; background:rgba(4,3,8,.72); cursor:default; } #set.on { display:flex; }
+  #set .box { width:520px; max-width:92vw; max-height:88vh; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:22px 26px 18px; background:linear-gradient(#14121b,#0b0a10); border-top:1px solid rgba(201,164,92,.8); border-bottom:1px solid rgba(201,164,92,.3); box-shadow:0 20px 60px rgba(0,0,0,.7); font-size:13px; letter-spacing:.1em; }
+  #set h3 { margin:0 0 16px; text-align:center; font-family:"Kaiti SC","STKaiti","KaiTi",serif; font-weight:normal; font-size:22px; letter-spacing:.4em; color:#e9dcae; } #set h4 { margin:18px 0 10px; font-weight:normal; font-size:13px; letter-spacing:.4em; color:#c9a45c; border-bottom:1px solid rgba(201,164,92,.25); padding-bottom:6px; }
+  #set .row { display:flex; flex-wrap:wrap; align-items:center; margin-bottom:12px; } #set .row label { width:56px; color:#cfc6ad; } #set .row small { flex-basis:100%; margin:5px 0 0 56px; font-size:11px; color:#77736b; letter-spacing:.04em; line-height:1.6; }
+  #set .seg { display:flex; } #set .seg b, #set .pre b { font-weight:normal; padding:5px 14px; margin-right:6px; border:1px solid rgba(233,228,214,.22); color:#9a958a; cursor:pointer; } #set .seg b.on { color:#0b0a10; background:#d8c48c; border-color:#d8c48c; } #set .seg.na b { opacity:.35; cursor:default; } #set .pre b:hover, #set .seg b:hover { border-color:#d8c48c; }
+  #set .note { font-size:11px; color:#77736b; margin:2px 0 4px; } #set .note b { font-weight:normal; margin-left:8px; padding:2px 8px; border:1px solid rgba(233,228,214,.25); cursor:pointer; color:#9a958a; } #set .note.on { color:#e0b866; } #set .note.on b { color:#0b0a10; background:#e0b866; border-color:#e0b866; }
+  #set .binds { display:flex; flex-wrap:wrap; margin:0 -5px; } #set .bind { width:calc(50% - 10px); margin:0 5px 8px; display:flex; justify-content:space-between; align-items:center; padding:6px 10px; background:rgba(233,228,214,.05); cursor:pointer; } #set .bind b { font-weight:normal; min-width:58px; text-align:center; padding:2px 8px; border:1px solid rgba(201,164,92,.5); color:#e9dcae; font-family:ui-monospace,Menlo,monospace; letter-spacing:0; } #set .bind.wait b { background:#e0b866; color:#0b0a10; border-color:#e0b866; } #set .bind:hover { background:rgba(233,228,214,.1); }
+  #set .close { margin:14px auto 0; width:120px; text-align:center; padding:7px 0; border:1px solid rgba(201,164,92,.6); color:#e9dcae; cursor:pointer; letter-spacing:.3em; } #set .close:hover { background:rgba(201,164,92,.15); }
+  body.touch #set h4, body.touch #set .binds, body.touch #set .pre { display:none; }
+  #nogl { position:fixed; left:0; top:0; right:0; bottom:0; z-index:30; display:none; align-items:center; justify-content:center; text-align:center; background:#0b0a10; font-size:15px; line-height:2; letter-spacing:.12em; color:#cfc6ad; padding:24px; }
+  /* ---- touch: stick on the left, the skill icons become buttons on the right, health moves to the top ---- */
+  .kt { display:none; } body.touch .kt { display:inline; } body.touch .kd { display:none; }
+  #stick { position:fixed; left:0; top:0; width:112px; height:112px; margin:-56px 0 0 -56px; border-radius:50%; border:1px solid rgba(233,228,214,.28); background:rgba(10,9,14,.22); display:none; z-index:4; pointer-events:none; }
+  #stick i { position:absolute; left:50%; top:50%; width:46px; height:46px; margin:-23px 0 0 -23px; border-radius:50%; background:rgba(233,228,214,.3); border:1px solid rgba(233,228,214,.5); }
+  body.touch { cursor:default; }
+  body.touch #skills { left:auto; right:0; bottom:0; transform:none; display:block; width:250px; height:250px; pointer-events:none; margin:0 calc(8px + var(--sar)) calc(10px + var(--sab)) 0; }
+  body.touch .sk { position:absolute; pointer-events:auto; width:54px; } body.touch .sk span { display:none; } body.touch .sk img { width:54px; height:54px; opacity:.9; } body.touch .sk.down img { transform:scale(.9); filter:brightness(1.5); }
+  body.touch #sk0 { right:18px; bottom:22px; width:84px; } body.touch #sk0 img { width:84px; height:84px; }
+  body.touch #sk6 { right:116px; bottom:10px; } body.touch #sk2 { right:106px; bottom:80px; } body.touch #sk1 { right:44px; bottom:124px; }
+  body.touch #sk3 { right:184px; bottom:8px; } body.touch #sk5 { right:170px; bottom:74px; } body.touch #sk4 { right:112px; bottom:150px; width:54px; } body.touch #sk4 img { width:54px; height:54px; } body.touch #sk4::before { width:62px; height:62px; -webkit-mask:radial-gradient(circle,transparent 28px,#000 29px); mask:radial-gradient(circle,transparent 28px,#000 29px); }
+  body.touch #sk1::after { width:54px; height:54px; }
+  body.touch #pl { left:14px; bottom:auto; top:14px; top:calc(14px + var(--sat)); width:46vw; max-width:300px; }
+  body.touch #obj { left:14px; top:74px; top:calc(74px + var(--sat)); font-size:12px; }
+  body.touch #boss { top:104px; width:84vw; } body.touch #boss .name { font-size:20px; }
+  body.touch #bag { right:16px; bottom:auto; top:52px; top:calc(52px + var(--sat)); pointer-events:auto; width:44px; } body.touch #bag .glyph { width:44px; height:44px; } body.touch #bag > span { display:none; } body.touch #baglist { bottom:auto; top:54px; }
+  body.touch #toasts { top:22%; right:12px; } body.touch .toast { font-size:12px; padding:7px 18px 7px 36px; }
+  body.touch #sub { bottom:36vh; font-size:15px; padding:0 18px; } body.touch #title .made { left:0; right:0; text-align:center; border:none; font-size:11px; bottom:calc(14px + var(--sab)); }
+  @media (max-aspect-ratio: 1/1) { #title .logo { width:84vw; } #title .k { padding:0 20px; } #banner .t { font-size:34px; } }
+</style>
+<meta name="hd-assets" content="assets-hd">
+</head>
+<body>
+<div id="hud">
+  <div id="obj"></div>
+  <div id="boss"><div class="name" id="bname"></div><div class="bt" id="btitle"></div><div class="hbw" id="bhpw"><div class="hb" id="bhp"><i class="lag"></i><i class="v"></i></div></div><div class="bar" id="bpo"><i class="v"></i></div></div>
+  <div id="pl"><div class="hbw" id="hpw"><div class="hb" id="hp"><i class="lag"></i><i class="v"></i></div></div><div class="hbw" id="stw"><div class="hb" id="st"><i class="v"></i></div></div><div id="soulrow">魂玉<b id="souls">0</b></div></div>
+  <div id="toasts"></div>
+  <div id="bag"><img class="glyph" src="assets/ui/i_bag.jpg" alt=""><em id="bagn">0</em><span>B</span><div id="baglist"><div><span>空</span></div></div></div>
+  <div id="skills">
+    <div class="sk" id="sk0"><img src="assets/ui/icon0.jpg" alt=""><span>左键</span></div>
+    <div class="sk" id="sk6"><img src="assets/ui/i_guard.jpg" alt=""><span>右键</span></div>
+    <div class="sk" id="sk1"><img src="assets/ui/icon1.jpg" alt=""><span>F</span></div>
+    <div class="sk" id="sk4"><img src="assets/ui/icon4.jpg" alt=""><span>Q</span></div>
+    <div class="sk" id="sk2"><img src="assets/ui/icon2.jpg" alt=""><span>空格</span></div>
+    <div class="sk" id="sk3"><img src="assets/ui/icon3.jpg" alt=""><span>Shift</span></div>
+    <div class="sk" id="sk5"><img src="assets/ui/icon5.jpg" alt=""><span>E</span><em id="flask">3</em></div>
+  </div>
+</div>
+<div class="lb" id="lbt"></div><div class="lb" id="lbb"></div>
+<div id="sub"></div>
+<div id="banner"><div class="t"></div><div class="rule"></div><div class="s"></div></div>
+<div id="fade"></div>
+<div id="title"><img class="logo" src="assets/ui/title.png" alt="雾锁山门"><div class="go">点击开始</div>
+  <div class="k"><span class="kd">W A S D 移动　左键出剑　按住右键格挡　空格闪避</span><span class="kt">左侧拖动移动　右侧按钮出剑、格挡、闪避</span></div>
+  <a class="made" href="https://github.com/op7418/guizang-game-skill" target="_blank" rel="noopener">这个游戏由 AI 用 guizang-game-skill 做成 · 看它是怎么做的 ↗</a></div>
+<a id="credit" href="https://x.com/op7418" target="_blank" rel="noopener">歸藏作品</a>
+<div id="fs">全屏</div>
+<div id="stick"><i></i></div>
+<div id="nogl">这台设备的浏览器不支持本游戏需要的 WebGL 2。<br>请换一台较新的手机或电脑再试。<br><br>雾锁山门 · 歸藏作品</div>
+<div id="load"><div class="track"><div id="lbar"></div></div><div id="ltxt">布阵</div><div class="sub"><span id="ltech">three.js · 引擎入阵</span><span id="lpct">3%</span></div></div>
+<script type="module" src="game.cdb73b9b.js"></script>
+</body>
+</html>
