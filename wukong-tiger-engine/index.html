@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>黑神话：悟空 · 虎先锋</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="虎先锋">
+<link rel="stylesheet" href="./src/style.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three/build/three.module.js",
+    "three/addons/": "./vendor/three/examples/jsm/",
+    "three/webgpu": "./vendor/three/build/three.webgpu.js",
+    "three/tsl": "./vendor/three/build/three.tsl.js",
+    "three-mesh-bvh": "./vendor/three-mesh-bvh/src/index.js"
+  }
+}
+</script>
+</head>
+<body>
+<div id="app"></div>
+
+<div id="hud" class="hidden">
+  <div id="touch">
+    <div id="t-stick"><div class="knob"></div></div>
+    <div class="tbtn" id="t-light" data-code="Mouse0">轻棍</div>
+    <div class="tbtn" id="t-heavy" data-code="Mouse2">重棍</div>
+    <div class="tbtn" id="t-dodge" data-code="Space" data-sprint>闪身</div>
+    <div class="tbtn" id="t-lock" data-code="KeyQ">锁定</div>
+    <div id="t-sys">
+      <div class="tbtn" data-code="KeyM">静音</div>
+      <div class="tbtn" data-action="fullscreen">全屏</div>
+    </div>
+  </div>
+  <div id="boss">
+    <div id="boss-name">虎先锋</div>
+    <div class="bar" id="boss-hp"><div class="fill-lag"></div><div class="fill"></div></div>
+    <div class="bar thin" id="boss-poise"><div class="fill"></div></div>
+  </div>
+  <div id="player">
+    <div class="bar" id="p-hp"><div class="fill-lag"></div><div class="fill"></div></div>
+    <div class="bar mid" id="p-mp"><div class="fill"></div></div>
+    <div class="bar mid" id="p-st"><div class="fill"></div></div>
+    <div id="gauges"></div>
+  </div>
+  <div id="skills"></div>
+  <div id="focus"><div class="pips"></div><div class="bar thin" id="p-focus"><div class="fill"></div></div></div>
+  <div id="gourd" data-code="KeyR"><div class="icon">葫</div><span id="gourd-count">0</span></div>
+  <div id="lock-marker" class="hidden"></div>
+  <div id="dmg-layer"></div>
+  <div id="toast"></div>
+  <div id="help">
+    <div><b>WASD</b> 移动　<b>Shift</b> 疾跑　<b>Ctrl / Alt</b> 慢走　<b>空格</b> 闪身</div>
+    <div><b>左键</b> 轻棍　<b>右键</b> 重棍（按住蓄力）　<b>V</b> 棍花（按住）</div>
+    <div><b>Z / X / C</b> 劈棍 / 立棍 / 戳棍　连击中 <b>右键</b>：识破 / 风云转 / 退寸进尺</div>
+    <div><b>1</b> 定身法　<b>2</b> 聚形散气（隐身时 <b>左键</b> 破隐一击）</div>
+    <div><b>4</b> 变身·赤潮（再按 4 变回）　<b>F</b> 精魄·广谋</div>
+    <div><b>R</b> 喝葫芦　<b>Q / 中键</b> 锁定　<b>M</b> 静音　<b>H</b> 显示/隐藏帮助</div>
+  </div>
+  <div id="fps"></div>
+</div>
+
+<div id="loading">
+  <div class="title">黑神话：悟空</div>
+  <div class="subtitle">第二回 · 卧虎寺 · 虎先锋</div>
+  <div class="bar wide" id="load-bar"><div class="fill"></div></div>
+  <div id="load-text">载入中…</div>
+  <div id="load-hint">首次载入约 82 MiB，建议连接 Wi-Fi；请横屏游玩</div>
+  <div id="load-pick" class="hidden">
+    <p>在线资源暂时无法加载。你也可以选择本机的 <code>assets</code> 文件夹继续，要求见 <a href="https://github.com/anxiangsir/wukong-tiger-engine#资源准备" target="_blank" rel="noopener">README</a>。</p>
+    <p>浏览器问是否「上传」时选确定：文件只在本机浏览器里读取，不会发到任何服务器。</p>
+    <label>选择资源文件夹<input type="file" webkitdirectory multiple hidden></label>
+  </div>
+  <div id="load-start" class="hidden">点击开始</div>
+</div>
+
+<div id="endscreen" class="hidden">
+  <div class="big"></div>
+  <div class="small"></div>
+  <div class="hint"><span class="kbd">按 Enter 或</span>点击 重新挑战</div>
+</div>
+
+<div id="rotate">
+  <div class="big">请横屏</div>
+  <div>将手机横过来继续战斗</div>
+</div>
+
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

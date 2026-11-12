@@ -1,0 +1,1576 @@
+{
+ "meta": {
+  "generator": "extract/B1Data/build_bianhua.py",
+  "units": "meters, seconds; times are montage seconds",
+  "clips": {
+   "form": "transform/gycy_lang.anims.json",
+   "spirit": "spirit/gycy_she.anims.json",
+   "snake": "spirit/gycy_shebang.anims.json",
+   "destinedOne": "player/bianhua.anims.json"
+  }
+ },
+ "transform": {
+  "spell": {
+   "id": 5001,
+   "name": "赤潮",
+   "type": "BianShen",
+   "skillId": 10412,
+   "floatParam": [
+    150,
+    90,
+    1.25,
+    0.8333333,
+    12
+   ],
+   "source": "SpellDesc 5001; FloatParam decoded by BUS_TransEnergyComp.OnSetEnergyInfo / CharacterAttrDataInitTemplate"
+  },
+  "energy": {
+   "max": 150,
+   "minConsume": 90,
+   "drainPerSec": 1.25,
+   "regenPerSec": 0.8333333,
+   "resId": 12,
+   "castNeedsFull": true,
+   "capAfterReturn": 60,
+   "sprintDrainPerSec": 1,
+   "rules": [
+    "FloatParam[0] TransEnergyMax, [1] EnergyMinConsume, [2] EnergyConsumeSpeed (/s while Transforming), [3] EnergyIncreaseSpeed (/s otherwise), [4] transformed ResID (FUStUnitTransCommDesc / FUStPlayerTransAttrDesc)",
+    "cast (BianShen) only when CurEnergy >= TransEnergyMax (BUIAUseSkillByType)",
+    "CurEnergy <= 0 while transformed -> EPlayerTransEndType.EnergyEmpty (BUS_TransEnergyComp.TickEndTrans)",
+    "returning keeps at most TransEnergyMax - EnergyMinConsume (BUS_TransPlayerDataBindComp attr 188) -> every transformation costs >= EnergyMinConsume",
+    "skills spend energy through CostPlayerTransEnergy effects (hits and montage triggers, effects below)",
+    "buff 12100 (birth buff): RecoverAttr 188 -1 per second [INFERENCE: while sprinting, per its tip 跑步加速消耗能量]",
+    "resting refills to TransEnergyMax (BUS_PlayerRestComp) -> the fight starts full"
+   ]
+  },
+  "unitConf": {
+   "ID": 1200,
+   "TransType": "BattleUnit",
+   "TransBackSkillId": 12099,
+   "TransBackBeHit": 0,
+   "DrinkSkillId": 0,
+   "DeadDontTransback": 0
+  },
+  "unitComm": {
+   "ID": 12,
+   "BPPath": "/Game/00Main/Design/Units/Player/Unit_player_gycy_lang.Unit_player_gycy_lang_C",
+   "UnitBornSkillID": 12001,
+   "NewUnitBornSkillID": 10462,
+   "PossessBlendTime": 0.8,
+   "IsInheritBuffInSpawnNew": "Yes"
+  },
+  "activeStates": {
+   "one": 12001,
+   "two": 12051
+  },
+  "cast": {
+   "skill": 10412,
+   "clip": "AM_wukong_trans_to_gycy_lang",
+   "swapAt": 0.4999,
+   "hideAt": 0.4,
+   "rule": "buff 10412 (0-0.5 s, ImmueDamage/Stiff) on Remove: PlayerTrans 12 -> the swap; buff 22400 hides the Destined One"
+  },
+  "born": {
+   "skill": 12001,
+   "clip": "AM_player_gycy_lang_Transform",
+   "spec": {
+    "skill": 12001,
+    "clip": "AM_player_gycy_lang_Transform",
+    "staminaCost": 0,
+    "minStaminaToStart": 0,
+    "damage": {
+     "1200901": {
+      "type": "damage",
+      "damageMult": 0.75,
+      "flatDamage": 0,
+      "hitWeight": 1,
+      "armorBreak": 0.1,
+      "armorBreakLevel": "【主角】轻棍连招/0段蓄力",
+      "damageType": 3,
+      "elementLevel": 1,
+      "element": 2,
+      "blockArmorHit": 50,
+      "damageImmuneLevel": 0,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0.15,
+       "slowRate": 0.1
+      },
+      "source": "FUStSkillEffectDesc 1200901: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】轻棍连招/0段蓄力'"
+     }
+    },
+    "focusGain": [],
+    "triggers": [
+     {
+      "time": 0.0333,
+      "effect": 2200000,
+      "type": "RecoverAttr",
+      "int": [
+       0,
+       151,
+       1
+      ],
+      "float": [
+       10000
+      ]
+     }
+    ],
+    "hitEffects": [],
+    "rebound": null,
+    "source": "FUStSkillSDesc 12001; AM_player_gycy_lang_Transform hit/trigger notifies; FUStSkillEffectDesc rows"
+   },
+   "heal": {
+    "attr": 151,
+    "ratio": true,
+    "value": 10000
+   },
+   "note": "landing slash (hit 1200901) + RecoverAttr 151 100% (form HP full)"
+  },
+  "back": {
+   "skill": 12099,
+   "clip": "AM_player_gycy_lang_Return",
+   "swapAt": 0.5,
+   "rule": "buff 12009 (0-0.5 s, invulnerable) on Remove: PlayerTrans 10"
+  },
+  "wukongReturn": {
+   "skill": 10462,
+   "clip": "AM_wukong_trans_from_gycy_lang",
+   "energy": {
+    "effect": 2200999,
+    "type": "RecoverAttr",
+    "int": [
+     0,
+     188,
+     1
+    ],
+    "float": [
+     200
+    ]
+   },
+   "note": "RecoverAttr 188 (CurEnergy) 200/10000 of max after the return [INFERENCE: ratio flag Int[2]=1 like 2200000]"
+  },
+  "endReasons": {
+   "castSpell": "press 变身 again (BUIAUseSkillByType: Transforming -> EPlayerTransEndType.CastSpell)",
+   "energyEmpty": "CurEnergy <= 0",
+   "hp": "form HP 0 -> HpTransBack (DeadDontTransback 0); damage never reaches the Destined One's HP"
+  },
+  "camera": {
+   "armLength": 9.5,
+   "boomZ": 1.4000000000000001,
+   "wukongArmLength": 4.7,
+   "source": "Unit_player_gycy_lang / Unit_Player_Wukong CameraBoom1"
+  },
+  "weaponSockets": [
+   {
+    "name": "Hit_Weapon_5",
+    "bone": "weapon_r",
+    "pos": [
+     0.0,
+     2.0,
+     0.1
+    ]
+   },
+   {
+    "name": "Hit_Weapon_1",
+    "bone": "weapon_r",
+    "pos": [
+     0.0,
+     -1.04,
+     -0.1
+    ]
+   },
+   {
+    "name": "Hit_Weapon_2",
+    "bone": "weapon_r",
+    "pos": [
+     0.0,
+     -0.32,
+     0.0
+    ]
+   },
+   {
+    "name": "Hit_Weapon_3",
+    "bone": "weapon_r",
+    "pos": [
+     0.0,
+     0.48,
+     0.0
+    ]
+   },
+   {
+    "name": "Hit_Weapon_4",
+    "bone": "weapon_r",
+    "pos": [
+     0.0,
+     1.28,
+     -0.0
+    ]
+   },
+   {
+    "name": "FX_Trail_Fire_01",
+    "bone": "weapon_r",
+    "pos": [
+     0.0,
+     1.8,
+     0.01
+    ]
+   },
+   {
+    "name": "FX_Trail_Fire_02",
+    "bone": "weapon_r",
+    "pos": [
+     0.0,
+     -0.8,
+     -0.01
+    ]
+   },
+   {
+    "name": "Touch_01",
+    "bone": "weapon_r",
+    "pos": [
+     0.0,
+     0.63,
+     0.0
+    ]
+   }
+  ],
+  "weaponFire": {
+   "points": [
+    [
+     0.0,
+     1.5,
+     0.0
+    ],
+    [
+     -0.0,
+     1.9738,
+     0.0304
+    ],
+    [
+     -0.0,
+     2.3152,
+     0.2505
+    ],
+    [
+     0.0,
+     -0.8791,
+     -0.0058
+    ],
+    [
+     -0.0,
+     -1.4599,
+     -0.1039
+    ],
+    [
+     -0.0,
+     -1.8142,
+     -0.2538
+    ]
+   ],
+   "frame": "weapon actor root (= body bone weapon_r); the mesh sits at Z -32 cm x1.2 inside it",
+   "system": "NG_GYCY_Lang_04_WeaponFire_01 (tags FireParticle/FireParticleUp)"
+  },
+  "energyEffects": {
+   "1201102": 4.05,
+   "1202102": 4.05,
+   "1201202": 4.05,
+   "1202202": 4.05,
+   "1201302": 2.7,
+   "1202302": 2.7,
+   "1201402": 4.66,
+   "1201412": 4.66,
+   "1202402": 4.66,
+   "1203102": 33,
+   "1204202": 33,
+   "1204402": 48,
+   "1204302": 48,
+   "1204502": 48,
+   "1206000": 0.7875
+  },
+  "peEffects": {
+   "1201103": 16,
+   "1201203": 16,
+   "1201303": 11,
+   "1201403": 19,
+   "1201413": 19,
+   "1204100": -100
+  },
+  "buffEffects": {
+   "1201100": 12051,
+   "1203103": 12030
+  },
+  "healEffects": {
+   "2200000": {
+    "attr": 151,
+    "ratio": true,
+    "value": 10000
+   }
+  },
+  "buffs": {
+   "10412": {
+    "tip": "主角变身BUFF-狼 | 10216",
+    "duration": null,
+    "interval": null,
+    "simpleStates": [
+     "ImmueDamage",
+     "ImmueStiff",
+     "ImmueImmobilizing"
+    ],
+    "effects": [
+     {
+      "trigger": "Remove",
+      "type": "PlayerTrans",
+      "params": [
+       12,
+       0
+      ],
+      "floats": [],
+      "strings": []
+     },
+     {
+      "trigger": "None",
+      "type": "None",
+      "params": [],
+      "floats": [],
+      "strings": []
+     }
+    ]
+   },
+   "12001": {
+    "tip": "【狼】变身-基础BUFF（属性免疫配置在Unit中） | 0.【变身音乐】",
+    "duration": null,
+    "interval": null,
+    "simpleStates": null,
+    "effects": [
+     {
+      "trigger": "Generation",
+      "type": "SwitchTransMusic",
+      "params": [],
+      "floats": [],
+      "strings": [
+       "AkAudioEvent'/Game/00Main/Audio/Music/MSC_bianshen_714/EVT_music_bianshen_lang_04/EVT_music_bianshen_lang_04_play.EVT_music_bianshen_lang_04_play'",
+       "AkAudioEvent'/Game/00Main/Audio/Music/MSC_bianshen_714/EVT_music_bianshen_lang_04/EVT_music_bianshen_lang_04_stop.EVT_music_bianshen_lang_04_stop'",
+       "AkAudioEvent'/Game/00Main/Audio/Music/MSC_bianshen_714/EVT_music_bianshen_lang_04/EVT_music_bianshen_lang_04_out.EVT_music_bianshen_lang_04_out'"
+      ]
+     },
+     {
+      "trigger": "Generation",
+      "type": "AddAttr",
+      "params": [
+       119,
+       -400,
+       0
+      ],
+      "floats": [],
+      "strings": []
+     }
+    ]
+   },
+   "12009": {
+    "tip": "【狼】变身-还原BUFF | 0【.替换单位】 | 1.【状态】无敌",
+    "duration": null,
+    "interval": null,
+    "simpleStates": [
+     "ImmueDamage",
+     "ImmueStiff",
+     "ImmueImmobilizing"
+    ],
+    "effects": [
+     {
+      "trigger": "Remove",
+      "type": "PlayerTrans",
+      "params": [
+       10,
+       0
+      ],
+      "floats": [],
+      "strings": []
+     }
+    ]
+   },
+   "12030": {
+    "tip": "【狼】变身-R2-01命中标识-持续1s | #允许使用R2-02-Max",
+    "duration": 1.0,
+    "interval": null,
+    "simpleStates": null,
+    "effects": null
+   },
+   "12050": {
+    "tip": "【狼】变身-精准闪避奖励Buff | 0.【Buff】添加时-添加Buff【12051】",
+    "duration": 1.0,
+    "interval": null,
+    "simpleStates": null,
+    "effects": [
+     {
+      "trigger": "Generation",
+      "type": "AddBuff",
+      "params": [
+       12051
+      ],
+      "floats": [
+       0
+      ],
+      "strings": []
+     }
+    ]
+   },
+   "12051": {
+    "tip": "【狼】变身-满棍势增伤 | 0.【属性】添加时-增伤0%",
+    "duration": null,
+    "interval": null,
+    "simpleStates": null,
+    "effects": [
+     {
+      "trigger": "Generation",
+      "type": "AddAttr",
+      "params": [
+       119,
+       0,
+       0
+      ],
+      "floats": [],
+      "strings": []
+     }
+    ]
+   },
+   "12060": {
+    "tip": "【狼】变身-前闪标识BUFF",
+    "duration": null,
+    "interval": null,
+    "simpleStates": null,
+    "effects": null
+   },
+   "12061": {
+    "tip": "【狼】变身-后闪标识BUFF",
+    "duration": null,
+    "interval": null,
+    "simpleStates": null,
+    "effects": null
+   },
+   "12062": {
+    "tip": "【狼】变身-左闪标识BUFF",
+    "duration": null,
+    "interval": null,
+    "simpleStates": null,
+    "effects": null
+   },
+   "12063": {
+    "tip": "【狼】变身-右闪标识BUFF",
+    "duration": null,
+    "interval": null,
+    "simpleStates": null,
+    "effects": null
+   },
+   "12069": {
+    "tip": "【狼】变身-闪避后增伤",
+    "duration": 5.0,
+    "interval": null,
+    "simpleStates": null,
+    "effects": [
+     {
+      "trigger": "Generation",
+      "type": "AddAttr",
+      "params": [
+       53,
+       1000,
+       0
+      ],
+      "floats": [],
+      "strings": []
+     }
+    ]
+   },
+   "12100": {
+    "tip": "【狼】变身-跑步加速消耗能量 | 0.【属性】每1s-变身能量-1",
+    "duration": null,
+    "interval": 1.0,
+    "simpleStates": null,
+    "effects": [
+     {
+      "trigger": "Time",
+      "type": "RecoverAttr",
+      "params": [
+       188,
+       -1,
+       0,
+       0
+      ],
+      "floats": [],
+      "strings": []
+     }
+    ]
+   },
+   "20000": {
+    "tip": "变身通用-不退出变身Buff",
+    "duration": null,
+    "interval": null,
+    "simpleStates": [
+     136
+    ],
+    "effects": null
+   },
+   "22001": {
+    "tip": "※※※※变身通用※※※※ | 【滑沙退出】",
+    "duration": null,
+    "interval": 0.1,
+    "simpleStates": null,
+    "effects": [
+     {
+      "trigger": "Time",
+      "type": "AddBuff",
+      "params": [
+       20999
+      ],
+      "floats": [
+       0
+      ],
+      "strings": []
+     }
+    ]
+   },
+   "22400": {
+    "tip": "※※※※变身通用※※※※ | 【隐身并隐藏特效】-主角退场",
+    "duration": 0.4,
+    "interval": null,
+    "simpleStates": null,
+    "effects": null
+   }
+  },
+  "birthBuffs": [
+   311,
+   22001,
+   12001,
+   12100
+  ],
+  "hud": {
+   "bar": "BI_TransCS: HpBar = form HP, EnergyBar = CurEnergy (attr 188)",
+   "tips": [
+    "<IA>LightAttack</>轻击“偃月”",
+    "<IA>HeavyAttack</>重击“赶月”",
+    "<IA>LightAttack</>轻击“偃月”强化",
+    "<IA>Roll_GP</><IA>Roll_KB</>闪避后接续<IA>HeavyAttack</>重击"
+   ]
+  }
+ },
+ "form": {
+  "resId": 12,
+  "statsFromDestinedOne": {
+   "formula": "X_form = X_wukong * XMul/10000 + XBase (PlayerTransAttrDataInit.ReClcPlayerBaseAttrList); HP starts full",
+   "hpMul": 1.2,
+   "hpBase": 0,
+   "atkMul": 1.0,
+   "atkBase": 0,
+   "defMul": 1.0,
+   "defBase": 0,
+   "critRateMul": 1.0,
+   "critRateBase": 0,
+   "critMultiplierMul": 1.0,
+   "critMultiplierBase": 0,
+   "dmgAdditionMul": 1.0,
+   "dmgAdditionBase": 0,
+   "dmgDefMul": 1.0,
+   "dmgDefBase": 2000,
+   "tenacityMul": 1.0,
+   "tenacityBase": 0,
+   "trueDamageRatio": 0,
+   "inheritCurHp": "No",
+   "peInherit": "None",
+   "source": "FUStPlayerTransAttrDesc 12 (ActorTag TPLang), FUStUnitBattleInfoExtendDesc 1201"
+  },
+  "movement": {
+   "walk": 0.9,
+   "run": 8.75,
+   "sprint": 15.0,
+   "backwardRate": 0.8,
+   "turnSpeed": 270,
+   "bigTurnSpeed": 540,
+   "source": "FUStUnitCommDesc 12, FUStPlayerCommDesc 12"
+  },
+  "stamina": {
+   "max": 200,
+   "regenPerSec": 0,
+   "regenBlockedDuringCostWindows": false,
+   "sprintPerSec": 0,
+   "depletion": {
+    "noRegenSec": 0,
+    "staminaDepletedStateSec": 0
+   },
+   "note": "no lang skill has a stamina cost (MinAttrCost* empty); sprint drains 变身能量 instead (buff 12100)"
+  },
+  "dodge": {
+   "chain": [
+    {
+     "skill": 12060,
+     "clips": {
+      "F": "AM_player_gycy_lang_Dodge_F_01",
+      "B": "AM_player_gycy_lang_Dodge_B_01",
+      "L": "AM_player_gycy_lang_Dodge_L_01",
+      "R": "AM_player_gycy_lang_Dodge_R_01"
+     },
+     "staminaCost": 0,
+     "energyCost": 0.7875,
+     "iframe": {
+      "start": -0.0001,
+      "end": 0.5,
+      "buff": 107
+     }
+    }
+   ],
+   "chainNote": "FUStRollSkillDesc 12060 NextRollSkillID 12060 (UseMultiRoll, MultiJustInLock); each dodge triggers effect 1206000 CostPlayerTransEnergy 0.7875",
+   "perfect": {
+    "skill": 12050,
+    "clips": {
+     "F": "AM_player_gycy_lang_Dodge_F_02",
+     "B": "AM_player_gycy_lang_Dodge_B_02",
+     "L": "AM_player_gycy_lang_Dodge_L_02",
+     "R": "AM_player_gycy_lang_Dodge_R_02"
+    },
+    "toleranceSec": 0.033333,
+    "rewards": {
+     "invulnerableSec": 0,
+     "focusGain": 100,
+     "maxAwardsPerWindow": 1,
+     "buff": 12050,
+     "note": "Unit_player_gycy_lang PlayerExtendConfigComp Awards: SkillEffect 1205003 IncreasePevalue 100 (full 气势); buff 1117 needs talent 301101 (not in the preset); the _02 clips carry buff 12050 精准闪避奖励 (-> 12051)"
+    },
+    "source": "FUStSkillSDesc 12050 (RollSkill, EnableSkill No in FUStRollSkillDesc = precise-dodge variant)"
+   },
+   "dirBuffs": {
+    "12060": "F",
+    "12061": "B",
+    "12062": "L",
+    "12063": "R"
+   },
+   "source": "FUStSkillSDesc 12060/12050; 17 events in Dodge_F_01"
+  },
+  "lightCombo": [
+   {
+    "skill": 12011,
+    "clip": "AM_player_gycy_lang_R1_01",
+    "staminaCost": 0,
+    "minStaminaToStart": 0,
+    "damage": {
+     "1201101": {
+      "type": "damage",
+      "damageMult": 0.75,
+      "flatDamage": 0,
+      "hitWeight": 1,
+      "armorBreak": 0.1,
+      "armorBreakLevel": "【主角】轻棍连招/0段蓄力",
+      "damageType": 3,
+      "elementLevel": 1,
+      "element": 2,
+      "blockArmorHit": 50,
+      "damageImmuneLevel": 0,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0.15,
+       "slowRate": 0.1
+      },
+      "source": "FUStSkillEffectDesc 1201101: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】轻棍连招/0段蓄力'"
+     }
+    },
+    "focusGain": [],
+    "triggers": [],
+    "hitEffects": [
+     1201100,
+     1201102,
+     1201103
+    ],
+    "rebound": null,
+    "source": "FUStSkillSDesc 12011; AM_player_gycy_lang_R1_01 hit/trigger notifies; FUStSkillEffectDesc rows",
+    "step": 1
+   },
+   {
+    "skill": 12012,
+    "clip": "AM_player_gycy_lang_R1_02",
+    "staminaCost": 0,
+    "minStaminaToStart": 0,
+    "damage": {
+     "1201201": {
+      "type": "damage",
+      "damageMult": 0.75,
+      "flatDamage": 0,
+      "hitWeight": 1,
+      "armorBreak": 0.1,
+      "armorBreakLevel": "【主角】轻棍连招/0段蓄力",
+      "damageType": 3,
+      "elementLevel": 1,
+      "element": 2,
+      "blockArmorHit": 50,
+      "damageImmuneLevel": 0,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0.15,
+       "slowRate": 0.1
+      },
+      "source": "FUStSkillEffectDesc 1201201: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】轻棍连招/0段蓄力'"
+     }
+    },
+    "focusGain": [],
+    "triggers": [],
+    "hitEffects": [
+     1201100,
+     1201202,
+     1201203
+    ],
+    "rebound": null,
+    "source": "FUStSkillSDesc 12012; AM_player_gycy_lang_R1_02 hit/trigger notifies; FUStSkillEffectDesc rows",
+    "step": 2
+   },
+   {
+    "skill": 12013,
+    "clip": "AM_player_gycy_lang_R1_03",
+    "staminaCost": 0,
+    "minStaminaToStart": 0,
+    "damage": {
+     "1201301": {
+      "type": "damage",
+      "damageMult": 0.5,
+      "flatDamage": 0,
+      "hitWeight": 1,
+      "armorBreak": 0.1,
+      "armorBreakLevel": "【主角】轻棍连招/0段蓄力",
+      "damageType": 3,
+      "elementLevel": 1,
+      "element": 2,
+      "blockArmorHit": 30,
+      "damageImmuneLevel": 0,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0.15,
+       "slowRate": 0.1
+      },
+      "source": "FUStSkillEffectDesc 1201301: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】轻棍连招/0段蓄力'"
+     }
+    },
+    "focusGain": [],
+    "triggers": [],
+    "hitEffects": [
+     1201100,
+     1201302,
+     1201303
+    ],
+    "rebound": null,
+    "source": "FUStSkillSDesc 12013; AM_player_gycy_lang_R1_03 hit/trigger notifies; FUStSkillEffectDesc rows",
+    "step": 3
+   },
+   {
+    "skill": 12014,
+    "clip": "AM_player_gycy_lang_R1_04",
+    "staminaCost": 0,
+    "minStaminaToStart": 0,
+    "damage": {
+     "1201401": {
+      "type": "damage",
+      "damageMult": 0.85,
+      "flatDamage": 0,
+      "hitWeight": 1,
+      "armorBreak": 50,
+      "armorBreakLevel": "【主角】轻棍终结",
+      "damageType": 3,
+      "elementLevel": 1,
+      "element": 2,
+      "blockArmorHit": 50,
+      "damageImmuneLevel": 0,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0.15,
+       "slowRate": 0.1
+      },
+      "source": "FUStSkillEffectDesc 1201401: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】轻棍终结'"
+     },
+     "1201411": {
+      "type": "damage",
+      "damageMult": 0.85,
+      "flatDamage": 0,
+      "hitWeight": 2,
+      "armorBreak": 50,
+      "armorBreakLevel": "【主角】轻棍终结",
+      "damageType": 3,
+      "elementLevel": 1,
+      "element": 2,
+      "blockArmorHit": 50,
+      "damageImmuneLevel": 0,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0.15,
+       "slowRate": 0.1
+      },
+      "source": "FUStSkillEffectDesc 1201411: Float[2]/10000 x Atk, Int[1]=22 -> AttackStiff HitWeight 2, Str[0]='【主角】轻棍终结'"
+     }
+    },
+    "focusGain": [],
+    "triggers": [],
+    "hitEffects": [
+     1201100,
+     1201402,
+     1201403,
+     1201412,
+     1201413
+    ],
+    "rebound": null,
+    "source": "FUStSkillSDesc 12014; AM_player_gycy_lang_R1_04 hit/trigger notifies; FUStSkillEffectDesc rows",
+    "step": 4
+   }
+  ],
+  "lightComboFire": [
+   {
+    "skill": 12021,
+    "clip": "AM_player_gycy_lang_R1_01_Fire",
+    "staminaCost": 0,
+    "minStaminaToStart": 0,
+    "damage": {
+     "1201101": {
+      "type": "damage",
+      "damageMult": 0.75,
+      "flatDamage": 0,
+      "hitWeight": 1,
+      "armorBreak": 0.1,
+      "armorBreakLevel": "【主角】轻棍连招/0段蓄力",
+      "damageType": 3,
+      "elementLevel": 1,
+      "element": 2,
+      "blockArmorHit": 50,
+      "damageImmuneLevel": 0,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0.15,
+       "slowRate": 0.1
+      },
+      "source": "FUStSkillEffectDesc 1201101: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】轻棍连招/0段蓄力'"
+     }
+    },
+    "focusGain": [],
+    "triggers": [],
+    "hitEffects": [
+     1201103,
+     1202102
+    ],
+    "rebound": null,
+    "source": "FUStSkillSDesc 12021; AM_player_gycy_lang_R1_01_Fire hit/trigger notifies; FUStSkillEffectDesc rows",
+    "step": 1
+   },
+   {
+    "skill": 12022,
+    "clip": "AM_player_gycy_lang_R1_02_Fire",
+    "staminaCost": 0,
+    "minStaminaToStart": 0,
+    "damage": {
+     "1201201": {
+      "type": "damage",
+      "damageMult": 0.75,
+      "flatDamage": 0,
+      "hitWeight": 1,
+      "armorBreak": 0.1,
+      "armorBreakLevel": "【主角】轻棍连招/0段蓄力",
+      "damageType": 3,
+      "elementLevel": 1,
+      "element": 2,
+      "blockArmorHit": 50,
+      "damageImmuneLevel": 0,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0.15,
+       "slowRate": 0.1
+      },
+      "source": "FUStSkillEffectDesc 1201201: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】轻棍连招/0段蓄力'"
+     }
+    },
+    "focusGain": [],
+    "triggers": [],
+    "hitEffects": [
+     1201203,
+     1202202
+    ],
+    "rebound": null,
+    "source": "FUStSkillSDesc 12022; AM_player_gycy_lang_R1_02_Fire hit/trigger notifies; FUStSkillEffectDesc rows",
+    "step": 2
+   },
+   {
+    "skill": 12023,
+    "clip": "AM_player_gycy_lang_R1_03_Fire",
+    "staminaCost": 0,
+    "minStaminaToStart": 0,
+    "damage": {
+     "1201301": {
+      "type": "damage",
+      "damageMult": 0.5,
+      "flatDamage": 0,
+      "hitWeight": 1,
+      "armorBreak": 0.1,
+      "armorBreakLevel": "【主角】轻棍连招/0段蓄力",
+      "damageType": 3,
+      "elementLevel": 1,
+      "element": 2,
+      "blockArmorHit": 30,
+      "damageImmuneLevel": 0,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0.15,
+       "slowRate": 0.1
+      },
+      "source": "FUStSkillEffectDesc 1201301: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】轻棍连招/0段蓄力'"
+     }
+    },
+    "focusGain": [],
+    "triggers": [],
+    "hitEffects": [
+     1201303,
+     1202302
+    ],
+    "rebound": null,
+    "source": "FUStSkillSDesc 12023; AM_player_gycy_lang_R1_03_Fire hit/trigger notifies; FUStSkillEffectDesc rows",
+    "step": 3
+   },
+   {
+    "skill": 12024,
+    "clip": "AM_player_gycy_lang_R1_04_Fire",
+    "staminaCost": 0,
+    "minStaminaToStart": 0,
+    "damage": {
+     "1201401": {
+      "type": "damage",
+      "damageMult": 0.85,
+      "flatDamage": 0,
+      "hitWeight": 1,
+      "armorBreak": 50,
+      "armorBreakLevel": "【主角】轻棍终结",
+      "damageType": 3,
+      "elementLevel": 1,
+      "element": 2,
+      "blockArmorHit": 50,
+      "damageImmuneLevel": 0,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0.15,
+       "slowRate": 0.1
+      },
+      "source": "FUStSkillEffectDesc 1201401: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】轻棍终结'"
+     },
+     "1201411": {
+      "type": "damage",
+      "damageMult": 0.85,
+      "flatDamage": 0,
+      "hitWeight": 2,
+      "armorBreak": 50,
+      "armorBreakLevel": "【主角】轻棍终结",
+      "damageType": 3,
+      "elementLevel": 1,
+      "element": 2,
+      "blockArmorHit": 50,
+      "damageImmuneLevel": 0,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0.15,
+       "slowRate": 0.1
+      },
+      "source": "FUStSkillEffectDesc 1201411: Float[2]/10000 x Atk, Int[1]=22 -> AttackStiff HitWeight 2, Str[0]='【主角】轻棍终结'"
+     }
+    },
+    "focusGain": [],
+    "triggers": [],
+    "hitEffects": [
+     1201403,
+     1201413,
+     1202402
+    ],
+    "rebound": null,
+    "source": "FUStSkillSDesc 12024; AM_player_gycy_lang_R1_04_Fire hit/trigger notifies; FUStSkillEffectDesc rows",
+    "step": 4
+   }
+  ],
+  "heavy": {
+   "r2": {
+    "skill": 12031,
+    "clip": "AM_player_gycy_lang_R2_01",
+    "staminaCost": 0,
+    "minStaminaToStart": 0,
+    "damage": {
+     "1203101": {
+      "type": "damage",
+      "damageMult": 4.025,
+      "flatDamage": 0,
+      "hitWeight": 1,
+      "armorBreak": 10,
+      "armorBreakLevel": "【主角】蓄力1",
+      "damageType": 3,
+      "elementLevel": 2,
+      "element": 2,
+      "blockArmorHit": 240,
+      "damageImmuneLevel": 0,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0.15,
+       "slowRate": 0.1
+      },
+      "source": "FUStSkillEffectDesc 1203101: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】蓄力1'"
+     }
+    },
+    "focusGain": [],
+    "triggers": [
+     {
+      "time": 0.2,
+      "effect": 1203102,
+      "type": "CostPlayerTransEnergy",
+      "int": [],
+      "float": [
+       33
+      ]
+     }
+    ],
+    "hitEffects": [
+     1203103
+    ],
+    "rebound": null,
+    "source": "FUStSkillSDesc 12031; AM_player_gycy_lang_R2_01 hit/trigger notifies; FUStSkillEffectDesc rows"
+   },
+   "r2Follow": {
+    "skill": 12032,
+    "clip": "AM_player_gycy_lang_R2_02",
+    "staminaCost": 0,
+    "minStaminaToStart": 0,
+    "damage": {
+     "1203101": {
+      "type": "damage",
+      "damageMult": 4.025,
+      "flatDamage": 0,
+      "hitWeight": 1,
+      "armorBreak": 10,
+      "armorBreakLevel": "【主角】蓄力1",
+      "damageType": 3,
+      "elementLevel": 2,
+      "element": 2,
+      "blockArmorHit": 240,
+      "damageImmuneLevel": 0,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0.15,
+       "slowRate": 0.1
+      },
+      "source": "FUStSkillEffectDesc 1203101: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】蓄力1'"
+     }
+    },
+    "focusGain": [],
+    "triggers": [
+     {
+      "time": 0.2,
+      "effect": 1204202,
+      "type": "CostPlayerTransEnergy",
+      "int": [],
+      "float": [
+       33
+      ]
+     }
+    ],
+    "hitEffects": [],
+    "rebound": null,
+    "source": "FUStSkillSDesc 12032; AM_player_gycy_lang_R2_02 hit/trigger notifies; FUStSkillEffectDesc rows"
+   },
+   "r2Fire": {
+    "skill": 12041,
+    "clip": "AM_player_gycy_lang_R2_01_Fire",
+    "staminaCost": 0,
+    "minStaminaToStart": 0,
+    "damage": {
+     "1204201": {
+      "type": "damage",
+      "damageMult": 4.025,
+      "flatDamage": 0,
+      "hitWeight": 1,
+      "armorBreak": 10,
+      "armorBreakLevel": "【主角】蓄力1",
+      "damageType": 3,
+      "elementLevel": 3,
+      "element": 2,
+      "blockArmorHit": 240,
+      "damageImmuneLevel": 0,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0.15,
+       "slowRate": 0.1
+      },
+      "source": "FUStSkillEffectDesc 1204201: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】蓄力1'"
+     }
+    },
+    "focusGain": [],
+    "triggers": [
+     {
+      "time": 0.2,
+      "effect": 1203102,
+      "type": "CostPlayerTransEnergy",
+      "int": [],
+      "float": [
+       33
+      ]
+     }
+    ],
+    "hitEffects": [
+     1203103
+    ],
+    "rebound": null,
+    "source": "FUStSkillSDesc 12041; AM_player_gycy_lang_R2_01_Fire hit/trigger notifies; FUStSkillEffectDesc rows"
+   },
+   "r2FireFollow": {
+    "skill": 12042,
+    "clip": "AM_player_gycy_lang_R2_02_Fire",
+    "staminaCost": 0,
+    "minStaminaToStart": 0,
+    "damage": {
+     "1204201": {
+      "type": "damage",
+      "damageMult": 4.025,
+      "flatDamage": 0,
+      "hitWeight": 1,
+      "armorBreak": 10,
+      "armorBreakLevel": "【主角】蓄力1",
+      "damageType": 3,
+      "elementLevel": 3,
+      "element": 2,
+      "blockArmorHit": 240,
+      "damageImmuneLevel": 0,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0.15,
+       "slowRate": 0.1
+      },
+      "source": "FUStSkillEffectDesc 1204201: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】蓄力1'"
+     }
+    },
+    "focusGain": [],
+    "triggers": [
+     {
+      "time": 0.2,
+      "effect": 1204202,
+      "type": "CostPlayerTransEnergy",
+      "int": [],
+      "float": [
+       33
+      ]
+     }
+    ],
+    "hitEffects": [],
+    "rebound": null,
+    "source": "FUStSkillSDesc 12042; AM_player_gycy_lang_R2_02_Fire hit/trigger notifies; FUStSkillEffectDesc rows"
+   },
+   "dodgeFire": {
+    "F": {
+     "skill": 12043,
+     "clip": "AM_player_gycy_lang_R2_F_Fire",
+     "staminaCost": 0,
+     "minStaminaToStart": 0,
+     "damage": {
+      "1204301": {
+       "type": "damage",
+       "damageMult": 10.05,
+       "flatDamage": 0,
+       "hitWeight": 5,
+       "armorBreak": 500,
+       "armorBreakLevel": "【主角】蓄力3",
+       "damageType": 3,
+       "elementLevel": 1,
+       "element": 2,
+       "blockArmorHit": 600,
+       "damageImmuneLevel": 0,
+       "hitStop": {
+        "freeze": 0,
+        "slow": 0.15,
+        "slowRate": 0.1
+       },
+       "source": "FUStSkillEffectDesc 1204301: Float[2]/10000 x Atk, Int[1]=25 -> AttackStiff HitWeight 5, Str[0]='【主角】蓄力3'"
+      }
+     },
+     "focusGain": [],
+     "triggers": [
+      {
+       "time": 0.2,
+       "effect": 1204302,
+       "type": "CostPlayerTransEnergy",
+       "int": [],
+       "float": [
+        48
+       ]
+      },
+      {
+       "time": 1.4,
+       "effect": 1204100,
+       "type": "IncreasePevalue",
+       "int": [
+        0
+       ],
+       "float": [
+        -100
+       ]
+      }
+     ],
+     "hitEffects": [],
+     "rebound": null,
+     "source": "FUStSkillSDesc 12043; AM_player_gycy_lang_R2_F_Fire hit/trigger notifies; FUStSkillEffectDesc rows"
+    },
+    "B": {
+     "skill": 12044,
+     "clip": "AM_player_gycy_lang_R2_B_Fire",
+     "staminaCost": 0,
+     "minStaminaToStart": 0,
+     "damage": {
+      "1204401": {
+       "type": "damage",
+       "damageMult": 8.4,
+       "flatDamage": 0,
+       "hitWeight": 5,
+       "armorBreak": 500,
+       "armorBreakLevel": "【主角】蓄力3",
+       "damageType": 3,
+       "elementLevel": 2,
+       "element": 2,
+       "blockArmorHit": 500,
+       "damageImmuneLevel": 0,
+       "hitStop": {
+        "freeze": 0,
+        "slow": 0.15,
+        "slowRate": 0.1
+       },
+       "source": "FUStSkillEffectDesc 1204401: Float[2]/10000 x Atk, Int[1]=25 -> AttackStiff HitWeight 5, Str[0]='【主角】蓄力3'"
+      }
+     },
+     "focusGain": [],
+     "triggers": [
+      {
+       "time": 0.2,
+       "effect": 1204402,
+       "type": "CostPlayerTransEnergy",
+       "int": [],
+       "float": [
+        48
+       ]
+      },
+      {
+       "time": 1.3333,
+       "effect": 1204100,
+       "type": "IncreasePevalue",
+       "int": [
+        0
+       ],
+       "float": [
+        -100
+       ]
+      }
+     ],
+     "hitEffects": [],
+     "rebound": null,
+     "source": "FUStSkillSDesc 12044; AM_player_gycy_lang_R2_B_Fire hit/trigger notifies; FUStSkillEffectDesc rows"
+    },
+    "S": {
+     "skill": 12045,
+     "clip": "AM_player_gycy_lang_R2_S_Fire",
+     "staminaCost": 0,
+     "minStaminaToStart": 0,
+     "damage": {
+      "1204501": {
+       "type": "damage",
+       "damageMult": 2.225,
+       "flatDamage": 0,
+       "hitWeight": 1,
+       "armorBreak": 50,
+       "armorBreakLevel": "【主角】轻棍终结",
+       "damageType": 3,
+       "elementLevel": 4,
+       "element": 2,
+       "blockArmorHit": 130,
+       "damageImmuneLevel": 0,
+       "hitStop": {
+        "freeze": 0,
+        "slow": 0.15,
+        "slowRate": 0.1
+       },
+       "source": "FUStSkillEffectDesc 1204501: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】轻棍终结'"
+      }
+     },
+     "focusGain": [],
+     "triggers": [
+      {
+       "time": 0.1,
+       "effect": 1204502,
+       "type": "CostPlayerTransEnergy",
+       "int": [],
+       "float": [
+        48
+       ]
+      },
+      {
+       "time": 0.1667,
+       "effect": 1204100,
+       "type": "IncreasePevalue",
+       "int": [
+        0
+       ],
+       "float": [
+        -100
+       ]
+      }
+     ],
+     "hitEffects": [],
+     "rebound": null,
+     "source": "FUStSkillSDesc 12045; AM_player_gycy_lang_R2_S_Fire hit/trigger notifies; FUStSkillEffectDesc rows"
+    }
+   },
+   "levels": [],
+   "charge": {
+    "damageReductionWhileCharging": 0
+   },
+   "note": "no charge stage: R2 skills are fixed montages (CCG_player_gycy_lang)"
+  },
+  "focus": {
+   "activeConfig": 0,
+   "configs": {
+    "0": [
+     {
+      "level": 0,
+      "threshold": 0,
+      "decayPerSec": 0,
+      "protectTime": -1,
+      "normalMax": false
+     },
+     {
+      "level": 1,
+      "threshold": 100,
+      "decayPerSec": 0,
+      "protectTime": -1,
+      "normalMax": false
+     }
+    ]
+   },
+   "perfectDodgeGain": 100,
+   "source": "FUStPotentialEnergyConfigDesc ResID 12 (气势: hits add IncreasePevalue effects listed in each hit)"
+  },
+  "gourd": {
+   "charges": 0,
+   "note": "FUStPlayerTransUnitConfDesc 1200 DrinkSkillId 0: no gourd while transformed"
+  },
+  "hitReactions": {
+   "stiffLevel": "effect.hitWeight - form tenacity",
+   "clips": "gycy_lang.anims.json extra.actions.hitByStiffLevel",
+   "source": "UBAC_player_gycy_lang_dep01"
+  },
+  "reboundClips": {
+   "12011": "AM_player_gycy_lang_tandao",
+   "12012": "AM_player_gycy_lang_tandao",
+   "12013": "AM_player_gycy_lang_tandao",
+   "12014": "AM_player_gycy_lang_tandao",
+   "12021": "AM_player_gycy_lang_tandao",
+   "12022": "AM_player_gycy_lang_tandao",
+   "12023": "AM_player_gycy_lang_tandao",
+   "12024": "AM_player_gycy_lang_tandao",
+   "12031": "AM_player_gycy_lang_tandao",
+   "12032": "AM_player_gycy_lang_tandao",
+   "12041": "AM_player_gycy_lang_tandao",
+   "12042": "AM_player_gycy_lang_tandao",
+   "12043": "AM_player_gycy_lang_tandao",
+   "12044": "AM_player_gycy_lang_tandao",
+   "12045": "AM_player_gycy_lang_tandao"
+  },
+  "comboGraph": {
+   "source": "out/raw/b1/CalliopeData/2.0/Game/00Main/Design/Combo/CCG_player_gycy_lang.Data (+ uasset node props)",
+   "idle": {
+    "light": "fullPe ? 12021 : 12011",
+    "heavy": "fullPe ? (buff 12062/12063 左闪/右闪 -> 12045, 12061 后闪 -> 12044, 12060 前闪 -> 12043, else 12041) : 12031"
+   },
+   "light": {
+    "12011": "fullPe ? 12022 : 12012",
+    "12021": "fullPe ? 12022 : 12012",
+    "12012": "fullPe ? 12023 : 12013",
+    "12022": "fullPe ? 12023 : 12013",
+    "12013": "fullPe ? 12024 : 12014",
+    "12023": "fullPe ? 12024 : 12014",
+    "12014": "-> idle light",
+    "12024": "-> idle light"
+   },
+   "heavy": {
+    "12031": "buff 12030 (R2-01 命中标识, 1 s) -> 12032",
+    "12041": "buff 12030 -> 12042"
+   },
+   "fullPe": "ComboConditionType::PotentialEnergy level >= 1 (满棍势; FUStPotentialEnergyConfigDesc ResID 12: level 1 at 100)",
+   "heavyFromLight": "[INFERENCE] light skills have no EAttackHeavy pin; heavy inside a light combo window runs the idle heavy branch"
+  }
+ },
+ "spirit": {
+  "soulSkill": {
+   "id": 8011,
+   "name": "广谋",
+   "internalName": "袖蛇",
+   "type": "MagicallyChange",
+   "castEnergy": 211.83595,
+   "skillId": 10111,
+   "enterSkill": 10100,
+   "leaveSkill": 10199,
+   "reEnterWaitTime": 1.6,
+   "desc": "化身广谋，唤出毒蛇，向对手喷吐毒液，造成毒伤。待毒液喷尽，众蛇自行退走",
+   "source": "SoulSkillDesc 8011 + ItemDesc 8011"
+  },
+  "energy": {
+   "max": 211.83595,
+   "castNeedsFull": true,
+   "spendAll": true,
+   "rules": [
+    "VigorEnergyMax = SoulSkillDesc.CastEnergy (BUS_MagicallyChangeComp.InitWearSoulSkill)",
+    "a successful cast spends all VigorEnergy and sets CantGainVigorEnergy until the skill ends",
+    "gain: hit effect lists carry CostAttr type 9 (VigorEnergy) rows with negative values -> gainByEffect",
+    "resting refills it (BUS_PlayerRestComp) -> the fight starts full"
+   ],
+   "gainByEffect": {
+    "1009692": 3,
+    "1021092": 2,
+    "1021192": 4,
+    "1021292": 6,
+    "1021392": 8,
+    "1021492": 10,
+    "1050293": 2.5,
+    "1060193": 1,
+    "1061092": 2,
+    "1061192": 4,
+    "1061292": 6,
+    "1061392": 8,
+    "1061492": 10,
+    "1070193": 1.5,
+    "1070293": 1.5,
+    "1070393": 1,
+    "1070493": 4,
+    "1070592": 1.5,
+    "1070692": 1,
+    "1070792": 4,
+    "1070892": 3,
+    "1071192": 1,
+    "1071492": 4,
+    "1071592": 3,
+    "1072192": 1,
+    "1072492": 1,
+    "1072494": 3,
+    "1080093": 2,
+    "1080193": 1.5,
+    "1080293": 1,
+    "1080393": 1,
+    "1080494": 1,
+    "1080496": 1,
+    "1080593": 4,
+    "1081794": 1,
+    "1082394": 1,
+    "1085293": 1.5,
+    "1086092": 2,
+    "1086192": 4,
+    "1086292": 6,
+    "1086392": 8,
+    "1086492": 10,
+    "1088092": 2,
+    "1088192": 4,
+    "1088292": 6,
+    "1088392": 8,
+    "1088492": 10
+   }
+  },
+  "enter": {
+   "skill": 10100,
+   "clip": "AM_wukong_trans_to_Vigor",
+   "changeAt": 0.5,
+   "note": "BAN_GSMagicallyChange: the Destined One's mesh becomes the spirit's (same actor, HP/attrs unchanged)"
+  },
+  "form": {
+   "clip": "AM_10_gycy_she_01_atk_07",
+   "skill": 10111,
+   "capsule": {
+    "radius": 0.7000000000000001,
+    "halfHeight": 1.69
+   },
+   "destroyOldAt": 0.1,
+   "summonAt": 1,
+   "fadeOutAt": 1.4667,
+   "recoverAt": 1.8667,
+   "source": "MC_10_gycy_she_01 (BGWDataAsset_MagicallyChangeConfig)"
+  },
+  "leave": {
+   "skill": 10199,
+   "clip": "AM_wukong_trans_from_Vigor"
+  },
+  "summon": {
+   "id": 1011101,
+   "count": 2,
+   "aliveTime": 10,
+   "bornDelay": 0.4,
+   "bornClip": "AM_GYCY_SheBang_Enter_01",
+   "dieClip": "AM_GYCY_SheBang_die_dep01_sl1_df_hf_nor",
+   "idleClip": "AS_GYCY_SheBang_Bstd_01_Anim",
+   "rotation": "FacingCurTarget",
+   "mesh": {
+    "scale": 10.0,
+    "offsetY": -0.8,
+    "source": "UNIT_vigorskill_gycy_shebang CollisionCylinder (r4 hh12, RelativeScale3D 10) + CharacterMesh0 Z -20"
+   },
+   "eqs": {
+    "circleRadius": 8.0,
+    "points": 9,
+    "score": "dot (facing the target)",
+    "source": "EQ_SummonVigorskill_huolingsha: EQG_simpleteleport_circle 800 cm, 9 points, EnvQueryTest_Dot"
+   },
+   "attack": {
+    "skill": 103801,
+    "clip": "AM_GYCY_SheBang_Atk_Fast_01",
+    "rotateSpeed": 200,
+    "gap": [
+     0.5,
+     1.5
+    ],
+    "gapNote": "[INFERENCE] BT_vigorskill_10_gycy_shebang loops BTT_UseZatoichiComboSkill (skill 103801, combo 1) with a 1 +- 0.5 s watch-time service"
+   },
+   "atkRatio": 0.2,
+   "attrCopy": 103809,
+   "source": "FUStSummonCommDesc 1011101, FUStAttrCopyConfigDesc 103809, UNIT_vigorskill_gycy_shebang (ResID 1038)"
+  },
+  "bullet": {
+   "id": 10380101,
+   "at": 0.729,
+   "socket": "FX_PenDu",
+   "target": "pelvis",
+   "speed": [
+    40.0,
+    50.0
+   ],
+   "accelTime": 0.2,
+   "radius": 0.24,
+   "life": 20,
+   "move": "StraightMode",
+   "damage": {
+    "type": "damage",
+    "damageMult": 1.5,
+    "flatDamage": 0,
+    "hitWeight": 0,
+    "armorBreak": 1,
+    "armorBreakLevel": "【怪物】打断轻棍连招/0段蓄力",
+    "damageType": 7,
+    "elementLevel": 4,
+    "element": 3,
+    "blockArmorHit": 0,
+    "damageImmuneLevel": 0,
+    "hitStop": {
+     "freeze": 0,
+     "slow": 0.15,
+     "slowRate": 0.1
+    },
+    "source": "FUStSkillEffectDesc 10380101: Float[2]/10000 x Atk, Int[1]=20 -> AttackStiff HitWeight 0, Str[0]='【怪物】打断轻棍连招/0段蓄力'"
+   },
+   "abnormal": {
+    "effect": 921310,
+    "type": "AccumulateAbnormalValue",
+    "int": [
+     3,
+     1,
+     1,
+     2000,
+     0,
+     0
+    ],
+    "float": [],
+    "note": "AccumulateAbnormalValue poison build-up (the tiger has no poison state here)"
+   },
+   "source": "FUStProjectileCommDesc/MoveDesc/BulletExpandDesc 10380101, BP_GYCY_SheBang_Bullet_01, BANS_GSSpawnBullets"
+  }
+ }
+}

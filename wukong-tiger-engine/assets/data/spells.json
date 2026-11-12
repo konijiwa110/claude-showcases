@@ -1,0 +1,1206 @@
+{
+ "schema": "spells/1",
+ "meta": {
+  "generator": "extract/B1Data/build_spells.py",
+  "sources": "per-field 'source' keys + rules text (decompiled GameDll classes)",
+  "units": "meters, seconds; damage rows use the player.json format (damage.js)",
+  "preset": "RoleDataConfigDesc group 31 talents 脆断 Lv1, 瞬机 Lv1, 纵横 Lv1",
+  "gameBuild": "Steam build 21393610; logic from czastack/B1CSharpLoader GameDll (older build)"
+ },
+ "talents": {
+  "100101": 1,
+  "100102": 1,
+  "100103": 1,
+  "100106": 1,
+  "100107": 1,
+  "100201": 1,
+  "100202": 1,
+  "100203": 1,
+  "100301": 3,
+  "100302": 3,
+  "100304": 2,
+  "100502": 2,
+  "100504": 2,
+  "100601": 1,
+  "100602": 1,
+  "100607": 1,
+  "100608": 1,
+  "100609": 1,
+  "100701": 1,
+  "100702": 1,
+  "100705": 1,
+  "100801": 1,
+  "100802": 1,
+  "100807": 1,
+  "100901": 1,
+  "100902": 1,
+  "101001": 1,
+  "200103": 1
+ },
+ "immobilize": {
+  "spell": 5101,
+  "name": "定身法",
+  "type": "QiShu",
+  "nameEnum": "Immobilize",
+  "skill": 10518,
+  "skills": {
+   "10518": {
+    "id": 10518,
+    "clip": "AM_Wukong_DingShen",
+    "type": "HurtSkill",
+    "mpRequired": 50,
+    "cooldown": 50,
+    "cooldownType": "TryToCast",
+    "cooldownSkills": [
+     10517,
+     10519
+    ],
+    "rotate": "MeleeRotate",
+    "source": "FUStSkillSDesc 10518"
+   },
+   "10519": {
+    "id": 10519,
+    "clip": "AM_wukong_dingshen_02",
+    "type": "HurtSkill",
+    "mpRequired": 50,
+    "cooldown": 50,
+    "cooldownType": "TryToCast",
+    "cooldownSkills": [
+     10517,
+     10518
+    ],
+    "rotate": "MeleeRotate",
+    "source": "FUStSkillSDesc 10519"
+   },
+   "10517": {
+    "id": 10517,
+    "clip": "AM_wukong_dingshen_02",
+    "type": "HurtSkill",
+    "mpRequired": 50,
+    "cooldown": 50,
+    "cooldownType": "TryToCast",
+    "cooldownSkills": [
+     10518,
+     10519
+    ],
+    "rotate": "MeleeRotate",
+    "source": "FUStSkillSDesc 10517"
+   }
+  },
+  "mpCostEffect": {
+   "type": "CostAttr",
+   "int": [
+    2
+   ],
+   "float": [
+    50,
+    0
+   ],
+   "str": [],
+   "attr": "Mp",
+   "value": 50,
+   "source": "FUStSkillEffectDesc 1051851"
+  },
+  "targeting": {
+   "selectType": "SstCameraLock",
+   "range": 50.0,
+   "zLimit": 3.5,
+   "canEmptyCast": false,
+   "target": "lock target only (BUS_CastImmobilizeComp: TargetInfo.LockTargetActor, TargetCount 1)",
+   "source": "FUStPlayerSkillCtrlDesc 10518"
+  },
+  "mapping": {
+   "rules": [
+    {
+     "skill": 10518,
+     "cyclic": true,
+     "rule": "Latest",
+     "configs": [
+      {
+       "cond": "InAttackWarning",
+       "int": [],
+       "skills": [
+        10519
+       ],
+       "montages": []
+      }
+     ]
+    },
+    {
+     "skill": 10519,
+     "cyclic": true,
+     "rule": "Latest",
+     "configs": [
+      {
+       "cond": "Talent",
+       "int": [
+        100902
+       ],
+       "skills": [
+        10518,
+        10517
+       ],
+       "montages": []
+      }
+     ]
+    },
+    {
+     "skill": 10517,
+     "cyclic": false,
+     "rule": "Latest",
+     "configs": [
+      {
+       "cond": "Talent",
+       "int": [
+        901711
+       ],
+       "skills": [
+        10519,
+        10519
+       ],
+       "montages": [
+        "AM_wukong_dingshen_02",
+        "AM_wukong_dingshen_02_qingtong"
+       ]
+      }
+     ]
+    }
+   ],
+   "logic": "BUS_SkillMappingComp: up to 3 rounds; InAttackWarning = PreciseDodgeData.InPreciseDodgeWindow(); Talent picks SkillIDs[talentLevel]. Preset (瞬机 Lv1, no 901711): perfect-dodge window -> 10518 -> 10519 -> 10517 -> 10519 with montage AM_wukong_dingshen_02 (ImmobilizeConfigID 1); otherwise 10518 AM_Wukong_DingShen (ImmobilizeConfigID 0 -> caster ResID 10)"
+  },
+  "configs": {
+   "10": {
+    "id": 10,
+    "durationMs": 8000,
+    "almostEndAheadMs": 3000,
+    "minDurationMs": 1000,
+    "targetCount": 1,
+    "rangeRadius": 12.0,
+    "repeatedDef": 0.2,
+    "greatSageBuff": 1089,
+    "begin": [
+     {
+      "type": "AddBuff",
+      "target": "Victim",
+      "value": 1024
+     },
+     {
+      "type": "RemoveBuff",
+      "target": "Victim",
+      "value": 1064
+     },
+     {
+      "type": "AddBuff",
+      "target": "Victim",
+      "value": 0
+     },
+     {
+      "type": "AddBuff",
+      "target": "Victim",
+      "value": 0
+     }
+    ],
+    "end": [
+     {
+      "type": "AddBuff",
+      "target": "Victim",
+      "value": 0
+     },
+     {
+      "type": "AddBuff",
+      "target": "Victim",
+      "value": 201
+     }
+    ],
+    "brk": [
+     {
+      "type": "AddBuff",
+      "target": "Caster",
+      "value": 0
+     },
+     {
+      "type": "AddBuff",
+      "target": "Victim",
+      "value": 201
+     },
+     {
+      "type": "SkillEffect",
+      "target": "Victim",
+      "value": 1099906
+     },
+     {
+      "type": "AddBuff",
+      "target": "Caster",
+      "value": 2181
+     }
+    ],
+    "dead": [
+     {
+      "type": "AddBuff",
+      "target": "Caster",
+      "value": 0
+     },
+     {
+      "type": "AddBuff",
+      "target": "Caster",
+      "value": 2181
+     }
+    ],
+    "fx": {
+     "begin": "DBC_Dingshen_Loop",
+     "almostEnd": "DBC_Dingshen_AlmostEnd",
+     "end": "DBC_Dingshen_End",
+     "quickEnd": "DBC_Dingshen_QuickEnd",
+     "failed": "DBC_Dingshen_End",
+     "breakingRatio": 0.5
+    },
+    "talentOverrides": [
+     {
+      "talent": 100901,
+      "name": "脆断",
+      "passive": 10901,
+      "beginEffect": 0,
+      "value": 1024
+     },
+     {
+      "talent": 100901,
+      "name": "脆断",
+      "passive": 10901,
+      "beginEffect": 0,
+      "value": 1024
+     }
+    ],
+    "source": "FUStImmobilizeSkillConfigDesc 10"
+   },
+   "1": {
+    "id": 1,
+    "durationMs": 12000,
+    "almostEndAheadMs": 3000,
+    "minDurationMs": 4000,
+    "targetCount": 1,
+    "rangeRadius": 12.0,
+    "repeatedDef": 0.2,
+    "greatSageBuff": 1089,
+    "begin": [
+     {
+      "type": "AddBuff",
+      "target": "Victim",
+      "value": 1024
+     },
+     {
+      "type": "RemoveBuff",
+      "target": "Victim",
+      "value": 1064
+     },
+     {
+      "type": "AddBuff",
+      "target": "Victim",
+      "value": 1027
+     },
+     {
+      "type": "AddBuff",
+      "target": "Victim",
+      "value": 0
+     }
+    ],
+    "end": [
+     {
+      "type": "AddBuff",
+      "target": "Victim",
+      "value": 0
+     },
+     {
+      "type": "AddBuff",
+      "target": "Victim",
+      "value": 201
+     }
+    ],
+    "brk": [
+     {
+      "type": "AddBuff",
+      "target": "Caster",
+      "value": 0
+     },
+     {
+      "type": "AddBuff",
+      "target": "Victim",
+      "value": 201
+     },
+     {
+      "type": "SkillEffect",
+      "target": "Victim",
+      "value": 1099906
+     },
+     {
+      "type": "AddBuff",
+      "target": "Caster",
+      "value": 2181
+     }
+    ],
+    "dead": [
+     {
+      "type": "AddBuff",
+      "target": "Caster",
+      "value": 0
+     },
+     {
+      "type": "AddBuff",
+      "target": "Caster",
+      "value": 2181
+     }
+    ],
+    "fx": {
+     "begin": "DBC_Dingshen_Loop",
+     "almostEnd": "DBC_Dingshen_AlmostEnd",
+     "end": "DBC_Dingshen_End",
+     "quickEnd": "DBC_Dingshen_QuickEnd",
+     "failed": "DBC_Dingshen_End",
+     "breakingRatio": 0.5
+    },
+    "talentOverrides": [
+     {
+      "talent": 100901,
+      "name": "脆断",
+      "passive": 10901,
+      "beginEffect": 0,
+      "value": 1024
+     },
+     {
+      "talent": 100901,
+      "name": "脆断",
+      "passive": 10901,
+      "beginEffect": 0,
+      "value": 1024
+     }
+    ],
+    "source": "FUStImmobilizeSkillConfigDesc 1"
+   }
+  },
+  "buffs": {
+   "1024": {
+    "id": 1024,
+    "name": "脆断-lv1效果",
+    "duration": null,
+    "interval": null,
+    "condition": null,
+    "effects": [
+     {
+      "trigger": "Generation",
+      "type": "AddAttr",
+      "attr": "DmgDefBase",
+      "value": -1000
+     }
+    ],
+    "source": "FUStBuffDesc 1024"
+   },
+   "1025": {
+    "id": 1025,
+    "name": "脆断-lv2效果",
+    "duration": null,
+    "interval": null,
+    "condition": null,
+    "effects": [
+     {
+      "trigger": "Generation",
+      "type": "AddAttr",
+      "attr": "DmgDefBase",
+      "value": -500
+     }
+    ],
+    "source": "FUStBuffDesc 1025"
+   },
+   "1027": {
+    "id": 1027,
+    "name": "脆断-精准定身版",
+    "duration": null,
+    "interval": null,
+    "condition": null,
+    "effects": [
+     {
+      "trigger": "Generation",
+      "type": "AddAttr",
+      "attr": "DmgDefBase",
+      "value": -3000
+     }
+    ],
+    "source": "FUStBuffDesc 1027"
+   },
+   "1028": {
+    "id": 1028,
+    "name": "精准定身降低定身CD",
+    "duration": 1.0,
+    "interval": null,
+    "condition": null,
+    "effects": [
+     {
+      "trigger": "Generation",
+      "type": "ModifyCooldown",
+      "skill": 10518,
+      "seconds": -30
+     },
+     {
+      "trigger": "Generation",
+      "type": "ModifyCooldown",
+      "skill": 10519,
+      "seconds": -30
+     },
+     {
+      "trigger": "Generation",
+      "type": "ModifyCooldown",
+      "skill": 10517,
+      "seconds": null
+     }
+    ],
+    "source": "FUStBuffDesc 1028"
+   },
+   "1040": {
+    "id": 1040,
+    "name": "精准定身 标记Buff",
+    "duration": 5.0,
+    "interval": null,
+    "condition": null,
+    "effects": [],
+    "source": "FUStBuffDesc 1040"
+   },
+   "201": {
+    "id": 201,
+    "name": "定身结束通用检测Buff",
+    "duration": 1.0,
+    "interval": null,
+    "condition": null,
+    "effects": [],
+    "source": "FUStBuffDesc 201"
+   },
+   "218": {
+    "id": 218,
+    "name": "无敌Buff（免疫受击，免疫定身，免疫伤害，免疫负面效果）",
+    "duration": null,
+    "interval": null,
+    "condition": null,
+    "effects": [
+     {
+      "trigger": "Generation",
+      "type": "SetSimpleState",
+      "states": [
+       "ImmueDamage",
+       "ImmueStiff",
+       "ImmueImmobilizing",
+       "ImmueAttackPerformEffect",
+       "ImmueBeAttackedPerformEffect",
+       "ImmuneNegative"
+      ]
+     },
+     {
+      "trigger": "Generation",
+      "type": "SetSimpleState",
+      "states": [
+       83,
+       84,
+       85,
+       86,
+       114,
+       115
+      ]
+     }
+    ],
+    "source": "FUStBuffDesc 218"
+   },
+   "1064": {
+    "id": 1064,
+    "name": "高效定身",
+    "duration": 3.0,
+    "interval": null,
+    "condition": null,
+    "effects": [
+     {
+      "trigger": "Generation",
+      "type": "AddAttr",
+      "attr": "DingshenDefAdditionBase",
+      "value": 2
+     }
+    ],
+    "source": "FUStBuffDesc 1064"
+   }
+  },
+  "victim": {
+   "unit": 2022,
+   "dingShenDef": 50,
+   "cantBeHitInDingShen": false,
+   "immobilityHpRatio": 0.06,
+   "immobilizeHp": 388.8,
+   "beImmobilized": {
+    "index": 7,
+    "asset": "BIC_general_boss_large",
+    "defaultFactorForBeAttacked": 1.0,
+    "factorForBeAttacked": {
+     "1": 1.2,
+     "4": 1.5
+    },
+    "specialFactorForBeAttacked": {
+     "1": 1.5,
+     "4": 1.875
+    },
+    "factorForBreakPart2Weak": 1.25,
+    "source": "GlobalBeImmobilizedConfig.BeImmobilizedConfigs[FUStUnitBattleInfoExtendDesc.BeImmoblizedConfigIndex]"
+   },
+   "source": "FUStUnitCommDesc 2022 DingShenDef, FUStUnitBattleInfoExtendDesc 202201 ImmobilityHPRadio/BeImmoblizedConfigIndex; tiger buffs 204 (DingshenDefAddition -25, DisableImmobilizedBreakAnim), 205/218 (ImmueImmobilizing) are read from tiger.json buffs at runtime"
+  },
+  "rules": {
+   "duration": "DurationMs/1000 * (DingShenDef * factor * (1 - RepeatedDef * repeatCount) + DingshenDefAddition) / 100, at least MinimalDurationMs; factor = BeImmobilizedConfig factorForBeAttacked[stiff level] while the victim plays a hit reaction (Beatback), else 1 (BUS_BeImmobilizedComp.OnTriggerImmobilize)",
+   "frozen": "montage paused (snapshot pose), movement deactivated, BT/FSM/perception/hatred paused, sweep checks and attack warnings paused; CBG keeps polling (rules test simpleState Immobilizing)",
+   "hit": "every hit: CurrentImmobilizeHP -= damage + ImmobilizeHit (0 for these skills); <= 0 -> ImmobilizedBreak: relieve, BreakEffects, break montage = normal stiff reaction of the hit's stiff level (lowest listed level when none) unless DisableImmobilizedBreakAnim (BUS_BeAttackedComp)",
+   "almostEnd": "remaining <= AlmostEndAheadMs -> AlmostEnd FX (DBC_Dingshen_AlmostEnd = NG_WuKong_DingShen_Hint); duration <= AlmostEndAhead -> QuickEnd FX instead of the loop",
+   "end": "timer -> relieve: montage resumes, EndFX (DBC_Dingshen_End = NG_WuKong_DingShen_End), EndEffects",
+   "immune": "victim with simple state ImmueImmobilizing -> FailedFX, no freeze (cast still spends MP/cooldown)",
+   "superArmorBreak": "SolveBreakSuperSkillArmorLogic relieves Immobilizing (not used: the tiger has no breakable armor bar)"
+  },
+  "fx": {
+   "dbc": {
+    "DBC_Dingshen_Loop": [
+     "NG_WuKong_DingShen_Hit",
+     "NG_WuKong_DingShen_Hit_Loop",
+     "material context curves",
+     "EVT_player_wk_fashu_dss_hit"
+    ],
+    "DBC_Dingshen_AlmostEnd": [
+     "NG_WuKong_DingShen_Hint",
+     "EVT_player_wk_fashu_dss_hit_rise"
+    ],
+    "DBC_Dingshen_End": [
+     "NG_WuKong_DingShen_End",
+     "EVT_player_wk_fashu_dss_break"
+    ],
+    "DBC_Dingshen_QuickEnd": [
+     "NG_WuKong_DingShen_Hint",
+     "EVT_player_wk_fashu_dss_hit"
+    ]
+   },
+   "curves": {
+    "C_Wukong_DingShen_Context_Brightness": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      0.3,
+      600.0
+     ]
+    ],
+    "C_Wukong_DingShen_Glow": [
+     [
+      0.0,
+      10.0
+     ],
+     [
+      0.4,
+      0.2
+     ]
+    ],
+    "C_Wukong_DingShen_Context_TexBrightness": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      0.3,
+      2.0
+     ]
+    ]
+   }
+  }
+ },
+ "cloud": {
+  "spell": 5201,
+  "name": "聚形散气",
+  "type": "ShenFa",
+  "nameEnum": "PhantomRush",
+  "skill": 10095,
+  "enter": {
+   "id": 10095,
+   "clip": "AM_Wukong_JXSQ_Enter_B",
+   "type": "RollSkill",
+   "mpRequired": 30,
+   "cooldown": 35,
+   "cooldownType": "TryToCast",
+   "cooldownSkills": [],
+   "rotate": "Roll",
+   "source": "FUStSkillSDesc 10095"
+  },
+  "enterClips": {
+   "F": "AM_Wukong_JXSQ_Enter_F",
+   "R": "AM_Wukong_JXSQ_Enter_R",
+   "B": "AM_Wukong_JXSQ_Enter_B",
+   "L": "AM_Wukong_JXSQ_Enter_L"
+  },
+  "enterRule": "FUStSkillSMappingDesc 10095 SkillDirection: index = dir-1 (F,R,B,L), no direction -> index 2 (B)",
+  "mpCostEffect": {
+   "type": "CostAttr",
+   "int": [
+    2
+   ],
+   "float": [
+    30,
+    0
+   ],
+   "str": [],
+   "attr": "Mp",
+   "value": 30,
+   "source": "FUStSkillEffectDesc 1009501"
+  },
+  "config": {
+   "id": 10001,
+   "duration": 10,
+   "summon": 1001301,
+   "beginBuffs": [
+    118,
+    119,
+    122,
+    1056,
+    1059,
+    2093
+   ],
+   "endEffects": [
+    1009602,
+    1009606
+   ],
+   "noMagicProtect": 1.0,
+   "exitOnSkills": [
+    10096,
+    10097,
+    10098,
+    10100,
+    10120,
+    10505,
+    10507,
+    10509,
+    10601,
+    10605,
+    10606,
+    10607,
+    10608,
+    10609,
+    10610,
+    10611,
+    10612,
+    10613,
+    10614,
+    10829,
+    10830,
+    10831,
+    10832,
+    10833,
+    10834,
+    10842,
+    10843,
+    10860,
+    10861,
+    10862,
+    10863,
+    10864,
+    10881,
+    10882,
+    10883,
+    10884,
+    10885,
+    10886,
+    10887,
+    10888,
+    10889,
+    10890,
+    10903,
+    10905,
+    10906,
+    10907,
+    10908,
+    10909,
+    10910,
+    10911,
+    10912,
+    10914,
+    10915,
+    10916,
+    10917,
+    10918,
+    10919,
+    10920,
+    10921,
+    10922,
+    10923,
+    10925,
+    10926,
+    10927,
+    10928,
+    10930,
+    10931,
+    10932,
+    10933,
+    10954,
+    11220,
+    11320,
+    50010,
+    50011,
+    50020,
+    50021,
+    50022,
+    50024,
+    50030,
+    50031,
+    50032,
+    50038,
+    50101
+   ],
+   "source": "FUStPhantomRushSkillConfigDesc 10001 (BUS_PhantomRushComp.PhantomRushDefaultConfigID); DA_PhantomRushRelatedSkillConfig.PhantomRushAtkSkill"
+  },
+  "rules": {
+   "enter": "pose snapshot at the cast point -> summon 1001301 (decoy keeps that pose: BUS_SummonBehaviorComp OnToggleSnapshotPose, no BT, MovementMode none); simple state PhantomRush; begin buffs added; timer = Duration",
+   "exit": "timer <= 0, or Mp <= 0 for noMagicProtect s, or a PhantomRushAtkSkill cast succeeds (破隐一击 10096), or death; begin buffs removed, end effects (destroy decoy unless talent 900921, buff 2096), PawnMakeNoise",
+   "ai": "FPhantomRushServantInstance: master becomes Imperceptible, enemies NotifySwitchTarget(master -> decoy, TriggerTaunt, SwitchTarget_PhantomRush) + copy hatred; the tiger has CanFindInvisibleUnit = Yes (FUStUnitBattleInfoExtendDesc 202201) [INFERENCE: taunt holds while the decoy lives]"
+  },
+  "buffs": {
+   "118": {
+    "id": 118,
+    "name": "聚形散气逻辑BUFF-A: 免疫受击，免疫定身，免疫负面效果+关闭碰撞+免疫铁球、减伤",
+    "duration": null,
+    "interval": null,
+    "condition": null,
+    "effects": [
+     {
+      "trigger": "Generation",
+      "type": "SetSimpleState",
+      "states": [
+       "ImmuneNegative",
+       "ImmueStiff",
+       "ImmueImmobilizing",
+       "ImmueAnimationSyncing",
+       "ImmueAttackPerformEffect",
+       "ImmueBeAttackedPerformEffect"
+      ]
+     },
+     {
+      "trigger": "Generation",
+      "type": "SwitchCollisionProfile",
+      "params": [
+       1
+      ],
+      "floats": [],
+      "strings": [
+       "WindWalk_Pawn"
+      ]
+     },
+     {
+      "trigger": "Generation",
+      "type": "AddAttr",
+      "attr": "DmgDefBase",
+      "value": 2000
+     },
+     {
+      "trigger": "Generation",
+      "type": "SetBgmSwitchPaused",
+      "params": [],
+      "floats": [
+       0
+      ],
+      "strings": []
+     },
+     {
+      "trigger": "Generation",
+      "type": "SwitchCollisionHitMove",
+      "params": [
+       0
+      ],
+      "floats": [],
+      "strings": []
+     },
+     {
+      "trigger": "Generation",
+      "type": "ImmuneHardMove",
+      "params": [
+       0
+      ],
+      "floats": [],
+      "strings": []
+     }
+    ],
+    "source": "FUStBuffDesc 118"
+   },
+   "119": {
+    "id": 119,
+    "name": "聚形散气表现Buff",
+    "duration": null,
+    "interval": null,
+    "condition": null,
+    "effects": [
+     {
+      "trigger": "Generation",
+      "type": "SwitchStateLib",
+      "params": [
+       16
+      ],
+      "floats": [
+       0
+      ],
+      "strings": [
+       "/Game/00MainHZ/Characters/Wukong/SL_jxsq_wukong.SL_jxsq_wukong"
+      ]
+     },
+     {
+      "trigger": "Generation",
+      "type": "SetSimpleState",
+      "states": [
+       "ImmueAttackPerformEffect"
+      ]
+     }
+    ],
+    "source": "FUStBuffDesc 119"
+   },
+   "120": {
+    "id": 120,
+    "name": "聚形散气分身逻辑Buff",
+    "duration": null,
+    "interval": null,
+    "condition": null,
+    "effects": [
+     {
+      "trigger": "Generation",
+      "type": "SetSimpleState",
+      "states": [
+       "ImmueAttackPerformEffect"
+      ]
+     },
+     {
+      "trigger": "Generation",
+      "type": "SetSimpleState",
+      "states": [
+       "ImmueStiff",
+       "ImmueImmobilizing",
+       "ImmuneNegative"
+      ]
+     }
+    ],
+    "source": "FUStBuffDesc 120"
+   },
+   "122": {
+    "id": 122,
+    "name": "聚形散气-持续扣蓝Buff",
+    "duration": null,
+    "interval": 1.0,
+    "condition": null,
+    "effects": [
+     {
+      "trigger": "Time",
+      "type": "RecoverAttr",
+      "attr": "Mp",
+      "value": -3
+     },
+     {
+      "trigger": "Generation",
+      "type": "RelieveImmobilized",
+      "params": [],
+      "floats": [],
+      "strings": []
+     }
+    ],
+    "source": "FUStBuffDesc 122"
+   },
+   "1059": {
+    "id": 1059,
+    "name": "聚形散气加移动速度",
+    "duration": null,
+    "interval": null,
+    "condition": {
+     "ConditionType": "HasTalent",
+     "ConditionParams": "101001"
+    },
+    "effects": [
+     {
+      "trigger": "Generation",
+      "type": "ChangeMoveSpeed",
+      "rates": [
+       1000,
+       1500,
+       1500
+      ]
+     }
+    ],
+    "source": "FUStBuffDesc 1059"
+   },
+   "2095": {
+    "id": 2095,
+    "name": "破隐一击加伤触发-AM",
+    "duration": null,
+    "interval": null,
+    "condition": {
+     "ConditionType": "HasBuff",
+     "ConditionParams": "2096"
+    },
+    "effects": [
+     {
+      "trigger": "Generation",
+      "type": "AddBuff",
+      "params": [
+       2098,
+       2100,
+       2101,
+       1053
+      ],
+      "floats": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "strings": []
+     },
+     {
+      "trigger": "Generation",
+      "type": "AddAttr",
+      "attr": "attr111",
+      "value": 0
+     },
+     {
+      "trigger": "Remove",
+      "type": "RemoveBuff",
+      "params": [
+       2098,
+       2100,
+       2101,
+       1053
+      ],
+      "floats": [
+       -1,
+       -1,
+       -1,
+       -1
+      ],
+      "strings": []
+     }
+    ],
+    "source": "FUStBuffDesc 2095"
+   },
+   "2096": {
+    "id": 2096,
+    "name": "退出化气通用Buff",
+    "duration": 0.1,
+    "interval": null,
+    "condition": null,
+    "effects": [],
+    "source": "FUStBuffDesc 2096"
+   }
+  },
+  "talents": {
+   "100901": {
+    "name": "脆断",
+    "level": 1,
+    "text": "每级少许增加打中被定身的对手时，造成的伤害"
+   },
+   "100902": {
+    "name": "瞬机",
+    "level": 1,
+    "text": "在对手出招的瞬息，将其定住！可延长定身时间，且大大增加对手受到的伤害"
+   },
+   "101001": {
+    "name": "纵横",
+    "level": 1,
+    "text": "化气时，少许增加移动速度"
+   }
+  },
+  "decoy": {
+   "summon": 1001301,
+   "resId": 10013,
+   "aliveTime": 10,
+   "buffs": [
+    120,
+    1054
+   ],
+   "hpRatio": 1.5,
+   "atkRatio": 0.3,
+   "deathMontage": "AM_PhantomRushSummon_Disappear (FUStUnitDeadOldDesc 1001301; not exported)",
+   "source": "FUStSummonCommDesc 1001301, FUStAttrCopyConfigDesc 1001301"
+  },
+  "strike": {
+   "id": 10096,
+   "clip": "AM_Wukong_JXSQ_Atk_01",
+   "type": "HurtSkill",
+   "mpRequired": 0,
+   "cooldown": 0,
+   "cooldownType": "TryToCast",
+   "cooldownSkills": [],
+   "rotate": "MeleeRotate",
+   "source": "FUStSkillSDesc 10096",
+   "damage": {
+    "1009601": {
+     "type": "damage",
+     "damageMult": 3.0,
+     "flatDamage": 0,
+     "hitWeight": 2,
+     "armorBreak": 100,
+     "armorBreakLevel": "【主角】蓄力2",
+     "damageType": 1,
+     "elementLevel": 0,
+     "element": 0,
+     "blockArmorHit": 0,
+     "damageImmuneLevel": 0,
+     "hitStop": {
+      "freeze": 0,
+      "slow": 0,
+      "slowRate": 0
+     },
+     "source": "FUStSkillEffectDesc 1009601: Float[2]/10000 x Atk, Int[1]=22 -> AttackStiff HitWeight 2, Str[0]='【主角】蓄力2'",
+     "condition": null
+    }
+   },
+   "onHit": {
+    "1009603": {
+     "type": "TimeScale",
+     "int": [],
+     "float": [],
+     "str": [
+      "/Game/00MainHZ/Characters/Wukong/TC_Wukong_JXSQ_Atk_01.TC_Wukong_JXSQ_Atk_01"
+     ],
+     "source": "FUStSkillEffectDesc 1009603"
+    },
+    "1009604": {
+     "type": "PlayCameraShake",
+     "int": [],
+     "float": [],
+     "str": [
+      "/Game/00MainHZ/Characters/Wukong/CS_wukong_jxsq_hit_01.CS_wukong_jxsq_hit_01"
+     ],
+     "source": "FUStSkillEffectDesc 1009604"
+    },
+    "1009691": {
+     "type": "CostAttr",
+     "int": [
+      8
+     ],
+     "float": [
+      -3,
+      0
+     ],
+     "str": [],
+     "attr": "FabaoEnergy",
+     "value": -3,
+     "source": "FUStSkillEffectDesc 1009691"
+    },
+    "1009692": {
+     "type": "CostAttr",
+     "int": [
+      9
+     ],
+     "float": [
+      -3,
+      0
+     ],
+     "str": [],
+     "attr": "VigorEnergy",
+     "value": -3,
+     "source": "FUStSkillEffectDesc 1009692"
+    }
+   },
+   "input": "light attack while 化气 (spell text: 化作白烟，隐身遁走，寻找机会破隐一击; heavy only with a talent '化气时，可使用重棍蓄力来代替轻棍造成破隐一击', not in the preset) [INFERENCE: light-attack binding]",
+   "timeScale": {
+    "scale": 0.2,
+    "total": 0.1,
+    "blendIn": 0.06,
+    "blendOut": 0.2,
+    "source": "TC_Wukong_JXSQ_Atk_01 (effect 1009603)"
+   }
+  },
+  "fx": {
+   "player": "buff 119 -> DBC_JXSQ_1: fresnel/opacity material layer (MLB_BaseColor_Add_jxsq, ML_TPCaustics+fresnel) + NG_WuKong_JXSQ_Smoke + EVT_player_wk_fashu_jxsq_loop",
+   "decoy": "buff 120 -> DBC_JXSQ_Ghost: opacity curve + NG_WuKong_JXSQ_Ghost_Smoke",
+   "curves": {
+    "C_JXSQ_Opacity_Input": [
+     [
+      0.0,
+      0.9
+     ],
+     [
+      0.1,
+      0.55
+     ],
+     [
+      0.6,
+      0.3
+     ]
+    ],
+    "C_JXSQ_Ghost_Opacity_Input": [
+     [
+      0.0,
+      0.9
+     ],
+     [
+      0.5,
+      0.7
+     ]
+    ],
+    "C_JXSQ_Fresnel_Input": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      0.5,
+      2.0
+     ],
+     [
+      0.8,
+      5.0
+     ]
+    ]
+   }
+  }
+ },
+ "textures": {
+  "spells_ding": {
+   "file": "spells_ding.webp",
+   "source": "b1/Content/00Main/VFX/Characters/sunwukong/Textures/T_Wukong_Ding",
+   "material": "M_SWK_Ding_Inst Base (NG_WuKong_DingShen_Hit_Loop / _Hint / _End: the 定 glyph)",
+   "size": 256,
+   "bytes": 12460
+  },
+  "spells_flare20": {
+   "file": "spells_flare20.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Glow/T_Flare20",
+   "material": "M_DSS_Glow_Inst Tex (NG_WuKong_DingShen_Loop)",
+   "size": 256,
+   "bytes": 17334
+  },
+  "spells_atypical027": {
+   "file": "spells_atypical027.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Glow/T_atypical_027",
+   "material": "M_kuosan_01_Inst3 Tex (shockwave: NG_WuKong_DingShen_BaoFa / _Hit, NG_JXSQ_Hit_LV1)",
+   "size": 256,
+   "bytes": 15256
+  },
+  "spells_flare04": {
+   "file": "spells_flare04.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Flares/T_Flare_04",
+   "material": "M_CleanseFlare_Inst (NG_WuKong_JXSQ_Smoke)",
+   "size": 256,
+   "bytes": 10728
+  },
+  "spells_smoke8x8": {
+   "file": "spells_smoke8x8.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Smoke/T_SmokeMedium_Var03_D__8x8",
+   "material": "M_BaseColor_Smoke_01_DOF_Inst5 BaseTex (NG_WuKong_DingShen_Hint / _Hit_Loop smoke)",
+   "size": 512,
+   "bytes": 150416,
+   "flipbook": [
+    8,
+    8
+   ]
+  },
+  "spells_fire8x8": {
+   "file": "spells_fire8x8.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Fire/T_Fire_8x8_005",
+   "material": "M_SubUV_Fire_01_Inst2 BaseTex_SubUV (NG_WuKong_JXSQ_OP / _Smoke / _Ghost_Smoke / _End white smoke)",
+   "size": 512,
+   "bytes": 131860,
+   "flipbook": [
+    8,
+    8
+   ]
+  }
+ }
+}

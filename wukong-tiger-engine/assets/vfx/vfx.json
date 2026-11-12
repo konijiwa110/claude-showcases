@@ -1,0 +1,7490 @@
+{
+ "schema": {
+  "textures": "{name: {file (WebP <=512 px), source (game texture path), material (instance + parameter it came from), flipbook [cols,rows]?}}",
+  "systems": "{eventName: {kind ribbon|spray|burst|fx|bullet|alias, ...}}. kind fx = emitter list: {emitter (Niagara emitter it reproduces), layer, count (burst, data), rate (/s, data), delay, dur, life [a,b] s, size [s0,s1] m (with sizeCurve: s0+(s1-s0)*curve), speed [a,b] m/s, dir sphere|up|cone|radial|out|fwd|down|none, cone deg, shape point|sphere|disc|ring|body, radius m, height m, color linear RGB, alpha, gravity, drag, frames, frameRand, rotSpeed, stretch, alphaCurve/sizeCurve/colorCurve (curves{} names)}; system flags: timed (runs while the BANS_ notify window is active), ground (project to the floor), attach (follow the socket), scale; `tuned` lists the hand-tuned fields; ribbon systems may list `ribbons` (GunYing + distortion sub-ribbons)",
+  "cameraShake": "trauma per shake class",
+  "rawDumps": "out/vfx/ng (systems), out/vfx/mat (materials), out/vfx/tex (PNG exports), out/vfx/bp (data assets/curves), out/vfx/niagara_summary.{json,txt} (decoded)",
+  "layers": "{name: SpriteLayer options {texture, blend normal|additive, ground, max, gain, bright, soft, distort (screen refraction UV offset)}}",
+  "curves": "{name: {lut (normalized age 0..1, stride floats per sample), stride, src}} resampled from the Niagara curve data interfaces (ShaderLUT)",
+  "ghost": "afterimage settings per BAN_GSGhost data asset",
+  "post": "screen pass settings per BAN_GSSpawnStaticMeshActor data asset (blur/glitch curves [[t, v]])"
+ },
+ "textures": {
+  "T_Streak_Soft_Trail_03": {
+   "file": "T_Streak_Soft_Trail_03.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Trails/T_Streak_Soft_Trail_03",
+   "material": "M_WuKong_Trail_Inst1 WipeTex"
+  },
+  "T_swk_gunying": {
+   "file": "T_swk_gunying.webp",
+   "source": "b1/Content/00Main/VFX/Characters/sunwukong/Textures/T_swk_gunying",
+   "material": "M_swk_gunying_Inst Tex"
+  },
+  "T_Streak_Soft_Trail_04": {
+   "file": "T_Streak_Soft_Trail_04.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Trails/T_Streak_Soft_Trail_04",
+   "material": "M_HFM_HuStone_01_Trail02_Inst1 Base"
+  },
+  "T_Fire_SmokeWisps_Tile_Dup": {
+   "file": "T_Fire_SmokeWisps_Tile_Dup.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Tile/T_Fire_SmokeWisps_Tile_Dup",
+   "material": "M_Tornado_big_2_Inst6 EmissiveTex (grayscale -> alpha)"
+  },
+  "T_liquid_8x8_006": {
+   "file": "T_liquid_8x8_006.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Liquid/T_liquid_8x8_006",
+   "material": "M_SubUV_Liquid_01_Inst2 BaseTex_SubUV",
+   "flipbook": [
+    8,
+    8
+   ]
+  },
+  "T_Smoke_Wisp": {
+   "file": "T_Smoke_Wisp.webp",
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Materials/Linshi/T_Smoke_Wisp",
+   "material": "M_HFM_HuStone_Smoke_Inst BaseTex (alpha channel; renderer SubImageSize 8x8)",
+   "flipbook": [
+    8,
+    8
+   ]
+  },
+  "T_Ring_001": {
+   "file": "T_Ring_001.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Ring/T_Ring_001",
+   "material": "M_kuosan_01_Inst Tex"
+  },
+  "T_Water_01": {
+   "file": "T_Water_01.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Environment/Water/T_Water_01",
+   "material": "M_Water_03_Inst_01 Base"
+  },
+  "T_Concrete_ChunkSubUV_D": {
+   "file": "T_Concrete_ChunkSubUV_D.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Debris/T_Concrete_ChunkSubUV_D",
+   "material": "M_stone_HeiFeng_01_Inst Base (renderer SubImageSize 4x4)",
+   "flipbook": [
+    4,
+    4
+   ]
+  },
+  "T_WaterSpark001": {
+   "file": "T_WaterSpark001.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Liquid/T_WaterSpark001",
+   "material": "M_Water_01 (base material texture sample)"
+  },
+  "T_Dian_01": {
+   "file": "T_Dian_01.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Glow/T_Dian_01",
+   "material": "M_Glow Texture (M_Glow_Inst2 / _Inst11)"
+  },
+  "Glow_337": {
+   "file": "Glow_337.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Glow/Glow_337",
+   "material": "M_Glow base texture"
+  },
+  "Glow_028": {
+   "file": "Glow_028.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Glow/Glow_028",
+   "material": "M_kuosan_01_Inst4 Tex"
+  },
+  "T_atypical_027": {
+   "file": "T_atypical_027.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Glow/T_atypical_027",
+   "material": "M_kuosan_01_Inst3 Tex (heal glow)"
+  },
+  "T_SmokeMedium_Var06_D__8x8": {
+   "file": "T_SmokeMedium_Var06_D__8x8.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Smoke/T_SmokeMedium_Var06_D__8x8",
+   "material": "M_BaseColor_Smoke_01_DOF_Inst BaseTex",
+   "flipbook": [
+    8,
+    8
+   ]
+  },
+  "T_ImpactDust_01": {
+   "file": "T_ImpactDust_01.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Smoke/T_ImpactDust_01",
+   "material": "M_Howitzer_Smoke_Cheaper_DOF_INST6 / M_Howitzer_Lunge_Smoke_INST HeightMaskParticle_SubUV_1",
+   "flipbook": [
+    8,
+    8
+   ]
+  },
+  "T_Plasma_Wisps": {
+   "file": "T_Plasma_Wisps.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Energy/Plasma/T_Plasma_Wisps",
+   "material": "M_Wispy_Pulse_Dense base texture (RGB -> grey, alpha kept)",
+   "flipbook": [
+    8,
+    8
+   ]
+  },
+  "T_swk_mao0001": {
+   "file": "T_swk_mao0001.webp",
+   "source": "b1/Content/00Main/VFX/Characters/sunwukong/Textures/T_swk_mao0001",
+   "material": "M_swk_mao01 (monkey hairs, renderer SubImageSize 8x8)",
+   "flipbook": [
+    8,
+    8
+   ]
+  },
+  "T_Ring_005": {
+   "file": "T_Ring_005.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Ring/T_Ring_005",
+   "material": "M_HFM_HuStone_Smoke2_Inst WipeTex/FlowTex"
+  },
+  "T_SoftDust_Mask_01": {
+   "file": "T_SoftDust_Mask_01.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Masks/T_SoftDust_Mask_01",
+   "material": "M_HFM_HuStone_Smoke_Inst WipeTex"
+  },
+  "T_Trail046_2_A": {
+   "file": "T_Trail046_2_A.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Trails/T_Trail046_2_A",
+   "material": "M_HFM_HuStone_DG03_Inst / DG01_AN WipeTex"
+  },
+  "T_Streak_Soft_Trail_01": {
+   "file": "T_Streak_Soft_Trail_01.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Trails/T_Streak_Soft_Trail_01",
+   "material": "M_PSD_hustone_pulse_01 / M_HFM_ShuNuShou_DG02 WipeTex/Base"
+  },
+  "T_SmokeTrailCoord1_Mask": {
+   "file": "T_SmokeTrailCoord1_Mask.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Masks/T_SmokeTrailCoord1_Mask",
+   "material": "M_WuKong_HeatDistort_Inst Mask"
+  },
+  "T_daoguang03_NRM": {
+   "file": "T_daoguang03_NRM.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Trails/T_daoguang03_NRM",
+   "material": "M_WuKong_HeatDistort_Inst Normal Tex",
+   "linear": true
+  },
+  "T_Tile_A_009": {
+   "file": "T_Tile_A_009.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Tile/Tile_A/T_Tile_A_009",
+   "material": "M_WuKong_Trail_Inst1/2 Normal Tex (M_pulse_01 refraction)",
+   "linear": true
+  },
+  "T_Radial_Refraction_Blur_N": {
+   "file": "T_Radial_Refraction_Blur_N.webp",
+   "source": "b1/Content/00MainHZ/VFXRes/Textures/Masks/T_Radial_Refraction_Blur_N",
+   "material": "M_Radial_Blur_Refraction normal",
+   "linear": true
+  }
+ },
+ "systems": {
+  "NG_WuKong_WeaponTrail": {
+   "kind": "ribbon",
+   "mode": "ghost",
+   "texture": "T_swk_gunying",
+   "blend": "normal",
+   "tint": [
+    0.7135,
+    0.7135,
+    0.7135
+   ],
+   "gain": 2.2,
+   "tileU": 2,
+   "mask": 2,
+   "life": 0.36,
+   "alphaCurve": {
+    "maxTime": 0.7,
+    "lut": [
+     1,
+     0.9498,
+     0.9007,
+     0.8527,
+     0.8059,
+     0.7602,
+     0.7158,
+     0.6725,
+     0.6304,
+     0.5896,
+     0.5499,
+     0.5116,
+     0.4745,
+     0.4387,
+     0.4041,
+     0.3709,
+     0.339,
+     0.3085,
+     0.2792,
+     0.2514,
+     0.2249,
+     0.1999,
+     0.1762,
+     0.154,
+     0.1332,
+     0.1138,
+     0.0959,
+     0.0795,
+     0.0646,
+     0.0512,
+     0.0393,
+     0.029,
+     0.0202,
+     0.013,
+     0.0073,
+     0.0033,
+     0.0008,
+     0
+    ]
+   },
+   "sockets": "notify OverrideSKMSockets: ribbon spans the first..last listed socket (FX_Weapon_Trail_01 = staff tip)",
+   "source": "b1/Content/00Main/VFX/Characters/sunwukong/Niagara/NG_WuKong_WeaponTrail",
+   "inferred": "tint 0.7135 grey and life 0.36 s are spawn-script literals (the yellow variant replaces 0.7135 with the colour 3.0/2.4087/1.3113); gain 2.2 stands in for the lit translucent shading",
+   "ribbons": [
+    {
+     "emitter": "GunYing",
+     "mode": "ghost",
+     "texture": "T_swk_gunying",
+     "blend": "normal",
+     "tint": [
+      0.7135,
+      0.7135,
+      0.7135
+     ],
+     "gain": 2.2,
+     "tileU": 2,
+     "mask": 2,
+     "life": 0.36,
+     "alphaCurve": {
+      "maxTime": 0.7,
+      "lut": [
+       1,
+       0.9498,
+       0.9007,
+       0.8527,
+       0.8059,
+       0.7602,
+       0.7158,
+       0.6725,
+       0.6304,
+       0.5896,
+       0.5499,
+       0.5116,
+       0.4745,
+       0.4387,
+       0.4041,
+       0.3709,
+       0.339,
+       0.3085,
+       0.2792,
+       0.2514,
+       0.2249,
+       0.1999,
+       0.1762,
+       0.154,
+       0.1332,
+       0.1138,
+       0.0959,
+       0.0795,
+       0.0646,
+       0.0512,
+       0.0393,
+       0.029,
+       0.0202,
+       0.013,
+       0.0073,
+       0.0033,
+       0.0008,
+       0
+      ]
+     }
+    },
+    {
+     "emitter": "liang",
+     "mode": "distort",
+     "texture": "T_Tile_A_009",
+     "maskTexture": "T_Streak_Soft_Trail_03",
+     "tint": [
+      0.776,
+      0.6372,
+      0.5083
+     ],
+     "gain": 0.12,
+     "tileU": 1.5,
+     "life": 0.3,
+     "distort": 0.012,
+     "alphaCurve": {
+      "maxTime": 1.0,
+      "lut": [
+       1.0,
+       0.8882,
+       0.7843,
+       0.6891,
+       0.6016,
+       0.5217,
+       0.4492,
+       0.3833,
+       0.3245,
+       0.2714,
+       0.2248,
+       0.1834,
+       0.1473,
+       0.1162,
+       0.0895,
+       0.0672,
+       0.0485,
+       0.0338,
+       0.022,
+       0.0133,
+       0.007,
+       0.0029,
+       0.0007,
+       0.0
+      ]
+     }
+    },
+    {
+     "emitter": "liang001",
+     "mode": "distort",
+     "texture": "T_Tile_A_009",
+     "maskTexture": "T_Streak_Soft_Trail_03",
+     "tint": [
+      0.7917,
+      0.6658,
+      0.4897
+     ],
+     "gain": 0.12,
+     "tileU": 1.5,
+     "life": 0.35,
+     "distort": 0.008,
+     "alphaCurve": {
+      "maxTime": 1.0,
+      "lut": [
+       1.0,
+       0.8882,
+       0.7843,
+       0.6891,
+       0.6016,
+       0.5217,
+       0.4492,
+       0.3833,
+       0.3245,
+       0.2714,
+       0.2248,
+       0.1834,
+       0.1473,
+       0.1162,
+       0.0895,
+       0.0672,
+       0.0485,
+       0.0338,
+       0.022,
+       0.0133,
+       0.007,
+       0.0029,
+       0.0007,
+       0.0
+      ]
+     }
+    },
+    {
+     "emitter": "niuqi",
+     "mode": "distort",
+     "texture": "T_daoguang03_NRM",
+     "maskTexture": "T_SmokeTrailCoord1_Mask",
+     "tint": [
+      0,
+      0,
+      0
+     ],
+     "gain": 0,
+     "tileU": 1.5,
+     "life": 0.4,
+     "distort": 0.02,
+     "alphaCurve": {
+      "maxTime": 1.0,
+      "lut": [
+       1.0,
+       0.9123,
+       0.8284,
+       0.7491,
+       0.6738,
+       0.603,
+       0.536,
+       0.4733,
+       0.4146,
+       0.3601,
+       0.3095,
+       0.2628,
+       0.2201,
+       0.1814,
+       0.1465,
+       0.1153,
+       0.0881,
+       0.0644,
+       0.0448,
+       0.0285,
+       0.0161,
+       0.0071,
+       0.0019,
+       0.0
+      ]
+     }
+    }
+   ],
+   "distortion": "liang/liang001 (M_WuKong_Trail_Inst1/2, M_pulse_01: refraction via Normal Tex T_Tile_A_009, WipeTex T_Streak_Soft_Trail_03, colour separation) and niuqi (M_WuKong_HeatDistort_Inst: Normal T_daoguang03_NRM, Mask T_SmokeTrailCoord1_Mask) as screen-refraction ribbons; lifetimes/colours = spawn-script literals of NG_WuKong_WeaponTrail, alpha = their curve LUTs; refraction strength (UV offset) hand-tuned",
+   "emittersNote": "GunYing_2 ribbon: M_swk_gunying_Inst (parent M_Sword_Fen_Master, BLEND_Translucent, two-sided): Tex T_swk_gunying, U 2, V 1, zhezhaoqiangdu 2 (mask), toumingdu 1, EmissiveColor 0.2; alpha = Scale Alpha curve (NiagaraDataInterfaceCurve LUT above, over normalized age). liang_1/liang001_1 (M_WuKong_Trail_Inst1/2, parent M_pulse_01: refraction + colour separation) and niuqi_0 (M_WuKong_HeatDistort_Inst) are screen-distortion ribbons: not reproduced."
+  },
+  "NG_WuKong_WeaponTrail_yellow": {
+   "kind": "ribbon",
+   "mode": "ghost",
+   "texture": "T_swk_gunying",
+   "blend": "normal",
+   "tint": [
+    3.0,
+    2.4087,
+    1.3113
+   ],
+   "gain": 1.6,
+   "tileU": 2,
+   "mask": 2,
+   "life": 0.36,
+   "alphaCurve": {
+    "maxTime": 0.7,
+    "lut": [
+     1,
+     0.9498,
+     0.9007,
+     0.8527,
+     0.8059,
+     0.7602,
+     0.7158,
+     0.6725,
+     0.6304,
+     0.5896,
+     0.5499,
+     0.5116,
+     0.4745,
+     0.4387,
+     0.4041,
+     0.3709,
+     0.339,
+     0.3085,
+     0.2792,
+     0.2514,
+     0.2249,
+     0.1999,
+     0.1762,
+     0.154,
+     0.1332,
+     0.1138,
+     0.0959,
+     0.0795,
+     0.0646,
+     0.0512,
+     0.0393,
+     0.029,
+     0.0202,
+     0.013,
+     0.0073,
+     0.0033,
+     0.0008,
+     0
+    ]
+   },
+   "source": "b1/Content/00Main/VFX/Characters/sunwukong/Niagara/NG_WuKong_WeaponTrail_yellow",
+   "note": "same four emitters/materials as NG_WuKong_WeaponTrail; GunYing colour literal 3.0/2.4087/1.3113 (HDR gold)",
+   "ribbons": [
+    {
+     "emitter": "GunYing",
+     "mode": "ghost",
+     "texture": "T_swk_gunying",
+     "blend": "normal",
+     "tint": [
+      3.0,
+      2.4087,
+      1.3113
+     ],
+     "gain": 1.6,
+     "tileU": 2,
+     "mask": 2,
+     "life": 0.36,
+     "alphaCurve": {
+      "maxTime": 0.7,
+      "lut": [
+       1,
+       0.9498,
+       0.9007,
+       0.8527,
+       0.8059,
+       0.7602,
+       0.7158,
+       0.6725,
+       0.6304,
+       0.5896,
+       0.5499,
+       0.5116,
+       0.4745,
+       0.4387,
+       0.4041,
+       0.3709,
+       0.339,
+       0.3085,
+       0.2792,
+       0.2514,
+       0.2249,
+       0.1999,
+       0.1762,
+       0.154,
+       0.1332,
+       0.1138,
+       0.0959,
+       0.0795,
+       0.0646,
+       0.0512,
+       0.0393,
+       0.029,
+       0.0202,
+       0.013,
+       0.0073,
+       0.0033,
+       0.0008,
+       0
+      ]
+     }
+    },
+    {
+     "emitter": "liang",
+     "mode": "distort",
+     "texture": "T_Tile_A_009",
+     "maskTexture": "T_Streak_Soft_Trail_03",
+     "tint": [
+      0.776,
+      0.6372,
+      0.5083
+     ],
+     "gain": 0.12,
+     "tileU": 1.5,
+     "life": 0.3,
+     "distort": 0.012,
+     "alphaCurve": {
+      "maxTime": 1.0,
+      "lut": [
+       1.0,
+       0.8882,
+       0.7843,
+       0.6891,
+       0.6016,
+       0.5217,
+       0.4492,
+       0.3833,
+       0.3245,
+       0.2714,
+       0.2248,
+       0.1834,
+       0.1473,
+       0.1162,
+       0.0895,
+       0.0672,
+       0.0485,
+       0.0338,
+       0.022,
+       0.0133,
+       0.007,
+       0.0029,
+       0.0007,
+       0.0
+      ]
+     }
+    },
+    {
+     "emitter": "liang001",
+     "mode": "distort",
+     "texture": "T_Tile_A_009",
+     "maskTexture": "T_Streak_Soft_Trail_03",
+     "tint": [
+      0.7917,
+      0.6658,
+      0.4897
+     ],
+     "gain": 0.12,
+     "tileU": 1.5,
+     "life": 0.35,
+     "distort": 0.008,
+     "alphaCurve": {
+      "maxTime": 1.0,
+      "lut": [
+       1.0,
+       0.8882,
+       0.7843,
+       0.6891,
+       0.6016,
+       0.5217,
+       0.4492,
+       0.3833,
+       0.3245,
+       0.2714,
+       0.2248,
+       0.1834,
+       0.1473,
+       0.1162,
+       0.0895,
+       0.0672,
+       0.0485,
+       0.0338,
+       0.022,
+       0.0133,
+       0.007,
+       0.0029,
+       0.0007,
+       0.0
+      ]
+     }
+    },
+    {
+     "emitter": "niuqi",
+     "mode": "distort",
+     "texture": "T_daoguang03_NRM",
+     "maskTexture": "T_SmokeTrailCoord1_Mask",
+     "tint": [
+      0,
+      0,
+      0
+     ],
+     "gain": 0,
+     "tileU": 1.5,
+     "life": 0.4,
+     "distort": 0.02,
+     "alphaCurve": {
+      "maxTime": 1.0,
+      "lut": [
+       1.0,
+       0.9123,
+       0.8284,
+       0.7491,
+       0.6738,
+       0.603,
+       0.536,
+       0.4733,
+       0.4146,
+       0.3601,
+       0.3095,
+       0.2628,
+       0.2201,
+       0.1814,
+       0.1465,
+       0.1153,
+       0.0881,
+       0.0644,
+       0.0448,
+       0.0285,
+       0.0161,
+       0.0071,
+       0.0019,
+       0.0
+      ]
+     }
+    }
+   ],
+   "distortion": "liang/liang001 (M_WuKong_Trail_Inst1/2, M_pulse_01: refraction via Normal Tex T_Tile_A_009, WipeTex T_Streak_Soft_Trail_03, colour separation) and niuqi (M_WuKong_HeatDistort_Inst: Normal T_daoguang03_NRM, Mask T_SmokeTrailCoord1_Mask) as screen-refraction ribbons; lifetimes/colours = spawn-script literals of NG_WuKong_WeaponTrail_yellow, alpha = their curve LUTs; refraction strength (UV offset) hand-tuned",
+   "emittersNote": "same four emitters/materials as NG_WuKong_WeaponTrail; GunYing colour literal 3.0/2.4087/1.3113 (HDR gold)"
+  },
+  "NG_WuKong_WeaponTrail_red": {
+   "kind": "ribbon",
+   "mode": "ghost",
+   "texture": "T_swk_gunying",
+   "blend": "normal",
+   "tint": [
+    3.0,
+    1.05,
+    0.6
+   ],
+   "gain": 1.6,
+   "tileU": 2,
+   "mask": 2,
+   "life": 0.36,
+   "alphaCurve": {
+    "maxTime": 0.7,
+    "lut": [
+     1,
+     0.9498,
+     0.9007,
+     0.8527,
+     0.8059,
+     0.7602,
+     0.7158,
+     0.6725,
+     0.6304,
+     0.5896,
+     0.5499,
+     0.5116,
+     0.4745,
+     0.4387,
+     0.4041,
+     0.3709,
+     0.339,
+     0.3085,
+     0.2792,
+     0.2514,
+     0.2249,
+     0.1999,
+     0.1762,
+     0.154,
+     0.1332,
+     0.1138,
+     0.0959,
+     0.0795,
+     0.0646,
+     0.0512,
+     0.0393,
+     0.029,
+     0.0202,
+     0.013,
+     0.0073,
+     0.0033,
+     0.0008,
+     0
+    ]
+   },
+   "source": "b1/Content/00Main/VFX/Characters/sunwukong/Niagara/NG_WuKong_WeaponTrail_red",
+   "note": "not dumped; assumed the yellow variant's materials with a red HDR colour [INFERENCE]",
+   "ribbons": [
+    {
+     "emitter": "GunYing",
+     "mode": "ghost",
+     "texture": "T_swk_gunying",
+     "blend": "normal",
+     "tint": [
+      3.0,
+      1.05,
+      0.6
+     ],
+     "gain": 1.6,
+     "tileU": 2,
+     "mask": 2,
+     "life": 0.36,
+     "alphaCurve": {
+      "maxTime": 0.7,
+      "lut": [
+       1,
+       0.9498,
+       0.9007,
+       0.8527,
+       0.8059,
+       0.7602,
+       0.7158,
+       0.6725,
+       0.6304,
+       0.5896,
+       0.5499,
+       0.5116,
+       0.4745,
+       0.4387,
+       0.4041,
+       0.3709,
+       0.339,
+       0.3085,
+       0.2792,
+       0.2514,
+       0.2249,
+       0.1999,
+       0.1762,
+       0.154,
+       0.1332,
+       0.1138,
+       0.0959,
+       0.0795,
+       0.0646,
+       0.0512,
+       0.0393,
+       0.029,
+       0.0202,
+       0.013,
+       0.0073,
+       0.0033,
+       0.0008,
+       0
+      ]
+     }
+    },
+    {
+     "emitter": "liang",
+     "mode": "distort",
+     "texture": "T_Tile_A_009",
+     "maskTexture": "T_Streak_Soft_Trail_03",
+     "tint": [
+      0.776,
+      0.6372,
+      0.5083
+     ],
+     "gain": 0.12,
+     "tileU": 1.5,
+     "life": 0.3,
+     "distort": 0.012,
+     "alphaCurve": {
+      "maxTime": 1.0,
+      "lut": [
+       1.0,
+       0.8882,
+       0.7843,
+       0.6891,
+       0.6016,
+       0.5217,
+       0.4492,
+       0.3833,
+       0.3245,
+       0.2714,
+       0.2248,
+       0.1834,
+       0.1473,
+       0.1162,
+       0.0895,
+       0.0672,
+       0.0485,
+       0.0338,
+       0.022,
+       0.0133,
+       0.007,
+       0.0029,
+       0.0007,
+       0.0
+      ]
+     }
+    },
+    {
+     "emitter": "liang001",
+     "mode": "distort",
+     "texture": "T_Tile_A_009",
+     "maskTexture": "T_Streak_Soft_Trail_03",
+     "tint": [
+      0.7917,
+      0.6658,
+      0.4897
+     ],
+     "gain": 0.12,
+     "tileU": 1.5,
+     "life": 0.35,
+     "distort": 0.008,
+     "alphaCurve": {
+      "maxTime": 1.0,
+      "lut": [
+       1.0,
+       0.8882,
+       0.7843,
+       0.6891,
+       0.6016,
+       0.5217,
+       0.4492,
+       0.3833,
+       0.3245,
+       0.2714,
+       0.2248,
+       0.1834,
+       0.1473,
+       0.1162,
+       0.0895,
+       0.0672,
+       0.0485,
+       0.0338,
+       0.022,
+       0.0133,
+       0.007,
+       0.0029,
+       0.0007,
+       0.0
+      ]
+     }
+    },
+    {
+     "emitter": "niuqi",
+     "mode": "distort",
+     "texture": "T_daoguang03_NRM",
+     "maskTexture": "T_SmokeTrailCoord1_Mask",
+     "tint": [
+      0,
+      0,
+      0
+     ],
+     "gain": 0,
+     "tileU": 1.5,
+     "life": 0.4,
+     "distort": 0.02,
+     "alphaCurve": {
+      "maxTime": 1.0,
+      "lut": [
+       1.0,
+       0.9123,
+       0.8284,
+       0.7491,
+       0.6738,
+       0.603,
+       0.536,
+       0.4733,
+       0.4146,
+       0.3601,
+       0.3095,
+       0.2628,
+       0.2201,
+       0.1814,
+       0.1465,
+       0.1153,
+       0.0881,
+       0.0644,
+       0.0448,
+       0.0285,
+       0.0161,
+       0.0071,
+       0.0019,
+       0.0
+      ]
+     }
+    }
+   ],
+   "distortion": "liang/liang001 (M_WuKong_Trail_Inst1/2, M_pulse_01: refraction via Normal Tex T_Tile_A_009, WipeTex T_Streak_Soft_Trail_03, colour separation) and niuqi (M_WuKong_HeatDistort_Inst: Normal T_daoguang03_NRM, Mask T_SmokeTrailCoord1_Mask) as screen-refraction ribbons; lifetimes/colours = spawn-script literals of NG_WuKong_WeaponTrail_red, alpha = their curve LUTs; refraction strength (UV offset) hand-tuned",
+   "emittersNote": "not dumped; assumed the yellow variant's materials with a red HDR colour [INFERENCE]"
+  },
+  "HFM_HuStone_RJ_Trail": {
+   "kind": "ribbon",
+   "texture": "T_Streak_Soft_Trail_04",
+   "blend": "additive",
+   "tint": [
+    1.0,
+    0.92,
+    0.85
+   ],
+   "bones": "weapon",
+   "life": 0.25,
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/HFM_HuStone_RJ_Trail",
+   "emitters": "M_RJ_liang_0 (M_HFM_HuStone_01_Trail02_Inst1, additive)"
+  },
+  "NG_HFM_HuStone_Trail_ReD": {
+   "kind": "ribbon",
+   "texture": "T_Fire_SmokeWisps_Tile_Dup",
+   "blend": "normal",
+   "tint": [
+    0.45,
+    0.02,
+    0.02
+   ],
+   "bones": "weapon",
+   "life": 0.35,
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HFM_HuStone_Trail_ReD",
+   "emitters": "liang_1/liang003_1 (M_Tornado_big_2_Inst6/8, masked blood)"
+  },
+  "NG_Hu_Stone_Blood_Trail": {
+   "kind": "spray",
+   "texture": "T_liquid_8x8_006",
+   "blend": "normal",
+   "tint": [
+    0.45,
+    0.03,
+    0.03
+   ],
+   "bones": "weapon",
+   "rate": 40,
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_Hu_Stone_Blood_Trail",
+   "emitters": "Smoke002_3 (M_SubUV_Liquid_01_Inst2, SubImageSize 8x8; EmissiveColor 0.24,0.03,0.03)"
+  },
+  "NG_hfm_hu_stone_foothit": {
+   "kind": "burst",
+   "ground": true,
+   "scale": 1.0,
+   "layers": [
+    "bloodSplash",
+    "groundRing"
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_hfm_hu_stone_foothit",
+   "emitters": "Foot_Soil001_2 (M_Blood_Liquid_Inst), kuosan_11 (M_Water_03_Inst_01, ground-facing), Water002_8 (M_Water_01_Inst)"
+  },
+  "NG_hfm_hu_stone_zadi": {
+   "kind": "burst",
+   "ground": true,
+   "scale": 1.6,
+   "layers": [
+    "bloodSplash",
+    "groundRing",
+    "debris",
+    "dust"
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_hfm_hu_stone_zadi",
+   "emitters": "+ NE_B1_PhysicalCollisionEmitter (rock chunks), NiagaraEmitter_0 (liquid 8x8)"
+  },
+  "NG_hfm_hu_stone_zadiBurst": {
+   "kind": "burst",
+   "ground": true,
+   "scale": 2.0,
+   "layers": [
+    "bloodSplash",
+    "groundRing",
+    "debris",
+    "dust",
+    "glow"
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_hfm_hu_stone_zadiBurst",
+   "emitters": "+ P_GLOW_0 (M_kuosan_01_Inst), ShockwaveRing_20"
+  },
+  "NG_HFM_HuStone_foot_chongji": {
+   "kind": "burst",
+   "ground": true,
+   "scale": 1.3,
+   "layers": [
+    "dust",
+    "glow"
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_HFM_HuStone_foot_chongji",
+   "emitters": "P_Penshe_niuqu_1 (M_HFM_HuStone_Smoke_Inst), P_GLOW_0 (M_kuosan_01_Inst)"
+  },
+  "NG_WuKong_XuLiGun_BaoFa_01_burst": {
+   "kind": "burst",
+   "ground": false,
+   "scale": 1.0,
+   "layers": [
+    "goldSparks",
+    "goldGlow"
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/sunwukong/Niagara/XuLiGun/NG_WuKong_XuLiGun_BaoFa_01_burst",
+   "emitters": "P_Huoxing_Velocity001_6 (M_hardSpark_Alpha_GPU_Random_Inst: procedural spark, no texture -> velocity-stretched T_Streak_Soft_Trail_03 [INFERENCE])"
+  },
+  "hit_staff": {
+   "kind": "burst",
+   "layers": [
+    "goldSparks",
+    "hitFlash"
+   ],
+   "source": "combat hit (no game system identified; sparks reuse the XuLiGun spark look) [INFERENCE]"
+  },
+  "hit_tiger": {
+   "kind": "burst",
+   "layers": [
+    "impactSplash",
+    "hitFlash"
+   ],
+   "source": "combat hit on player (T_WaterSpark001 splash) [INFERENCE]"
+  },
+  "bullet_20220702": {
+   "kind": "bullet",
+   "layers": [
+    "tornadoSmoke",
+    "tornadoDebris"
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HuStone_Atk07_Tornado",
+   "emitters": "vortex001_1 (M_HFM_HuStone_Smoke_Inst 8x8), vortex_1 (M_Smoke_Wisp 8x8), parts_12 (M_stone_HeiFeng_01_Inst 4x4)",
+   "note": "tornado system chosen by name (Atk07 = Fast_07 spawns 20220702); also used for 20220703 [INFERENCE]"
+  },
+  "bullet_20221001": {
+   "kind": "bullet",
+   "layers": [
+    "bladeWisp",
+    "bloodSplash"
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HFM_HuStone_DG_Bullet",
+   "emitters": "blood_2/blood001_1 (SM_BladeWind_01 + M_Tornado_big_2_Inst1/2) rendered as wisp sprites over the blade box; vortex_3 (M_SubUV_Liquid_01_Inst2 8x8)",
+   "note": "referenced by BP_HFM_Hu_Stone_Bullet_01"
+  },
+  "NG_HFM_Hu_Stone_Hand_Blood": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "Sand",
+     "layer": "liquid",
+     "rate": 125.0,
+     "life": [
+      0.35,
+      0.6
+     ],
+     "size": [
+      0.25,
+      0.6
+     ],
+     "speed": [
+      1.5,
+      3.5
+     ],
+     "dir": "cone",
+     "cone": 60,
+     "shape": "sphere",
+     "radius": 0.15,
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 9.8,
+     "drag": 2,
+     "frames": 64,
+     "sizeCurve": "NG_HFM_Hu_Stone_Hand_Blood.Sand.Value"
+    },
+    {
+     "emitter": "Smoke002",
+     "layer": "splash",
+     "rate": 50.0,
+     "life": [
+      0.4,
+      0.7
+     ],
+     "size": [
+      0.4,
+      1.3
+     ],
+     "speed": [
+      0.5,
+      1.5
+     ],
+     "dir": "cone",
+     "cone": 70,
+     "shape": "sphere",
+     "radius": 0.1,
+     "color": [
+      0.5,
+      0.06,
+      0.05
+     ],
+     "alpha": 0.7,
+     "drag": 3,
+     "alphaCurve": "NG_HFM_Hu_Stone_Hand_Blood.Smoke002.Scale Alpha"
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_HFM_Hu_Stone_Hand_Blood",
+   "tuned": "Sand rate x0.25 and Smoke002 x0.5 of the data rates (500/s, 100/s: GPU budget); lifetimes/sizes/speeds (GPU literals not exported)",
+   "timed": true,
+   "dur": 0.1
+  },
+  "NG_HFM_HuStone_Quan02_Blood": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "P_GLOW",
+     "layer": "glow",
+     "count": 1,
+     "life": [
+      0.25,
+      0.35
+     ],
+     "size": [
+      0.5,
+      4.0
+     ],
+     "dir": "none",
+     "color": [
+      1,
+      0.55,
+      0.4
+     ],
+     "alpha": 0.5,
+     "colorCurve": "NG_HFM_HuStone_Quan02_Blood.P_GLOW.Color",
+     "sizeCurve": "NG_HFM_HuStone_Quan02_Blood.P_GLOW.Value"
+    },
+    {
+     "emitter": "P_Penshe_niuqu001",
+     "layer": "ring5",
+     "count": 1,
+     "life": [
+      0.2,
+      0.4
+     ],
+     "size": [
+      0.6,
+      4.5
+     ],
+     "dir": "none",
+     "color": [
+      0.6,
+      0.45,
+      0.4
+     ],
+     "alpha": 0.6,
+     "sizeCurve": "NG_HFM_HuStone_Quan02_Blood.P_Penshe_niuqu001.Value"
+    },
+    {
+     "emitter": "Refraction",
+     "layer": "refract",
+     "count": 1,
+     "life": [
+      0.45,
+      0.45
+     ],
+     "size": [
+      1.0,
+      6.0
+     ],
+     "dir": "none",
+     "sizeCurve": "NG_HFM_HuStone_Quan02_Blood.Refraction.Value"
+    },
+    {
+     "emitter": "ShockwaveRing",
+     "layer": "gring",
+     "count": 1,
+     "life": [
+      0.85,
+      0.85
+     ],
+     "size": [
+      0.5,
+      7.0
+     ],
+     "dir": "none",
+     "color": [
+      0.5,
+      0.4,
+      0.35
+     ],
+     "alpha": 0.5,
+     "groundProject": true,
+     "sizeCurve": "NG_HFM_HuStone_Quan02_Blood.ShockwaveRing.Value"
+    },
+    {
+     "emitter": "(blood spray, BloodVersion)",
+     "layer": "liquid",
+     "count": 14,
+     "life": [
+      0.4,
+      0.7
+     ],
+     "size": [
+      0.4,
+      1.0
+     ],
+     "speed": [
+      3,
+      6
+     ],
+     "dir": "sphere",
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 12,
+     "drag": 1,
+     "frames": 64
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_HFM_HuStone_Quan02_Blood",
+   "tuned": "sprite sizes (Initial SpriteSize is a parameter-store value, k560) and colour scale; Refraction lifetime 0.45 of 1 s; ShockwaveRing (fresnel sphere mesh) drawn as a ground ring"
+  },
+  "NG_HFM_HuStone_Quan02": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "P_GLOW",
+     "layer": "glow",
+     "count": 1,
+     "life": [
+      0.25,
+      0.35
+     ],
+     "size": [
+      0.5,
+      4.0
+     ],
+     "dir": "none",
+     "color": [
+      1,
+      0.55,
+      0.4
+     ],
+     "alpha": 0.5,
+     "colorCurve": "NG_HFM_HuStone_Quan02.P_GLOW.Color",
+     "sizeCurve": "NG_HFM_HuStone_Quan02.P_GLOW.Value"
+    },
+    {
+     "emitter": "P_Penshe_niuqu001",
+     "layer": "ring5",
+     "count": 1,
+     "life": [
+      0.2,
+      0.4
+     ],
+     "size": [
+      0.6,
+      4.5
+     ],
+     "dir": "none",
+     "color": [
+      0.6,
+      0.45,
+      0.4
+     ],
+     "alpha": 0.6,
+     "sizeCurve": "NG_HFM_HuStone_Quan02.P_Penshe_niuqu001.Value"
+    },
+    {
+     "emitter": "Refraction",
+     "layer": "refract",
+     "count": 1,
+     "life": [
+      0.45,
+      0.45
+     ],
+     "size": [
+      1.0,
+      6.0
+     ],
+     "dir": "none",
+     "sizeCurve": "NG_HFM_HuStone_Quan02.Refraction.Value"
+    },
+    {
+     "emitter": "ShockwaveRing",
+     "layer": "gring",
+     "count": 1,
+     "life": [
+      0.85,
+      0.85
+     ],
+     "size": [
+      0.5,
+      7.0
+     ],
+     "dir": "none",
+     "color": [
+      0.5,
+      0.4,
+      0.35
+     ],
+     "alpha": 0.5,
+     "groundProject": true,
+     "sizeCurve": "NG_HFM_HuStone_Quan02.ShockwaveRing.Value"
+    },
+    {
+     "emitter": "Foot_Smoke",
+     "layer": "dust8",
+     "count": 25,
+     "life": [
+      0.8,
+      1.4
+     ],
+     "size": [
+      1.0,
+      2.6
+     ],
+     "speed": [
+      3,
+      7
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.5,
+     "color": [
+      0.56,
+      0.5,
+      0.42
+     ],
+     "alpha": 0.5,
+     "drag": 3,
+     "frames": 64
+    },
+    {
+     "emitter": "P_Stone_lizi01001",
+     "layer": "debris",
+     "count": 10,
+     "life": [
+      0.8,
+      1.2
+     ],
+     "size": [
+      0.2,
+      0.15
+     ],
+     "speed": [
+      4,
+      8
+     ],
+     "dir": "cone",
+     "cone": 50,
+     "color": [
+      0.55,
+      0.5,
+      0.45
+     ],
+     "gravity": 15,
+     "frameRand": 16,
+     "rotSpeed": [
+      -8,
+      8
+     ]
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HFM_HuStone_Quan02",
+   "tuned": "sprite sizes (Initial SpriteSize is a parameter-store value, k560) and colour scale; Refraction lifetime 0.45 of 1 s; ShockwaveRing (fresnel sphere mesh) drawn as a ground ring"
+  },
+  "NG_HFM_HuStone_Quan01_Blood": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "B1_Base_SpriteRenderer",
+     "layer": "glow",
+     "count": 1,
+     "life": [
+      0.25,
+      0.35
+     ],
+     "size": [
+      0.5,
+      4.5
+     ],
+     "dir": "none",
+     "color": [
+      1,
+      0.5,
+      0.35
+     ],
+     "alpha": 0.6
+    },
+    {
+     "emitter": "Glow001",
+     "layer": "flare",
+     "count": 1,
+     "life": [
+      0.15,
+      0.15
+     ],
+     "size": [
+      3.0,
+      1.0
+     ],
+     "dir": "none",
+     "color": [
+      1,
+      0.6,
+      0.45
+     ]
+    },
+    {
+     "emitter": "P_LIZI_Velocity",
+     "layer": "spark",
+     "count": 25,
+     "life": [
+      0.2,
+      0.45
+     ],
+     "size": [
+      0.3,
+      0.1
+     ],
+     "speed": [
+      8,
+      16
+     ],
+     "dir": "fwd",
+     "spread": 0.6,
+     "color": [
+      1,
+      0.6,
+      0.35
+     ],
+     "gravity": 6,
+     "drag": 2.5,
+     "stretch": 4
+    },
+    {
+     "emitter": "P_Penshe_niuqu001",
+     "layer": "ring5",
+     "count": 1,
+     "life": [
+      0.3,
+      0.4
+     ],
+     "size": [
+      0.6,
+      5.0
+     ],
+     "dir": "none",
+     "color": [
+      0.6,
+      0.45,
+      0.4
+     ],
+     "alpha": 0.6
+    },
+    {
+     "emitter": "Refraction",
+     "layer": "refract",
+     "count": 1,
+     "life": [
+      0.5,
+      0.5
+     ],
+     "size": [
+      1.0,
+      7.0
+     ],
+     "dir": "none"
+    },
+    {
+     "emitter": "ShockwaveRing",
+     "layer": "gring",
+     "count": 1,
+     "life": [
+      1.0,
+      1.0
+     ],
+     "size": [
+      0.5,
+      8.0
+     ],
+     "dir": "none",
+     "color": [
+      0.55,
+      0.42,
+      0.35
+     ],
+     "alpha": 0.5
+    },
+    {
+     "emitter": "(blood spray)",
+     "layer": "liquid",
+     "count": 16,
+     "life": [
+      0.4,
+      0.7
+     ],
+     "size": [
+      0.4,
+      1.1
+     ],
+     "speed": [
+      3,
+      7
+     ],
+     "dir": "fwd",
+     "spread": 0.8,
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 12,
+     "drag": 1,
+     "frames": 64
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_HFM_HuStone_Quan01_Blood",
+   "tuned": "glow/ring sizes and colours; P_QuanFeng01 wind mesh not drawn; spark speeds; blood spray stands in for the BloodVersion liquid"
+  },
+  "NG_HFM_HuStone_Atk_wind_Blood": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "Foot_Soil",
+     "layer": "liquid",
+     "count": 46,
+     "life": [
+      0.4,
+      0.8
+     ],
+     "size": [
+      0.3,
+      0.9
+     ],
+     "speed": [
+      3,
+      8
+     ],
+     "dir": "fwd",
+     "spread": 0.9,
+     "shape": "sphere",
+     "radius": 0.6,
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 12,
+     "drag": 1.5,
+     "frames": 64
+    },
+    {
+     "emitter": "kuosan",
+     "layer": "ring",
+     "count": 3,
+     "life": [
+      0.4,
+      0.55
+     ],
+     "size": [
+      0.5,
+      3.5
+     ],
+     "dir": "none",
+     "color": [
+      0.5,
+      0.08,
+      0.06
+     ],
+     "alpha": 0.8
+    },
+    {
+     "emitter": "Water003",
+     "layer": "splash",
+     "count": 6,
+     "life": [
+      0.3,
+      0.5
+     ],
+     "size": [
+      0.5,
+      1.6
+     ],
+     "speed": [
+      1,
+      3
+     ],
+     "dir": "cone",
+     "cone": 60,
+     "color": [
+      0.5,
+      0.06,
+      0.05
+     ],
+     "alpha": 0.8
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_HFM_HuStone_Atk_wind_Blood",
+   "tuned": "liquid count = 1/3 of the 140-particle burst; sizes/speeds; blood clip / VAT splash meshes not drawn",
+   "ground": true
+  },
+  "NG_HFM_HuStone_Atk_wind_Blood_Ring": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "Foot_Soil",
+     "layer": "liquid",
+     "count": 46,
+     "life": [
+      0.4,
+      0.8
+     ],
+     "size": [
+      0.3,
+      0.9
+     ],
+     "speed": [
+      3,
+      8
+     ],
+     "dir": "fwd",
+     "spread": 0.9,
+     "shape": "sphere",
+     "radius": 0.6,
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 12,
+     "drag": 1.5,
+     "frames": 64
+    },
+    {
+     "emitter": "kuosan",
+     "layer": "ring",
+     "count": 3,
+     "life": [
+      0.4,
+      0.55
+     ],
+     "size": [
+      0.5,
+      3.5
+     ],
+     "dir": "none",
+     "color": [
+      0.5,
+      0.08,
+      0.06
+     ],
+     "alpha": 0.8
+    },
+    {
+     "emitter": "Water",
+     "layer": "splash",
+     "count": 6,
+     "life": [
+      0.3,
+      0.5
+     ],
+     "size": [
+      0.5,
+      1.6
+     ],
+     "speed": [
+      1,
+      3
+     ],
+     "dir": "cone",
+     "cone": 60,
+     "color": [
+      0.5,
+      0.06,
+      0.05
+     ],
+     "alpha": 0.8
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_HFM_HuStone_Atk_wind_Blood_Ring",
+   "tuned": "liquid count = 1/3 of the 140-particle burst; sizes/speeds; blood clip / VAT splash meshes not drawn",
+   "ground": true
+  },
+  "NG_Hu_Stone_ChongQuan_BloodTrail": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "Smoke002",
+     "layer": "liquid",
+     "rate": 45.0,
+     "life": [
+      0.4,
+      0.8
+     ],
+     "size": [
+      0.6,
+      1.6
+     ],
+     "speed": [
+      0.5,
+      2
+     ],
+     "dir": "up",
+     "shape": "disc",
+     "radius": 0.8,
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 4,
+     "drag": 2,
+     "frames": 64
+    },
+    {
+     "emitter": "Smoke",
+     "layer": "splash",
+     "rate": 18.0,
+     "life": [
+      0.4,
+      0.7
+     ],
+     "size": [
+      0.8,
+      2.0
+     ],
+     "speed": [
+      0.3,
+      1
+     ],
+     "dir": "up",
+     "shape": "disc",
+     "radius": 0.8,
+     "color": [
+      0.5,
+      0.06,
+      0.05
+     ],
+     "alpha": 0.6
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_Hu_Stone_ChongQuan_BloodTrail",
+   "tuned": "rates x0.3 / x0.12 of the 150.0/s SpawnRate literal; CylinderLocation radius; sizes",
+   "timed": true,
+   "dur": 0.1,
+   "offsetY": 0.3
+  },
+  "NG_Hu_Stone_ChongQuan_BloodTrail_Fast": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "Smoke002",
+     "layer": "liquid",
+     "rate": 45.0,
+     "life": [
+      0.4,
+      0.8
+     ],
+     "size": [
+      0.6,
+      1.6
+     ],
+     "speed": [
+      0.5,
+      2
+     ],
+     "dir": "up",
+     "shape": "disc",
+     "radius": 0.8,
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 4,
+     "drag": 2,
+     "frames": 64
+    },
+    {
+     "emitter": "Smoke",
+     "layer": "splash",
+     "rate": 18.0,
+     "life": [
+      0.4,
+      0.7
+     ],
+     "size": [
+      0.8,
+      2.0
+     ],
+     "speed": [
+      0.3,
+      1
+     ],
+     "dir": "up",
+     "shape": "disc",
+     "radius": 0.8,
+     "color": [
+      0.5,
+      0.06,
+      0.05
+     ],
+     "alpha": 0.6
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_Hu_Stone_ChongQuan_BloodTrail_Fast",
+   "tuned": "rates x0.3 / x0.12 of the 150/s SpawnRate literal; CylinderLocation radius; sizes",
+   "timed": true,
+   "dur": 0.1,
+   "offsetY": 0.3
+  },
+  "NG_HYM_HuStone_Stone_InPut": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "lizi002",
+     "layer": "debris",
+     "count": 250,
+     "life": [
+      1.2,
+      2.2
+     ],
+     "size": [
+      0.12,
+      0.1
+     ],
+     "speed": [
+      0.2,
+      1.2
+     ],
+     "dir": "out",
+     "shape": "body",
+     "radius": 0.25,
+     "color": [
+      0.6,
+      0.55,
+      0.5
+     ],
+     "gravity": 2,
+     "drag": 1.5,
+     "frameRand": 16,
+     "rotSpeed": [
+      -3,
+      3
+     ]
+    },
+    {
+     "emitter": "smoke001",
+     "layer": "dust8",
+     "count": 10,
+     "rate": 50,
+     "dur": 0.8,
+     "life": [
+      1.0,
+      2.0
+     ],
+     "size": [
+      1.0,
+      2.6
+     ],
+     "speed": [
+      0.2,
+      0.8
+     ],
+     "dir": "up",
+     "shape": "body",
+     "radius": 0.3,
+     "color": [
+      0.56,
+      0.5,
+      0.42
+     ],
+     "alpha": 0.45,
+     "drag": 1,
+     "frames": 64
+    },
+    {
+     "emitter": "smoke",
+     "layer": "puff",
+     "count": 15,
+     "life": [
+      0.6,
+      1.0
+     ],
+     "size": [
+      1.2,
+      3.0
+     ],
+     "speed": [
+      0.5,
+      2
+     ],
+     "dir": "out",
+     "shape": "body",
+     "radius": 0.2,
+     "color": [
+      0.56,
+      0.5,
+      0.42
+     ],
+     "alpha": 0.5,
+     "drag": 2,
+     "frames": 64
+    },
+    {
+     "emitter": "smoke003",
+     "layer": "puff",
+     "rate": 15,
+     "dur": 1.2,
+     "life": [
+      0.6,
+      1.3
+     ],
+     "size": [
+      0.8,
+      2.0
+     ],
+     "speed": [
+      0.2,
+      0.6
+     ],
+     "dir": "up",
+     "shape": "body",
+     "radius": 0.3,
+     "color": [
+      0.7,
+      0.4803,
+      0.2385
+     ],
+     "alpha": 0.35,
+     "frames": 64
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HYM_HuStone_Stone_InPut",
+   "tuned": "lizi002 count = half of the 500 burst; smoke rates/durations; bones stand in for the mesh-triangle spawn (NM_ParticleSpawn_by_TriangleSize)",
+   "attach": false
+  },
+  "NG_HYM_HuStone_Stone_OutPut": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "lizi002",
+     "layer": "debris",
+     "count": 300,
+     "life": [
+      0.8,
+      1.6
+     ],
+     "size": [
+      0.2,
+      0.16
+     ],
+     "speed": [
+      3,
+      9
+     ],
+     "dir": "out",
+     "shape": "body",
+     "radius": 0.2,
+     "color": [
+      0.6,
+      0.55,
+      0.5
+     ],
+     "gravity": 14,
+     "drag": 0.6,
+     "frameRand": 16,
+     "rotSpeed": [
+      -9,
+      9
+     ]
+    },
+    {
+     "emitter": "P_Smoke",
+     "layer": "puff",
+     "count": 30,
+     "life": [
+      2.0,
+      3.0
+     ],
+     "size": [
+      1.2,
+      3.6
+     ],
+     "speed": [
+      1,
+      3
+     ],
+     "dir": "out",
+     "shape": "body",
+     "radius": 0.3,
+     "color": [
+      0.56,
+      0.5,
+      0.42
+     ],
+     "alpha": 0.5,
+     "drag": 1.8,
+     "frames": 64
+    },
+    {
+     "emitter": "smoke",
+     "layer": "dust8",
+     "count": 30,
+     "life": [
+      1.0,
+      2.0
+     ],
+     "size": [
+      1.0,
+      2.8
+     ],
+     "speed": [
+      2,
+      5
+     ],
+     "dir": "out",
+     "shape": "body",
+     "radius": 0.3,
+     "color": [
+      0.56,
+      0.5,
+      0.42
+     ],
+     "alpha": 0.5,
+     "drag": 2.2,
+     "frames": 64
+    },
+    {
+     "emitter": "B1_Base_MeshRenderer",
+     "layer": "spark",
+     "count": 24,
+     "life": [
+      0.5,
+      2.0
+     ],
+     "size": [
+      0.25,
+      0.08
+     ],
+     "speed": [
+      6,
+      12
+     ],
+     "dir": "out",
+     "shape": "body",
+     "radius": 0.2,
+     "color": [
+      1,
+      0.75,
+      0.45
+     ],
+     "gravity": 8,
+     "drag": 2,
+     "stretch": 3
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HYM_HuStone_Stone_OutPut",
+   "tuned": "lizi002 count = half of the 600 burst; spark count (rate emitter 0.7/s x 2 s in data); speeds/sizes",
+   "attach": false
+  },
+  "NG_HYM_HuStone_Stone_OutPut_burst": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "lizi002",
+     "layer": "debris",
+     "count": 66,
+     "life": [
+      0.7,
+      1.3
+     ],
+     "size": [
+      0.2,
+      0.15
+     ],
+     "speed": [
+      4,
+      10
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.4,
+     "color": [
+      0.6,
+      0.55,
+      0.5
+     ],
+     "gravity": 15,
+     "frameRand": 16,
+     "rotSpeed": [
+      -9,
+      9
+     ]
+    },
+    {
+     "emitter": "huoxing003",
+     "layer": "spark",
+     "count": 30,
+     "life": [
+      0.2,
+      0.5
+     ],
+     "size": [
+      0.3,
+      0.1
+     ],
+     "speed": [
+      6,
+      14
+     ],
+     "dir": "sphere",
+     "color": [
+      1,
+      0.7,
+      0.4
+     ],
+     "gravity": 8,
+     "drag": 2.5,
+     "stretch": 4
+    },
+    {
+     "emitter": "P_GLOW",
+     "layer": "glow",
+     "count": 1,
+     "life": [
+      0.3,
+      0.3
+     ],
+     "size": [
+      0.5,
+      4.0
+     ],
+     "dir": "none",
+     "color": [
+      1,
+      0.65,
+      0.4
+     ],
+     "alpha": 0.6
+    },
+    {
+     "emitter": "Refraction",
+     "layer": "refract",
+     "count": 1,
+     "life": [
+      0.4,
+      0.4
+     ],
+     "size": [
+      1,
+      5
+     ],
+     "dir": "none"
+    },
+    {
+     "emitter": "smoke",
+     "layer": "dust8",
+     "count": 15,
+     "life": [
+      0.8,
+      1.5
+     ],
+     "size": [
+      1.0,
+      2.5
+     ],
+     "speed": [
+      2,
+      5
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.4,
+     "color": [
+      0.56,
+      0.5,
+      0.42
+     ],
+     "alpha": 0.5,
+     "drag": 2.5,
+     "frames": 64
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HYM_HuStone_Stone_OutPut_burst",
+   "tuned": "counts = 1/3 (stones) and 1/2 (sparks) of the data bursts; all GPU literals",
+   "scale": 1.0
+  },
+  "NG_HYM_HuStone_Stone_OutPut_burst_Body": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "lizi002",
+     "layer": "debris",
+     "count": 100,
+     "life": [
+      0.7,
+      1.3
+     ],
+     "size": [
+      0.2,
+      0.15
+     ],
+     "speed": [
+      4,
+      10
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.4,
+     "color": [
+      0.6,
+      0.55,
+      0.5
+     ],
+     "gravity": 15,
+     "frameRand": 16,
+     "rotSpeed": [
+      -9,
+      9
+     ]
+    },
+    {
+     "emitter": "huoxing003",
+     "layer": "spark",
+     "count": 45,
+     "life": [
+      0.2,
+      0.5
+     ],
+     "size": [
+      0.3,
+      0.1
+     ],
+     "speed": [
+      6,
+      14
+     ],
+     "dir": "sphere",
+     "color": [
+      1,
+      0.7,
+      0.4
+     ],
+     "gravity": 8,
+     "drag": 2.5,
+     "stretch": 4
+    },
+    {
+     "emitter": "P_GLOW",
+     "layer": "glow",
+     "count": 1,
+     "life": [
+      0.3,
+      0.3
+     ],
+     "size": [
+      0.5,
+      4.0
+     ],
+     "dir": "none",
+     "color": [
+      1,
+      0.65,
+      0.4
+     ],
+     "alpha": 0.6
+    },
+    {
+     "emitter": "Refraction",
+     "layer": "refract",
+     "count": 1,
+     "life": [
+      0.4,
+      0.4
+     ],
+     "size": [
+      1,
+      5
+     ],
+     "dir": "none"
+    },
+    {
+     "emitter": "smoke",
+     "layer": "dust8",
+     "count": 20,
+     "life": [
+      0.8,
+      1.5
+     ],
+     "size": [
+      1.0,
+      2.5
+     ],
+     "speed": [
+      2,
+      5
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.4,
+     "color": [
+      0.56,
+      0.5,
+      0.42
+     ],
+     "alpha": 0.5,
+     "drag": 2.5,
+     "frames": 64
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HYM_HuStone_Stone_OutPut_burst_Body",
+   "tuned": "counts = 1/3 (stones) and 1/2 (sparks) of the data bursts; all GPU literals",
+   "scale": 1.3
+  },
+  "NG_HYM_HuStone_Stone_OutPut_burst_Body_Heavy": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "lizi002",
+     "layer": "debris",
+     "count": 150,
+     "life": [
+      0.7,
+      1.3
+     ],
+     "size": [
+      0.2,
+      0.15
+     ],
+     "speed": [
+      4,
+      10
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.4,
+     "color": [
+      0.6,
+      0.55,
+      0.5
+     ],
+     "gravity": 15,
+     "frameRand": 16,
+     "rotSpeed": [
+      -9,
+      9
+     ]
+    },
+    {
+     "emitter": "huoxing003",
+     "layer": "spark",
+     "count": 150,
+     "life": [
+      0.2,
+      0.5
+     ],
+     "size": [
+      0.3,
+      0.1
+     ],
+     "speed": [
+      6,
+      14
+     ],
+     "dir": "sphere",
+     "color": [
+      1,
+      0.7,
+      0.4
+     ],
+     "gravity": 8,
+     "drag": 2.5,
+     "stretch": 4
+    },
+    {
+     "emitter": "P_GLOW",
+     "layer": "glow",
+     "count": 1,
+     "life": [
+      0.3,
+      0.3
+     ],
+     "size": [
+      0.5,
+      4.0
+     ],
+     "dir": "none",
+     "color": [
+      1,
+      0.65,
+      0.4
+     ],
+     "alpha": 0.6
+    },
+    {
+     "emitter": "Refraction",
+     "layer": "refract",
+     "count": 1,
+     "life": [
+      0.4,
+      0.4
+     ],
+     "size": [
+      1,
+      5
+     ],
+     "dir": "none"
+    },
+    {
+     "emitter": "smoke",
+     "layer": "dust8",
+     "count": 20,
+     "life": [
+      0.8,
+      1.5
+     ],
+     "size": [
+      1.0,
+      2.5
+     ],
+     "speed": [
+      2,
+      5
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.4,
+     "color": [
+      0.56,
+      0.5,
+      0.42
+     ],
+     "alpha": 0.5,
+     "drag": 2.5,
+     "frames": 64
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HYM_HuStone_Stone_OutPut_burst_Body_Heavy",
+   "tuned": "counts = 1/3 (stones) and 1/2 (sparks) of the data bursts; all GPU literals",
+   "scale": 1.5
+  },
+  "NG_HYM_HuStone_Stone_Sand_Arm": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "smoke",
+     "layer": "dust8",
+     "count": 15,
+     "life": [
+      0.6,
+      1.1
+     ],
+     "size": [
+      0.6,
+      1.6
+     ],
+     "speed": [
+      0.5,
+      2
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.3,
+     "color": [
+      0.56,
+      0.5,
+      0.42
+     ],
+     "alpha": 0.45,
+     "drag": 2,
+     "frames": 64
+    },
+    {
+     "emitter": "lizi",
+     "layer": "debris",
+     "rate": 35,
+     "dur": 0.6,
+     "life": [
+      0.5,
+      1.0
+     ],
+     "size": [
+      0.1,
+      0.08
+     ],
+     "speed": [
+      0.5,
+      2
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.35,
+     "color": [
+      0.6,
+      0.55,
+      0.5
+     ],
+     "gravity": 6,
+     "frameRand": 16,
+     "rotSpeed": [
+      -6,
+      6
+     ]
+    },
+    {
+     "emitter": "lizi002",
+     "layer": "debris",
+     "count": 25,
+     "life": [
+      0.6,
+      1.0
+     ],
+     "size": [
+      0.14,
+      0.1
+     ],
+     "speed": [
+      2,
+      5
+     ],
+     "dir": "cone",
+     "cone": 60,
+     "color": [
+      0.6,
+      0.55,
+      0.5
+     ],
+     "gravity": 12,
+     "frameRand": 16,
+     "rotSpeed": [
+      -8,
+      8
+     ]
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HYM_HuStone_Stone_Sand_Arm",
+   "tuned": "sizes/speeds; lizi rate",
+   "attach": true
+  },
+  "NG_HYM_HuStone_Stone_Sand_Arm_In": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "smoke",
+     "layer": "dust8",
+     "count": 10,
+     "life": [
+      0.6,
+      1.1
+     ],
+     "size": [
+      0.6,
+      1.6
+     ],
+     "speed": [
+      0.5,
+      2
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.3,
+     "color": [
+      0.56,
+      0.5,
+      0.42
+     ],
+     "alpha": 0.45,
+     "drag": 2,
+     "frames": 64
+    },
+    {
+     "emitter": "lizi",
+     "layer": "debris",
+     "rate": 35,
+     "dur": 0.6,
+     "life": [
+      0.5,
+      1.0
+     ],
+     "size": [
+      0.1,
+      0.08
+     ],
+     "speed": [
+      0.5,
+      2
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.35,
+     "color": [
+      0.6,
+      0.55,
+      0.5
+     ],
+     "gravity": 6,
+     "frameRand": 16,
+     "rotSpeed": [
+      -6,
+      6
+     ]
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HYM_HuStone_Stone_Sand_Arm_In",
+   "tuned": "sizes/speeds; lizi rate",
+   "attach": true
+  },
+  "NG_hfm_hu_stone_qifei": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "Foot_Soil001+Foot_Soil",
+     "layer": "liquid",
+     "count": 30,
+     "life": [
+      0.45,
+      0.8
+     ],
+     "size": [
+      0.5,
+      1.3
+     ],
+     "speed": [
+      2,
+      6
+     ],
+     "dir": "cone",
+     "cone": 70,
+     "shape": "disc",
+     "radius": 1.0,
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 14,
+     "drag": 1,
+     "frames": 64
+    },
+    {
+     "emitter": "kuosan",
+     "layer": "ring",
+     "count": 3,
+     "life": [
+      0.45,
+      0.6
+     ],
+     "size": [
+      0.8,
+      5.0
+     ],
+     "dir": "none",
+     "color": [
+      0.5,
+      0.08,
+      0.06
+     ],
+     "alpha": 0.8
+    },
+    {
+     "emitter": "NE_B1_PhysicalCollisionEmitter",
+     "layer": "debris",
+     "count": 30,
+     "life": [
+      0.8,
+      1.3
+     ],
+     "size": [
+      0.3,
+      0.26
+     ],
+     "speed": [
+      3,
+      8
+     ],
+     "dir": "cone",
+     "cone": 55,
+     "shape": "disc",
+     "radius": 1.2,
+     "color": [
+      0.55,
+      0.48,
+      0.42
+     ],
+     "gravity": 20,
+     "frameRand": 16,
+     "rotSpeed": [
+      -8,
+      8
+     ]
+    },
+    {
+     "emitter": "Water002",
+     "layer": "splash",
+     "count": 10,
+     "life": [
+      0.3,
+      0.55
+     ],
+     "size": [
+      0.6,
+      2.0
+     ],
+     "speed": [
+      1,
+      3
+     ],
+     "dir": "cone",
+     "cone": 50,
+     "shape": "disc",
+     "radius": 1.0,
+     "color": [
+      0.5,
+      0.06,
+      0.05
+     ],
+     "alpha": 0.8
+    },
+    {
+     "emitter": "niuqu002",
+     "layer": "refract",
+     "count": 1,
+     "life": [
+      0.69,
+      0.69
+     ],
+     "size": [
+      1.0,
+      6.0
+     ],
+     "dir": "none"
+    },
+    {
+     "emitter": "(dust)",
+     "layer": "smoke",
+     "count": 10,
+     "life": [
+      1.0,
+      1.6
+     ],
+     "size": [
+      1.6,
+      4.5
+     ],
+     "speed": [
+      1,
+      3
+     ],
+     "dir": "radial",
+     "shape": "ring",
+     "radius": 0.8,
+     "color": [
+      0.62,
+      0.52,
+      0.42
+     ],
+     "alpha": 0.55,
+     "drag": 1.8,
+     "frames": 64
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_hfm_hu_stone_qifei",
+   "tuned": "liquid = 1/6 of the 180 burst; GPU sizes/speeds; dust stands in for the take-off smoke",
+   "ground": true
+  },
+  "NG_hfm_hu_stone_zadi_trail": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "Foot_Soil001+Foot_Soil",
+     "layer": "liquid",
+     "count": 30,
+     "life": [
+      0.45,
+      0.8
+     ],
+     "size": [
+      0.5,
+      1.3
+     ],
+     "speed": [
+      2,
+      6
+     ],
+     "dir": "cone",
+     "cone": 70,
+     "shape": "disc",
+     "radius": 1.0,
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 14,
+     "drag": 1,
+     "frames": 64
+    },
+    {
+     "emitter": "kuosan",
+     "layer": "ring",
+     "count": 3,
+     "life": [
+      0.45,
+      0.6
+     ],
+     "size": [
+      0.8,
+      5.0
+     ],
+     "dir": "none",
+     "color": [
+      0.5,
+      0.08,
+      0.06
+     ],
+     "alpha": 0.8
+    },
+    {
+     "emitter": "NE_B1_PhysicalCollisionEmitter",
+     "layer": "debris",
+     "count": 30,
+     "life": [
+      0.8,
+      1.3
+     ],
+     "size": [
+      0.3,
+      0.26
+     ],
+     "speed": [
+      3,
+      8
+     ],
+     "dir": "cone",
+     "cone": 55,
+     "shape": "disc",
+     "radius": 1.2,
+     "color": [
+      0.55,
+      0.48,
+      0.42
+     ],
+     "gravity": 20,
+     "frameRand": 16,
+     "rotSpeed": [
+      -8,
+      8
+     ]
+    },
+    {
+     "emitter": "Water002",
+     "layer": "splash",
+     "count": 10,
+     "life": [
+      0.3,
+      0.55
+     ],
+     "size": [
+      0.6,
+      2.0
+     ],
+     "speed": [
+      1,
+      3
+     ],
+     "dir": "cone",
+     "cone": 50,
+     "shape": "disc",
+     "radius": 1.0,
+     "color": [
+      0.5,
+      0.06,
+      0.05
+     ],
+     "alpha": 0.8
+    },
+    {
+     "emitter": "niuqu002",
+     "layer": "refract",
+     "count": 1,
+     "life": [
+      0.69,
+      0.69
+     ],
+     "size": [
+      1.0,
+      6.0
+     ],
+     "dir": "none"
+    },
+    {
+     "emitter": "(dust)",
+     "layer": "smoke",
+     "count": 10,
+     "life": [
+      1.0,
+      1.6
+     ],
+     "size": [
+      1.6,
+      4.5
+     ],
+     "speed": [
+      1,
+      3
+     ],
+     "dir": "radial",
+     "shape": "ring",
+     "radius": 0.8,
+     "color": [
+      0.62,
+      0.52,
+      0.42
+     ],
+     "alpha": 0.55,
+     "drag": 1.8,
+     "frames": 64
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_hfm_hu_stone_zadi_trail",
+   "tuned": "liquid = 1/6 of the 180 burst; GPU sizes/speeds; dust stands in for the take-off smoke",
+   "ground": true,
+   "note": "same emitter set as NG_hfm_hu_stone_qifei (burst counts 100/80/3/20/30 identical)"
+  },
+  "NG_hfm_hu_stone_foothitloop": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "Foot_Soil001",
+     "layer": "liquid",
+     "count": 12,
+     "life": [
+      0.4,
+      0.7
+     ],
+     "size": [
+      0.4,
+      1.1
+     ],
+     "speed": [
+      2,
+      5
+     ],
+     "dir": "cone",
+     "cone": 60,
+     "shape": "disc",
+     "radius": 1.2,
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 14,
+     "drag": 1,
+     "frames": 64
+    },
+    {
+     "emitter": "kuosan",
+     "layer": "ring",
+     "count": 3,
+     "life": [
+      0.4,
+      0.55
+     ],
+     "size": [
+      0.6,
+      4.0
+     ],
+     "dir": "none",
+     "color": [
+      0.5,
+      0.08,
+      0.06
+     ],
+     "alpha": 0.8
+    },
+    {
+     "emitter": "NE_B1_BaseEmitter002 (rate 0.8/s mesh splash)",
+     "layer": "splash",
+     "rate": 8,
+     "life": [
+      0.3,
+      0.5
+     ],
+     "size": [
+      0.6,
+      1.8
+     ],
+     "speed": [
+      0.5,
+      1.5
+     ],
+     "dir": "up",
+     "shape": "disc",
+     "radius": 1.5,
+     "color": [
+      0.5,
+      0.06,
+      0.05
+     ],
+     "alpha": 0.8
+    },
+    {
+     "emitter": "smoke",
+     "layer": "puff",
+     "rate": 12,
+     "life": [
+      1.0,
+      2.0
+     ],
+     "size": [
+      1.4,
+      3.6
+     ],
+     "speed": [
+      0.5,
+      1.5
+     ],
+     "dir": "radial",
+     "shape": "disc",
+     "radius": 1.5,
+     "color": [
+      0.56,
+      0.5,
+      0.42
+     ],
+     "alpha": 0.4,
+     "drag": 1,
+     "frames": 64
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_hfm_hu_stone_foothitloop",
+   "tuned": "liquid = 1/4 of the 50 burst; splash/smoke rates",
+   "timed": true,
+   "ground": true,
+   "dur": 0.1
+  },
+  "NG_HFM_HuStone_Atk03_DaoGuang01": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "P_DAOGUANG / P_GAOGUANG (SM_DaoGuang06 arc mesh)",
+     "layer": "arc",
+     "count": 1,
+     "life": [
+      0.35,
+      0.35
+     ],
+     "size": [
+      7.0,
+      9.0
+     ],
+     "dir": "none",
+     "color": [
+      1.0,
+      0.85,
+      0.7
+     ],
+     "alpha": 0.9
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HFM_HuStone_Atk03_DaoGuang01",
+   "tuned": "the blade-light arc mesh (SM_DaoGuang06 + M_HFM_HuStone_DG03: WipeTex T_Trail046_2_A) is drawn as one oriented arc sprite (T_Trail046_2_A) in the tiger's facing; size/colour/lifetime",
+   "arc": true
+  },
+  "NG_HFM_HuStone_Atk03_DaoGuang01_Red": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "P_DAOGUANG / P_GAOGUANG (SM_DaoGuang06 arc mesh)",
+     "layer": "arc",
+     "count": 1,
+     "life": [
+      0.35,
+      0.35
+     ],
+     "size": [
+      7.0,
+      9.0
+     ],
+     "dir": "none",
+     "color": [
+      1.0,
+      0.25,
+      0.15
+     ],
+     "alpha": 0.9
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HFM_HuStone_Atk03_DaoGuang01_Red",
+   "tuned": "the blade-light arc mesh (SM_DaoGuang06 + M_HFM_HuStone_DG03: WipeTex T_Trail046_2_A) is drawn as one oriented arc sprite (T_Trail046_2_A) in the tiger's facing; size/colour/lifetime",
+   "arc": true
+  },
+  "NG_HFM_HuStone_Atk03_DaoGuang01_Blood": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "P_DAOGUANG / P_GAOGUANG (SM_DaoGuang06 arc mesh)",
+     "layer": "arc",
+     "count": 1,
+     "life": [
+      0.35,
+      0.35
+     ],
+     "size": [
+      7.0,
+      9.0
+     ],
+     "dir": "none",
+     "color": [
+      0.9,
+      0.12,
+      0.08
+     ],
+     "alpha": 0.9
+    },
+    {
+     "emitter": "Foot_Soil001",
+     "layer": "liquid",
+     "count": 50,
+     "life": [
+      0.4,
+      0.8
+     ],
+     "size": [
+      0.4,
+      1.1
+     ],
+     "speed": [
+      3,
+      8
+     ],
+     "dir": "fwd",
+     "spread": 1.0,
+     "shape": "sphere",
+     "radius": 2.0,
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 10,
+     "drag": 1,
+     "frames": 64
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_HFM_HuStone_Atk03_DaoGuang01_Blood",
+   "tuned": "the blade-light arc mesh (SM_DaoGuang06 + M_HFM_HuStone_DG03: WipeTex T_Trail046_2_A) is drawn as one oriented arc sprite (T_Trail046_2_A) in the tiger's facing; size/colour/lifetime",
+   "arc": true
+  },
+  "NG_HFM_HuStone_Atk03_GX01": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "P_Glow001",
+     "layer": "flare",
+     "count": 1,
+     "life": [
+      0.3,
+      0.3
+     ],
+     "size": [
+      1.0,
+      4.0
+     ],
+     "dir": "none",
+     "color": [
+      1.0,
+      0.9,
+      0.75
+     ]
+    },
+    {
+     "emitter": "NE_B1_Branch_Lightning (beam ribbon, 100 particles, colour 50 HDR)",
+     "layer": "spark",
+     "count": 20,
+     "life": [
+      0.08,
+      0.2
+     ],
+     "size": [
+      0.6,
+      0.2
+     ],
+     "speed": [
+      10,
+      22
+     ],
+     "dir": "sphere",
+     "color": [
+      1.0,
+      0.9,
+      0.75
+     ],
+     "drag": 6,
+     "stretch": 6
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HFM_HuStone_Atk03_GX01",
+   "tuned": "the branch-lightning beam is approximated with 20 stretched sparks; glow size"
+  },
+  "NG_HFM_HuStone_Atk03_GX01_Red": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "P_Glow001",
+     "layer": "flare",
+     "count": 1,
+     "life": [
+      0.3,
+      0.3
+     ],
+     "size": [
+      1.0,
+      4.0
+     ],
+     "dir": "none",
+     "color": [
+      1.0,
+      0.3,
+      0.2
+     ]
+    },
+    {
+     "emitter": "NE_B1_Branch_Lightning (beam ribbon, 100 particles, colour 50 HDR)",
+     "layer": "spark",
+     "count": 20,
+     "life": [
+      0.08,
+      0.2
+     ],
+     "size": [
+      0.6,
+      0.2
+     ],
+     "speed": [
+      10,
+      22
+     ],
+     "dir": "sphere",
+     "color": [
+      1.0,
+      0.3,
+      0.2
+     ],
+     "drag": 6,
+     "stretch": 6
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HFM_HuStone_Atk03_GX01_Red",
+   "tuned": "the branch-lightning beam is approximated with 20 stretched sparks; glow size"
+  },
+  "NG_HFM_HuStone_Atk06_Jiao01_Max": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "niuqu",
+     "layer": "refract",
+     "rate": 6.0,
+     "dur": 1.0,
+     "life": [
+      0.5,
+      0.5
+     ],
+     "size": [
+      1.0,
+      7.0
+     ],
+     "dir": "none"
+    },
+    {
+     "emitter": "P_Glow",
+     "layer": "glow",
+     "rate": 7.0,
+     "dur": 1.0,
+     "life": [
+      0.3,
+      0.3
+     ],
+     "size": [
+      0.5,
+      3.5
+     ],
+     "dir": "none",
+     "color": [
+      1,
+      0.6,
+      0.45
+     ],
+     "alpha": 0.5
+    },
+    {
+     "emitter": "Foot_Smoke",
+     "layer": "dust8",
+     "rate": 21.0,
+     "dur": 1.0,
+     "life": [
+      0.6,
+      1.2
+     ],
+     "size": [
+      0.8,
+      2.4
+     ],
+     "speed": [
+      3,
+      6
+     ],
+     "dir": "fwd",
+     "spread": 0.5,
+     "color": [
+      0.56,
+      0.5,
+      0.42
+     ],
+     "alpha": 0.4,
+     "drag": 2.5,
+     "frames": 64
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HFM_HuStone_Atk06_Jiao01_Max",
+   "tuned": "rate durations 1 s; sizes; Foot_Smoke rate x0.3"
+  },
+  "NG_HFM_HuStone_Atk06_Jiao01_Max02": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "niuqu",
+     "layer": "refract",
+     "rate": 6.0,
+     "dur": 1.0,
+     "life": [
+      0.5,
+      0.5
+     ],
+     "size": [
+      1.0,
+      7.0
+     ],
+     "dir": "none"
+    },
+    {
+     "emitter": "P_Glow",
+     "layer": "glow",
+     "rate": 7.0,
+     "dur": 1.0,
+     "life": [
+      0.3,
+      0.3
+     ],
+     "size": [
+      0.5,
+      3.5
+     ],
+     "dir": "none",
+     "color": [
+      1,
+      0.6,
+      0.45
+     ],
+     "alpha": 0.5
+    },
+    {
+     "emitter": "Foot_Smoke",
+     "layer": "dust8",
+     "rate": 21.0,
+     "dur": 1.0,
+     "life": [
+      0.6,
+      1.2
+     ],
+     "size": [
+      0.8,
+      2.4
+     ],
+     "speed": [
+      3,
+      6
+     ],
+     "dir": "fwd",
+     "spread": 0.5,
+     "color": [
+      0.56,
+      0.5,
+      0.42
+     ],
+     "alpha": 0.4,
+     "drag": 2.5,
+     "frames": 64
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HFM_HuStone_Atk06_Jiao01_Max02",
+   "tuned": "rate durations 1 s; sizes; Foot_Smoke rate x0.3",
+   "note": "same look as _Max [INFERENCE]"
+  },
+  "NG_HFM_HuStone_Atk06_Jiao01_long": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "B1_Base_SpriteRenderer",
+     "layer": "glow",
+     "rate": 7.0,
+     "life": [
+      0.3,
+      0.3
+     ],
+     "size": [
+      0.5,
+      3.5
+     ],
+     "dir": "none",
+     "color": [
+      1,
+      0.6,
+      0.45
+     ],
+     "alpha": 0.4
+    },
+    {
+     "emitter": "Refraction / P_Penshe_niuqu001 (YinBo sound wave)",
+     "layer": "refract",
+     "rate": 2.5,
+     "life": [
+      0.7,
+      0.7
+     ],
+     "size": [
+      1.0,
+      9.0
+     ],
+     "dir": "none"
+    },
+    {
+     "emitter": "P_Penshe_niuqu",
+     "layer": "ring5",
+     "rate": 2.5,
+     "life": [
+      0.5,
+      0.5
+     ],
+     "size": [
+      1.0,
+      7.0
+     ],
+     "dir": "none",
+     "color": [
+      0.5,
+      0.4,
+      0.35
+     ],
+     "alpha": 0.35
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HFM_HuStone_Atk06_Jiao01_long",
+   "tuned": "sizes; ring alpha",
+   "timed": true,
+   "dur": 0.1
+  },
+  "NG_HFM_HuStone_Atk06_YinBo_Blood": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "P_LIZI / Foot_Smoke002",
+     "layer": "liquid",
+     "rate": 60,
+     "dur": 0.8,
+     "life": [
+      0.5,
+      0.9
+     ],
+     "size": [
+      0.4,
+      1.1
+     ],
+     "speed": [
+      3,
+      8
+     ],
+     "dir": "fwd",
+     "spread": 0.6,
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 9,
+     "drag": 1,
+     "frames": 64
+    },
+    {
+     "emitter": "Foot_Smoke",
+     "layer": "splash",
+     "rate": 20,
+     "dur": 0.8,
+     "life": [
+      0.4,
+      0.7
+     ],
+     "size": [
+      0.6,
+      2.0
+     ],
+     "speed": [
+      1,
+      3
+     ],
+     "dir": "fwd",
+     "spread": 0.8,
+     "color": [
+      0.5,
+      0.06,
+      0.05
+     ],
+     "alpha": 0.7
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_HFM_HuStone_Atk06_YinBo_Blood",
+   "tuned": "rates scaled down from the data (P_LIZI 1000/s); durations",
+   "timed": true,
+   "dur": 0.1
+  },
+  "NG_HFM_HuStone_Atk06_Jiao01_blood": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "P_LIZI / Foot_Smoke002",
+     "layer": "liquid",
+     "rate": 60,
+     "dur": 0.8,
+     "life": [
+      0.5,
+      0.9
+     ],
+     "size": [
+      0.4,
+      1.1
+     ],
+     "speed": [
+      3,
+      8
+     ],
+     "dir": "fwd",
+     "spread": 0.6,
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 9,
+     "drag": 1,
+     "frames": 64
+    },
+    {
+     "emitter": "Foot_Smoke",
+     "layer": "splash",
+     "rate": 20,
+     "dur": 0.8,
+     "life": [
+      0.4,
+      0.7
+     ],
+     "size": [
+      0.6,
+      2.0
+     ],
+     "speed": [
+      1,
+      3
+     ],
+     "dir": "fwd",
+     "spread": 0.8,
+     "color": [
+      0.5,
+      0.06,
+      0.05
+     ],
+     "alpha": 0.7
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_HFM_HuStone_Atk06_Jiao01_blood",
+   "tuned": "rates scaled down from the data (P_LIZI 1000/s); durations",
+   "timed": false
+  },
+  "NG_HFM_HuStone_Atk06_Jiao02_Blood": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "P_LIZI / Foot_Smoke002",
+     "layer": "liquid",
+     "rate": 60,
+     "dur": 0.8,
+     "life": [
+      0.5,
+      0.9
+     ],
+     "size": [
+      0.4,
+      1.1
+     ],
+     "speed": [
+      3,
+      8
+     ],
+     "dir": "fwd",
+     "spread": 0.6,
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 9,
+     "drag": 1,
+     "frames": 64
+    },
+    {
+     "emitter": "Foot_Smoke",
+     "layer": "splash",
+     "rate": 20,
+     "dur": 0.8,
+     "life": [
+      0.4,
+      0.7
+     ],
+     "size": [
+      0.6,
+      2.0
+     ],
+     "speed": [
+      1,
+      3
+     ],
+     "dir": "fwd",
+     "spread": 0.8,
+     "color": [
+      0.5,
+      0.06,
+      0.05
+     ],
+     "alpha": 0.7
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_HFM_HuStone_Atk06_Jiao02_Blood",
+   "tuned": "rates scaled down from the data (P_LIZI 1000/s); durations",
+   "timed": false
+  },
+  "NG_HFM_HuStone_Blood_XZ02": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "Blood_Liquid emitters",
+     "layer": "liquid",
+     "count": 60,
+     "life": [
+      0.4,
+      0.9
+     ],
+     "size": [
+      0.4,
+      1.2
+     ],
+     "speed": [
+      2,
+      7
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.6,
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 10,
+     "drag": 1,
+     "frames": 64
+    },
+    {
+     "emitter": "Water_01 emitters",
+     "layer": "splash",
+     "count": 10,
+     "life": [
+      0.3,
+      0.6
+     ],
+     "size": [
+      0.6,
+      1.8
+     ],
+     "speed": [
+      0.5,
+      2
+     ],
+     "dir": "sphere",
+     "color": [
+      0.5,
+      0.06,
+      0.05
+     ],
+     "alpha": 0.7
+    },
+    {
+     "emitter": "Refraction",
+     "layer": "refract",
+     "count": 1,
+     "life": [
+      0.5,
+      0.5
+     ],
+     "size": [
+      1,
+      6
+     ],
+     "dir": "none"
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_HFM_HuStone_Blood_XZ02",
+   "tuned": "generic blood burst (60 liquid sprites) standing in for the GPU liquid / VAT splash meshes"
+  },
+  "NG_HFM_HuStone_Atk07_Yin_Blood": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "Blood_Liquid emitters",
+     "layer": "liquid",
+     "count": 25,
+     "life": [
+      0.4,
+      0.9
+     ],
+     "size": [
+      0.4,
+      1.2
+     ],
+     "speed": [
+      2,
+      7
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.6,
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 10,
+     "drag": 1,
+     "frames": 64
+    },
+    {
+     "emitter": "Water_01 emitters",
+     "layer": "splash",
+     "count": 4,
+     "life": [
+      0.3,
+      0.6
+     ],
+     "size": [
+      0.6,
+      1.8
+     ],
+     "speed": [
+      0.5,
+      2
+     ],
+     "dir": "sphere",
+     "color": [
+      0.5,
+      0.06,
+      0.05
+     ],
+     "alpha": 0.7
+    },
+    {
+     "emitter": "Refraction",
+     "layer": "refract",
+     "count": 1,
+     "life": [
+      0.5,
+      0.5
+     ],
+     "size": [
+      1,
+      6
+     ],
+     "dir": "none"
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_HFM_HuStone_Atk07_Yin_Blood",
+   "tuned": "generic blood burst (25 liquid sprites) standing in for the GPU liquid / VAT splash meshes"
+  },
+  "NG_HFM_HuStone_Atk07_XL01_Blood": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "Blood_Liquid emitters",
+     "layer": "liquid",
+     "count": 25,
+     "life": [
+      0.4,
+      0.9
+     ],
+     "size": [
+      0.4,
+      1.2
+     ],
+     "speed": [
+      2,
+      7
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.6,
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 10,
+     "drag": 1,
+     "frames": 64
+    },
+    {
+     "emitter": "Water_01 emitters",
+     "layer": "splash",
+     "count": 4,
+     "life": [
+      0.3,
+      0.6
+     ],
+     "size": [
+      0.6,
+      1.8
+     ],
+     "speed": [
+      0.5,
+      2
+     ],
+     "dir": "sphere",
+     "color": [
+      0.5,
+      0.06,
+      0.05
+     ],
+     "alpha": 0.7
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_HFM_HuStone_Atk07_XL01_Blood",
+   "tuned": "generic blood burst (25 liquid sprites) standing in for the GPU liquid / VAT splash meshes"
+  },
+  "NG_Hu_Stone_Blood_Fall_Hand": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "Blood_Liquid emitters",
+     "layer": "liquid",
+     "count": 10,
+     "life": [
+      0.4,
+      0.9
+     ],
+     "size": [
+      0.4,
+      1.2
+     ],
+     "speed": [
+      2,
+      7
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.6,
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 10,
+     "drag": 1,
+     "frames": 64
+    },
+    {
+     "emitter": "Water_01 emitters",
+     "layer": "splash",
+     "count": 3,
+     "life": [
+      0.3,
+      0.6
+     ],
+     "size": [
+      0.6,
+      1.8
+     ],
+     "speed": [
+      0.5,
+      2
+     ],
+     "dir": "sphere",
+     "color": [
+      0.5,
+      0.06,
+      0.05
+     ],
+     "alpha": 0.7
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_Hu_Stone_Blood_Fall_Hand",
+   "tuned": "generic blood burst (10 liquid sprites) standing in for the GPU liquid / VAT splash meshes"
+  },
+  "NG_Hu_Stone_Blood_gather_weapon": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "Blood_Liquid emitters",
+     "layer": "liquid",
+     "count": 18,
+     "life": [
+      0.4,
+      0.9
+     ],
+     "size": [
+      0.4,
+      1.2
+     ],
+     "speed": [
+      2,
+      7
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.6,
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 10,
+     "drag": 1,
+     "frames": 64
+    },
+    {
+     "emitter": "Water_01 emitters",
+     "layer": "splash",
+     "count": 3,
+     "life": [
+      0.3,
+      0.6
+     ],
+     "size": [
+      0.6,
+      1.8
+     ],
+     "speed": [
+      0.5,
+      2
+     ],
+     "dir": "sphere",
+     "color": [
+      0.5,
+      0.06,
+      0.05
+     ],
+     "alpha": 0.7
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_Hu_Stone_Blood_gather_weapon",
+   "tuned": "generic blood burst (18 liquid sprites) standing in for the GPU liquid / VAT splash meshes"
+  },
+  "NG_HFM_HuStone_Atk03_Weapon_Blood": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "NE_B1_BaseEmitter (blood VAT drips on the blade)",
+     "layer": "liquid",
+     "rate": 30,
+     "life": [
+      0.4,
+      0.7
+     ],
+     "size": [
+      0.3,
+      0.7
+     ],
+     "speed": [
+      0.2,
+      1
+     ],
+     "dir": "down",
+     "shape": "sphere",
+     "radius": 0.5,
+     "color": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "gravity": 9,
+     "frames": 64
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_HFM_HuStone_Atk03_Weapon_Blood",
+   "tuned": "drip rate",
+   "timed": true,
+   "dur": 0.1
+  },
+  "NG_HFM_HuStone_Atk03_DaoGuang01_Red_Pre": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "MF_HFM_HuStone_Weapon_Pre (blade glow mesh)",
+     "layer": "dot",
+     "rate": 40,
+     "life": [
+      0.2,
+      0.35
+     ],
+     "size": [
+      0.6,
+      0.2
+     ],
+     "speed": [
+      0,
+      0.3
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.6,
+     "color": [
+      1,
+      0.2,
+      0.1
+     ]
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HFM_HuStone_Atk03_DaoGuang01_Red_Pre",
+   "tuned": "blade-glow mesh drawn as red glow dots around the blade socket",
+   "timed": true,
+   "dur": 0.1
+  },
+  "NG_HFM_HuStone_Feng": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "B1_Base_MeshRenderer",
+     "layer": "debris",
+     "rate": 30,
+     "life": [
+      0.4,
+      1.6
+     ],
+     "size": [
+      0.12,
+      0.1
+     ],
+     "speed": [
+      0.5,
+      2
+     ],
+     "dir": "sphere",
+     "shape": "body",
+     "radius": 0.2,
+     "color": [
+      0.75,
+      0.6,
+      0.4
+     ],
+     "gravity": 4,
+     "frameRand": 16,
+     "rotSpeed": [
+      -6,
+      6
+     ]
+    },
+    {
+     "emitter": "smoke",
+     "layer": "puff",
+     "rate": 20,
+     "life": [
+      1.0,
+      2.0
+     ],
+     "size": [
+      1.0,
+      2.4
+     ],
+     "speed": [
+      0.5,
+      1.5
+     ],
+     "dir": "out",
+     "shape": "body",
+     "radius": 0.2,
+     "color": [
+      0.56,
+      0.5,
+      0.42
+     ],
+     "alpha": 0.35,
+     "frames": 64
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HFM_HuStone_Feng",
+   "tuned": "rates; sizes",
+   "timed": true,
+   "dur": 0.1
+  },
+  "NG_Hu_Stone_ChongZhaung_Smoke": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "P_GLOW",
+     "layer": "glow",
+     "count": 1,
+     "life": [
+      0.15,
+      0.15
+     ],
+     "size": [
+      0.5,
+      4.0
+     ],
+     "dir": "none",
+     "color": [
+      1,
+      0.6,
+      0.45
+     ],
+     "alpha": 0.5
+    },
+    {
+     "emitter": "P_Penshe_niuqu001",
+     "layer": "ring5",
+     "count": 1,
+     "life": [
+      0.15,
+      0.15
+     ],
+     "size": [
+      0.6,
+      4.0
+     ],
+     "dir": "none",
+     "color": [
+      0.6,
+      0.45,
+      0.4
+     ],
+     "alpha": 0.5
+    },
+    {
+     "emitter": "Refraction",
+     "layer": "refract",
+     "count": 1,
+     "life": [
+      0.25,
+      0.25
+     ],
+     "size": [
+      1,
+      6
+     ],
+     "dir": "none"
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/BloodVersion/NG_Hu_Stone_ChongZhaung_Smoke",
+   "tuned": "sizes; the two half-sphere shock meshes (zhao1/zhao2) not drawn",
+   "timed": true,
+   "dur": 0.15,
+   "offsetY": 2.0
+  },
+  "NG_HFM_HuStone_LongTrail": {
+   "kind": "ribbon",
+   "mode": "mask",
+   "texture": "T_Streak_Soft_Trail_01",
+   "blend": "additive",
+   "tint": [
+    1.0,
+    0.7645,
+    0.3118
+   ],
+   "life": 0.4,
+   "gain": 1.6,
+   "bones": "weapon",
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HFM_HuStone_LongTrail",
+   "emitters": "liang (M_HFM_ShuNuShou_DG02: T_Streak_Soft_Trail_01), niuqi colour 1/0.765/0.312 (heat-distort), P_RJ_liang life 0.8 -> 0.4 s here"
+  },
+  "NG_HFM_HuStone_Trail": {
+   "kind": "ribbon",
+   "mode": "mask",
+   "texture": "T_Streak_Soft_Trail_01",
+   "blend": "additive",
+   "tint": [
+    0.8542,
+    0.3973,
+    0.1986
+   ],
+   "life": 0.35,
+   "gain": 1.6,
+   "bones": "weapon",
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HFM_HuStone_Trail",
+   "emitters": "liang001/liang002 M_PSD_hustone_pulse_01_Inst1/2 (WipeTex T_Streak_Soft_Trail_01), colour (0.427,0.199,0.099) x2, life 0.35"
+  },
+  "NG_HFM_Wind_Trial": {
+   "kind": "ribbon",
+   "mode": "color",
+   "texture": "T_Fire_SmokeWisps_Tile_Dup",
+   "blend": "normal",
+   "tint": [
+    0.62,
+    0.55,
+    0.48
+   ],
+   "life": 0.5,
+   "gain": 1.6,
+   "bones": "weapon",
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HFM_Wind_Trial",
+   "emitters": "liang001 M_HuStone_Run_DB01_Inst (translucent dust trail, TileTex T_SoftSmoke_04) life 1 -> 0.5; niuqi heat distortion not drawn"
+  },
+  "NG_Hu_Stone_ZhuaJiTrail_Stone": {
+   "kind": "ribbon",
+   "mode": "mask",
+   "texture": "T_Streak_Soft_Trail_01",
+   "blend": "additive",
+   "tint": [
+    1.5,
+    0.8242,
+    0.3359
+   ],
+   "life": 0.4,
+   "gain": 1.6,
+   "bones": "weapon",
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_Hu_Stone_ZhuaJiTrail_Stone",
+   "emitters": "liang001/liang M_GYCY_Lang_05_Trail (colour 1.5/0.824/0.336, life 0.4); niuqi heat distortion not drawn"
+  },
+  "NG_Hu_Stone_ZhuaJiTrail_Stone_Heavy": {
+   "kind": "ribbon",
+   "mode": "mask",
+   "texture": "T_Streak_Soft_Trail_01",
+   "blend": "additive",
+   "tint": [
+    1.5,
+    0.8242,
+    0.3359
+   ],
+   "life": 0.4,
+   "gain": 1.6,
+   "bones": "weapon",
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_Hu_Stone_ZhuaJiTrail_Stone_Heavy",
+   "emitters": "liang001/liang M_GYCY_Lang_05_Trail (colour 1.5/0.824/0.336, life 0.4); niuqi heat distortion not drawn"
+  },
+  "NG_WuKong_Atk_Lv4_ZaDi": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "huoxing",
+     "layer": "spark",
+     "count": 100,
+     "life": [
+      0.4,
+      0.9
+     ],
+     "size": [
+      0.35,
+      0.1
+     ],
+     "speed": [
+      6,
+      16
+     ],
+     "dir": "cone",
+     "cone": 75,
+     "shape": "disc",
+     "radius": 0.8,
+     "color": [
+      1,
+      0.7,
+      0.35
+     ],
+     "gravity": 9,
+     "drag": 2,
+     "stretch": 4,
+     "colorCurve": "NG_WuKong_Atk_Lv4_ZaDi.huoxing.Color"
+    },
+    {
+     "emitter": "kuosan01001",
+     "layer": "glow",
+     "count": 1,
+     "life": [
+      0.3,
+      0.3
+     ],
+     "size": [
+      0.0,
+      20.0
+     ],
+     "dir": "none",
+     "offsetY": 0.4,
+     "color": [
+      1.0,
+      0.5913,
+      0.2825
+     ],
+     "alpha": 1,
+     "sizeCurve": "NG_WuKong_Atk_Lv4_ZaDi.kuosan01001.Value",
+     "alphaCurve": "NG_WuKong_Atk_Lv4_ZaDi.kuosan01001.Scale Alpha"
+    },
+    {
+     "emitter": "NE_B1_BaseEmitter007/013 (SM_RoundPlane_02 + M_pulse_02 chongji)",
+     "layer": "gring",
+     "count": 2,
+     "life": [
+      0.5,
+      0.7
+     ],
+     "size": [
+      1.0,
+      9.0
+     ],
+     "dir": "none",
+     "color": [
+      1.0,
+      0.7249,
+      0.4104
+     ],
+     "alpha": 0.8
+    },
+    {
+     "emitter": "niuqu003",
+     "layer": "refract",
+     "count": 1,
+     "life": [
+      1.0,
+      1.0
+     ],
+     "size": [
+      0,
+      10
+     ],
+     "dir": "none",
+     "offsetY": 0.5,
+     "sizeCurve": "NG_WuKong_Atk_Lv4_ZaDi.niuqu003.Value"
+    },
+    {
+     "emitter": "ShockwaveRing001",
+     "layer": "gring",
+     "count": 1,
+     "life": [
+      1.2,
+      1.2
+     ],
+     "size": [
+      1.0,
+      12.0
+     ],
+     "dir": "none",
+     "color": [
+      0.6,
+      0.4272,
+      0.2323
+     ],
+     "alpha": 0.6
+    },
+    {
+     "emitter": "(ground debris + dust: BAN_GSPlayAtkFXOnGround of the same montage)",
+     "layer": "debris",
+     "count": 18,
+     "life": [
+      0.8,
+      1.3
+     ],
+     "size": [
+      0.3,
+      0.25
+     ],
+     "speed": [
+      3,
+      9
+     ],
+     "dir": "cone",
+     "cone": 55,
+     "shape": "disc",
+     "radius": 1.0,
+     "color": [
+      0.55,
+      0.48,
+      0.42
+     ],
+     "gravity": 20,
+     "frameRand": 16,
+     "rotSpeed": [
+      -8,
+      8
+     ]
+    },
+    {
+     "emitter": "(dust)",
+     "layer": "smoke",
+     "count": 14,
+     "life": [
+      1.0,
+      1.8
+     ],
+     "size": [
+      1.6,
+      5.0
+     ],
+     "speed": [
+      1.5,
+      4
+     ],
+     "dir": "radial",
+     "shape": "ring",
+     "radius": 1.0,
+     "color": [
+      0.62,
+      0.52,
+      0.42
+     ],
+     "alpha": 0.5,
+     "drag": 1.8,
+     "frames": 64
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/sunwukong/Niagara/FootEffects/LV4ZaDi/NG_WuKong_Atk_Lv4_ZaDi",
+   "tuned": "kuosan01001 Initial SpriteSize taken as 1 (x curve x 2000 cm); spark speeds/sizes; ground pulse rings and debris/dust sizes",
+   "ground": true
+  },
+  "NG_WuKong_HeYao_JiaXue": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "huoxing003",
+     "layer": "dot",
+     "count": 40,
+     "life": [
+      0.6,
+      1.2
+     ],
+     "size": [
+      0.12,
+      0.04
+     ],
+     "speed": [
+      0.5,
+      2.0
+     ],
+     "dir": "up",
+     "shape": "disc",
+     "radius": 0.5,
+     "color": [
+      1.0076,
+      1.2,
+      0.5749
+     ],
+     "drag": 1.5,
+     "upBias": 0.6
+    },
+    {
+     "emitter": "NE_B1_BaseEmitter (SM_BanYuanHuan_01 half ring)",
+     "layer": "gring",
+     "count": 1,
+     "life": [
+      1.5,
+      1.5
+     ],
+     "size": [
+      0.5,
+      2.6
+     ],
+     "dir": "none",
+     "color": [
+      1.2595,
+      1.5,
+      0.7186
+     ],
+     "alpha": 0.7
+    },
+    {
+     "emitter": "NE_B1_BaseEmitter002 (SM_RoundPlane_02)",
+     "layer": "gring",
+     "count": 1,
+     "life": [
+      1.0,
+      1.0
+     ],
+     "size": [
+      0.3,
+      1.8
+     ],
+     "dir": "none",
+     "color": [
+      1.2908,
+      2.0,
+      0.9416
+     ],
+     "alpha": 0.6
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/sunwukong/Niagara/HuiFu/NG_WuKong_HeYao_JiaXue",
+   "tuned": "sizes/speeds; the pulse cylinder mesh is not drawn",
+   "ground": false
+  },
+  "NG_WuKong_HeYao_JiaXue02": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "Glow002",
+     "layer": "star",
+     "count": 1,
+     "life": [
+      0.6,
+      0.6
+     ],
+     "size": [
+      0.4,
+      2.2
+     ],
+     "dir": "none",
+     "color": [
+      0.7613,
+      1.0,
+      0.2087
+     ],
+     "alpha": 0.8
+    },
+    {
+     "emitter": "huoxing003",
+     "layer": "dot",
+     "count": 30,
+     "rate": 60.0,
+     "dur": 0.6,
+     "life": [
+      0.5,
+      1.0
+     ],
+     "size": [
+      0.1,
+      0.03
+     ],
+     "speed": [
+      0.3,
+      1.5
+     ],
+     "dir": "up",
+     "shape": "sphere",
+     "radius": 0.45,
+     "color": [
+      0.9136,
+      1.2,
+      0.2504
+     ],
+     "drag": 1,
+     "upBias": 0.5
+    },
+    {
+     "emitter": "NE_B1_LightEmitter001 (point light, 1.2 s) -> soft glow",
+     "layer": "flare",
+     "count": 1,
+     "life": [
+      1.2,
+      1.2
+     ],
+     "size": [
+      2.5,
+      2.0
+     ],
+     "dir": "none",
+     "color": [
+      0.4568,
+      0.6,
+      0.1252
+     ],
+     "alpha": 0.5
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/sunwukong/Niagara/HuiFu/NG_WuKong_HeYao_JiaXue02",
+   "tuned": "sizes/speeds; the light emitter becomes a glow sprite (no dynamic light: avoids shader recompiles)"
+  },
+  "NG_WuKong_XuLiGun_Levelup_01": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "P_Huoxing_Velocity*",
+     "layer": "spark",
+     "count": 5,
+     "life": [
+      0.5,
+      1.2
+     ],
+     "size": [
+      0.3,
+      0.08
+     ],
+     "speed": [
+      1.5,
+      5
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.08,
+     "color": [
+      1.0,
+      0.9087,
+      0.8073
+     ],
+     "gravity": 3,
+     "drag": 2.5,
+     "stretch": 3
+    },
+    {
+     "emitter": "Glow / Glow001 (M_kuosan_01_Inst4: Glow_028)",
+     "layer": "flare",
+     "count": 1,
+     "life": [
+      0.7,
+      0.7
+     ],
+     "size": [
+      1.6,
+      0.4
+     ],
+     "dir": "none",
+     "color": [
+      1.0,
+      0.9241,
+      0.8438
+     ],
+     "alpha": 1.0
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/sunwukong/Niagara/XuLiGun/Levelup/NG_WuKong_XuLiGun_Levelup_01",
+   "tuned": "per-staff-point share of the data spark count (20) spread over 7 points (x7/4 for readability at gameplay distance); sizes; glow life; light emitter colour used for the glow"
+  },
+  "NG_WuKong_XuLiGun_Levelup_02": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "P_Huoxing_Velocity*",
+     "layer": "spark",
+     "count": 25,
+     "life": [
+      0.5,
+      1.2
+     ],
+     "size": [
+      0.3,
+      0.08
+     ],
+     "speed": [
+      1.5,
+      5
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.08,
+     "color": [
+      1.0,
+      0.5944,
+      0.1442
+     ],
+     "gravity": 3,
+     "drag": 2.5,
+     "stretch": 3
+    },
+    {
+     "emitter": "Glow / Glow001 (M_kuosan_01_Inst4: Glow_028)",
+     "layer": "flare",
+     "count": 1,
+     "life": [
+      0.7,
+      0.7
+     ],
+     "size": [
+      1.6,
+      0.4
+     ],
+     "dir": "none",
+     "color": [
+      1.0,
+      0.6049,
+      0.1872
+     ],
+     "alpha": 1.0
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/sunwukong/Niagara/XuLiGun/Levelup/NG_WuKong_XuLiGun_Levelup_02",
+   "tuned": "per-staff-point share of the data spark count (100) spread over 7 points (x7/4 for readability at gameplay distance); sizes; glow life; light emitter colour used for the glow"
+  },
+  "NG_WuKong_XuLiGun_Levelup_03": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "P_Huoxing_Velocity*",
+     "layer": "spark",
+     "count": 7,
+     "life": [
+      0.5,
+      1.2
+     ],
+     "size": [
+      0.3,
+      0.08
+     ],
+     "speed": [
+      1.5,
+      5
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.08,
+     "color": [
+      1.0,
+      0.23,
+      0.07
+     ],
+     "gravity": 3,
+     "drag": 2.5,
+     "stretch": 3
+    },
+    {
+     "emitter": "Glow / Glow001 (M_kuosan_01_Inst4: Glow_028)",
+     "layer": "flare",
+     "count": 1,
+     "life": [
+      0.7,
+      0.7
+     ],
+     "size": [
+      1.6,
+      0.4
+     ],
+     "dir": "none",
+     "color": [
+      1.0,
+      0.2591,
+      0.099
+     ],
+     "alpha": 1.0
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/sunwukong/Niagara/XuLiGun/Levelup/NG_WuKong_XuLiGun_Levelup_03",
+   "tuned": "per-staff-point share of the data spark count (30 = rate x 0.1 s) spread over 7 points (x7/4 for readability at gameplay distance); sizes; glow life; light emitter colour used for the glow"
+  },
+  "NG_WuKong_XuLiGun_Levelup_04": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "P_Huoxing_Velocity*",
+     "layer": "spark",
+     "count": 17,
+     "life": [
+      0.5,
+      1.2
+     ],
+     "size": [
+      0.3,
+      0.08
+     ],
+     "speed": [
+      1.5,
+      5
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.08,
+     "color": [
+      1.0,
+      0.23,
+      0.07
+     ],
+     "gravity": 3,
+     "drag": 2.5,
+     "stretch": 3
+    },
+    {
+     "emitter": "Glow / Glow001 (M_kuosan_01_Inst4: Glow_028)",
+     "layer": "flare",
+     "count": 1,
+     "life": [
+      0.7,
+      0.7
+     ],
+     "size": [
+      1.6,
+      0.4
+     ],
+     "dir": "none",
+     "color": [
+      1.0,
+      0.25,
+      0.1
+     ],
+     "alpha": 1.0
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/sunwukong/Niagara/XuLiGun/Levelup/NG_WuKong_XuLiGun_Levelup_04",
+   "tuned": "per-staff-point share of the data spark count (70 = rate x 0.1 s) spread over 7 points (x7/4 for readability at gameplay distance); sizes; glow life; light emitter colour used for the glow"
+  },
+  "focusLevelUp": {
+   "kind": "alias",
+   "levels": [
+    "NG_WuKong_XuLiGun_Levelup_01",
+    "NG_WuKong_XuLiGun_Levelup_02",
+    "NG_WuKong_XuLiGun_Levelup_03",
+    "NG_WuKong_XuLiGun_Levelup_04"
+   ],
+   "source": "FUStPotentialEnergyConfigDesc ResID 10 PELevelConfig.DBCDAPath DBC_XuLi_Baofa_1..4 (lv4/5 share _4)"
+  },
+  "NG_wukong_Die_output": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "huoxing001",
+     "layer": "dot",
+     "count": 50,
+     "life": [
+      0.8,
+      1.6
+     ],
+     "size": [
+      0.12,
+      0.04
+     ],
+     "speed": [
+      1,
+      3
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.3,
+     "color": [
+      1.0,
+      0.75,
+      0.45
+     ],
+     "drag": 1.5,
+     "alphaCurve": "NG_wukong_Die_output.huoxing001.Scale Alpha"
+    },
+    {
+     "emitter": "huoxing",
+     "layer": "spark",
+     "count": 50,
+     "life": [
+      0.4,
+      1.0
+     ],
+     "size": [
+      0.2,
+      0.05
+     ],
+     "speed": [
+      2,
+      6
+     ],
+     "dir": "sphere",
+     "shape": "sphere",
+     "radius": 0.3,
+     "color": [
+      0.6,
+      0.75,
+      1.0
+     ],
+     "gravity": 2,
+     "drag": 2,
+     "stretch": 3
+    },
+    {
+     "emitter": "NE_B1_BaseEmitter002 (lens soft glow)",
+     "layer": "flare",
+     "count": 1,
+     "life": [
+      1.0,
+      1.0
+     ],
+     "size": [
+      0.0,
+      3.5
+     ],
+     "dir": "none",
+     "color": [
+      1.0,
+      0.61,
+      0.24
+     ],
+     "sizeCurve": "NG_wukong_Die_output.NE_B1_BaseEmitter002.Value",
+     "alphaCurve": "NG_wukong_Die_output.NE_B1_BaseEmitter002.Scale Alpha"
+    },
+    {
+     "emitter": "niuqu001",
+     "layer": "refract",
+     "count": 1,
+     "life": [
+      0.5,
+      0.5
+     ],
+     "size": [
+      0,
+      3.5
+     ],
+     "dir": "none",
+     "sizeCurve": "NG_wukong_Die_output.niuqu001.Value"
+    },
+    {
+     "emitter": "P_Mao006",
+     "layer": "hair",
+     "count": 160,
+     "life": [
+      3.0,
+      4.2
+     ],
+     "size": [
+      [
+       0.08,
+       0.1
+      ],
+      [
+       0.08,
+       0.1
+      ]
+     ],
+     "speed": [
+      0.5,
+      2.5
+     ],
+     "dir": "sphere",
+     "shape": "body",
+     "radius": 0.15,
+     "color": [
+      0.85,
+      0.72,
+      0.5
+     ],
+     "gravity": 0.6,
+     "drag": 1.2,
+     "frameRand": 64,
+     "rotSpeed": [
+      -2,
+      2
+     ],
+     "sizeCurve": "NG_wukong_Die_output.P_Mao006.Value"
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/sunwukong/Niagara/Die/NG_wukong_Die_output",
+   "tuned": "P_Mao006 count = half of the 320 burst; hair size 10x7 cm (data) x scale; GPU spark literals; colours of the GPU emitters",
+   "attach": false
+  },
+  "NG_wukong_Die_glow": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "Glow001 (M_FlareMesh)",
+     "layer": "flare",
+     "count": 1,
+     "life": [
+      3.0,
+      3.0
+     ],
+     "size": [
+      2.5,
+      1.0
+     ],
+     "dir": "none",
+     "color": [
+      1.0,
+      0.7,
+      0.35
+     ],
+     "alpha": 0.7
+    },
+    {
+     "emitter": "P_Light01001 (light 3 s, colour 4.27/4.95/5)",
+     "layer": "glow",
+     "count": 1,
+     "life": [
+      3.0,
+      3.0
+     ],
+     "size": [
+      3.0,
+      1.0
+     ],
+     "dir": "none",
+     "color": [
+      0.85,
+      0.95,
+      1.0
+     ],
+     "alpha": 0.25
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/sunwukong/Niagara/Die/NG_wukong_Die_glow",
+   "tuned": "glow sizes; the light emitter becomes a glow (no dynamic light)",
+   "timed": true,
+   "dur": 0.2
+  },
+  "NG_wukong_die_mo": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "Hand_lizi001",
+     "layer": "debris",
+     "rate": 60,
+     "life": [
+      0.5,
+      1.0
+     ],
+     "size": [
+      0.08,
+      0.05
+     ],
+     "speed": [
+      0.3,
+      1.2
+     ],
+     "dir": "up",
+     "shape": "body",
+     "radius": 0.12,
+     "color": [
+      0.5131,
+      0.6553,
+      0.7563
+     ],
+     "gravity": -0.4,
+     "drag": 1,
+     "frameRand": 16,
+     "rotSpeed": [
+      -4,
+      4
+     ]
+    },
+    {
+     "emitter": "NG_Die_xi_Smoke001",
+     "layer": "wispy",
+     "rate": 9.0,
+     "life": [
+      1.5,
+      1.5
+     ],
+     "size": [
+      0.6,
+      1.6
+     ],
+     "speed": [
+      0.2,
+      0.6
+     ],
+     "dir": "up",
+     "shape": "body",
+     "radius": 0.2,
+     "color": [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "alpha": 0.5,
+     "frames": 64
+    },
+    {
+     "emitter": "xi_lizi001_sk",
+     "layer": "dot",
+     "rate": 25.0,
+     "life": [
+      1.0,
+      2.0
+     ],
+     "size": [
+      0.06,
+      0.02
+     ],
+     "speed": [
+      0.2,
+      1.0
+     ],
+     "dir": "up",
+     "shape": "body",
+     "radius": 0.15,
+     "color": [
+      1.0,
+      0.7,
+      0.4
+     ],
+     "drag": 0.5,
+     "upBias": 0.3
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/sunwukong/Niagara/Die/NG_wukong_die_mo",
+   "tuned": "Hand_lizi001 rate 60/s of the 500/s literal; smoke rate x3 (one emitter for the whole body); sizes",
+   "timed": true,
+   "dur": 0.5,
+   "attach": true
+  },
+  "NG_wukong_Die_lizi_b": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "Hand_lizi001/002 (stone + fabric chaff from the mesh)",
+     "layer": "debris",
+     "rate": 40,
+     "life": [
+      0.8,
+      2.0
+     ],
+     "size": [
+      0.1,
+      0.06
+     ],
+     "speed": [
+      0.2,
+      1.0
+     ],
+     "dir": "up",
+     "shape": "body",
+     "radius": 0.15,
+     "color": [
+      0.5131,
+      0.6553,
+      0.7563
+     ],
+     "gravity": -0.3,
+     "drag": 0.8,
+     "frameRand": 16,
+     "rotSpeed": [
+      -4,
+      4
+     ]
+    },
+    {
+     "emitter": "NG_Die_Smoke",
+     "layer": "wispy",
+     "rate": 10,
+     "life": [
+      0.8,
+      2.0
+     ],
+     "size": [
+      0.8,
+      2.0
+     ],
+     "speed": [
+      0.3,
+      0.8
+     ],
+     "dir": "up",
+     "shape": "body",
+     "radius": 0.2,
+     "color": [
+      0.2548,
+      0.2604,
+      0.2439
+     ],
+     "alpha": 0.7,
+     "frames": 64
+    },
+    {
+     "emitter": "MeshSpark001 (burning paper SM_Dust02)",
+     "layer": "dot",
+     "rate": 12.0,
+     "life": [
+      2.0,
+      3.0
+     ],
+     "size": [
+      0.08,
+      0.03
+     ],
+     "speed": [
+      0.3,
+      1.2
+     ],
+     "dir": "up",
+     "shape": "body",
+     "radius": 0.2,
+     "color": [
+      1.0,
+      0.55,
+      0.25
+     ],
+     "drag": 0.6
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/sunwukong/Niagara/Die/NG_wukong_Die_lizi_b",
+   "tuned": "rates for one whole-body emitter; sizes; burning-paper meshes drawn as embers",
+   "timed": true,
+   "dur": 0.5,
+   "attach": true
+  },
+  "groundHit": {
+   "kind": "fx",
+   "source": "BAN_GSPlayAtkFXOnGround (HitFXRadiusMin/Max cm, ExpandTime, LineTraceHeight, SkillEffectID -> surface FX table, not decoded)",
+   "tuned": "ring/dust/debris look reuses the arena-floor dust; counts scale with HitFXRadiusMax",
+   "emitters": [
+    {
+     "emitter": "ring",
+     "layer": "ring",
+     "color": [
+      0.55,
+      0.48,
+      0.4
+     ],
+     "alpha": 0.55
+    },
+    {
+     "emitter": "dust",
+     "layer": "smoke",
+     "count": 4,
+     "life": [
+      0.8,
+      1.3
+     ],
+     "size": [
+      0.8,
+      2.6
+     ],
+     "speed": [
+      0.6,
+      1.6
+     ],
+     "dir": "radial",
+     "shape": "ring",
+     "radius": 0.5,
+     "color": [
+      0.62,
+      0.54,
+      0.45
+     ],
+     "alpha": 0.45,
+     "drag": 2,
+     "frames": 64
+    },
+    {
+     "emitter": "debris",
+     "layer": "debris",
+     "count": 4,
+     "life": [
+      0.6,
+      1.0
+     ],
+     "size": [
+      0.14,
+      0.12
+     ],
+     "speed": [
+      2,
+      4
+     ],
+     "dir": "cone",
+     "cone": 45,
+     "shape": "disc",
+     "radius": 0.4,
+     "color": [
+      0.55,
+      0.48,
+      0.42
+     ],
+     "gravity": 18,
+     "frameRand": 16,
+     "rotSpeed": [
+      -8,
+      8
+     ]
+    }
+   ]
+  },
+  "NG_HuStone_Rock_Body1": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "P_Smoke / smoke_add",
+     "layer": "dust8",
+     "count": 24,
+     "life": [
+      1.0,
+      1.8
+     ],
+     "size": [
+      1.2,
+      3.2
+     ],
+     "speed": [
+      0.5,
+      2
+     ],
+     "dir": "radial",
+     "lift": 0.5,
+     "shape": "disc",
+     "radius": 2.5,
+     "height": 2.5,
+     "color": [
+      0.56,
+      0.5,
+      0.42
+     ],
+     "alpha": 0.45,
+     "drag": 1.5,
+     "frames": 64
+    },
+    {
+     "emitter": "P_SHA (M_Debris_Snow 4x2 sand)",
+     "layer": "debris",
+     "rate": 40,
+     "dur": 1.8,
+     "life": [
+      0.8,
+      1.4
+     ],
+     "size": [
+      0.08,
+      0.06
+     ],
+     "speed": [
+      0.2,
+      0.8
+     ],
+     "dir": "down",
+     "shape": "disc",
+     "radius": 2.5,
+     "height": 3.0,
+     "color": [
+      0.62,
+      0.56,
+      0.45
+     ],
+     "gravity": 6,
+     "frameRand": 16,
+     "rotSpeed": [
+      -5,
+      5
+     ]
+    },
+    {
+     "emitter": "NE_B1_PhysicalCollisionEmitter (SM_rock_08)",
+     "layer": "debris",
+     "count": 12,
+     "life": [
+      0.8,
+      1.4
+     ],
+     "size": [
+      0.3,
+      0.26
+     ],
+     "speed": [
+      1,
+      3
+     ],
+     "dir": "radial",
+     "lift": 0.3,
+     "shape": "disc",
+     "radius": 2.5,
+     "height": 1.0,
+     "color": [
+      0.55,
+      0.5,
+      0.42
+     ],
+     "gravity": 18,
+     "frameRand": 16,
+     "rotSpeed": [
+      -6,
+      6
+     ]
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HuStone_Rock_Body1",
+   "tuned": "spawned over the statue's footprint (StaticMeshLocation on HuStoneMesh_New1 -> disc 2.5 m x 3 m high); counts/rates",
+   "ground": true
+  },
+  "NG_HuStone_Rock_Body2": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "NE_B1_PhysicalCollisionEmitter (+001)",
+     "layer": "debris",
+     "count": 75,
+     "life": [
+      1.0,
+      1.6
+     ],
+     "size": [
+      0.32,
+      0.28
+     ],
+     "speed": [
+      1,
+      4
+     ],
+     "dir": "radial",
+     "lift": 0.6,
+     "shape": "disc",
+     "radius": 2.5,
+     "height": 3.0,
+     "color": [
+      0.55,
+      0.5,
+      0.42
+     ],
+     "gravity": 18,
+     "frameRand": 16,
+     "rotSpeed": [
+      -7,
+      7
+     ]
+    },
+    {
+     "emitter": "P_SHA",
+     "layer": "debris",
+     "count": 100,
+     "life": [
+      0.8,
+      1.6
+     ],
+     "size": [
+      0.09,
+      0.07
+     ],
+     "speed": [
+      0.5,
+      2
+     ],
+     "dir": "radial",
+     "shape": "disc",
+     "radius": 2.5,
+     "height": 3.0,
+     "color": [
+      0.62,
+      0.56,
+      0.45
+     ],
+     "gravity": 10,
+     "frameRand": 16,
+     "rotSpeed": [
+      -5,
+      5
+     ]
+    },
+    {
+     "emitter": "P_Smoke001",
+     "layer": "puff",
+     "count": 33,
+     "life": [
+      1.2,
+      2.2
+     ],
+     "size": [
+      1.4,
+      3.8
+     ],
+     "speed": [
+      1,
+      3
+     ],
+     "dir": "radial",
+     "lift": 0.4,
+     "shape": "disc",
+     "radius": 2.0,
+     "height": 2.0,
+     "color": [
+      0.56,
+      0.5,
+      0.42
+     ],
+     "alpha": 0.5,
+     "drag": 1.6,
+     "frames": 64
+    },
+    {
+     "emitter": "P_Smoke",
+     "layer": "dust8",
+     "count": 30,
+     "life": [
+      1.0,
+      1.8
+     ],
+     "size": [
+      1.2,
+      3.0
+     ],
+     "speed": [
+      0.5,
+      1.5
+     ],
+     "dir": "up",
+     "shape": "disc",
+     "radius": 2.5,
+     "height": 3.0,
+     "color": [
+      0.56,
+      0.5,
+      0.42
+     ],
+     "alpha": 0.45,
+     "drag": 1.5,
+     "frames": 64
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Characters/HFM/HFM_Hu_Stone/Niagara/NG_HuStone_Rock_Body2",
+   "tuned": "counts = 1/2 (rocks) and 1/3 (sand, smoke001) of the data bursts; footprint disc",
+   "ground": true
+  },
+  "NG_Common_die": {
+   "kind": "fx",
+   "emitters": [
+    {
+     "emitter": "NG_Die_Smoke",
+     "layer": "wispy",
+     "rate": 20.0,
+     "life": [
+      1.0,
+      2.0
+     ],
+     "size": [
+      1.0,
+      2.6
+     ],
+     "speed": [
+      0.2,
+      0.8
+     ],
+     "dir": "up",
+     "shape": "body",
+     "radius": 0.3,
+     "color": [
+      0.3,
+      0.28,
+      0.27
+     ],
+     "alpha": 0.5,
+     "frames": 64
+    },
+    {
+     "emitter": "NE_B1_Common_Die_Particle (M_Sand_02 dissolve sand, 8000/s)",
+     "layer": "dot",
+     "rate": 90,
+     "life": [
+      1.0,
+      2.0
+     ],
+     "size": [
+      0.06,
+      0.02
+     ],
+     "speed": [
+      0.3,
+      1.5
+     ],
+     "dir": "up",
+     "shape": "body",
+     "radius": 0.35,
+     "color": [
+      1.0,
+      0.55,
+      0.3
+     ],
+     "drag": 0.5,
+     "upBias": 0.4
+    }
+   ],
+   "source": "b1/Content/00Main/VFX/Common/Niagara/Die/Monster/NG_Common_die",
+   "tuned": "NG_Die_Smoke rate x0.4 of 50/s; the 8000/s dissolve sand is drawn as 90 embers/s",
+   "timed": true,
+   "attach": true,
+   "dur": 0.5
+  },
+  "hit_stone": {
+   "kind": "fx",
+   "source": "HitItemFXType Stone (FUStBeAttackedDispInfoDesc 25); look reuses the stone emitters [INFERENCE]",
+   "tuned": "all",
+   "emitters": [
+    {
+     "emitter": "spark",
+     "layer": "spark",
+     "count": 16,
+     "life": [
+      0.15,
+      0.35
+     ],
+     "size": [
+      0.25,
+      0.08
+     ],
+     "speed": [
+      5,
+      11
+     ],
+     "dir": "sphere",
+     "color": [
+      1,
+      0.8,
+      0.55
+     ],
+     "gravity": 8,
+     "drag": 2.5,
+     "stretch": 4
+    },
+    {
+     "emitter": "chips",
+     "layer": "debris",
+     "count": 8,
+     "life": [
+      0.5,
+      0.9
+     ],
+     "size": [
+      0.12,
+      0.1
+     ],
+     "speed": [
+      3,
+      6
+     ],
+     "dir": "sphere",
+     "color": [
+      0.6,
+      0.55,
+      0.48
+     ],
+     "gravity": 14,
+     "frameRand": 16,
+     "rotSpeed": [
+      -9,
+      9
+     ]
+    },
+    {
+     "emitter": "dust",
+     "layer": "dust8",
+     "count": 3,
+     "life": [
+      0.6,
+      1.0
+     ],
+     "size": [
+      0.6,
+      1.6
+     ],
+     "speed": [
+      0.5,
+      1.5
+     ],
+     "dir": "sphere",
+     "color": [
+      0.56,
+      0.5,
+      0.42
+     ],
+     "alpha": 0.5,
+     "drag": 2,
+     "frames": 64
+    },
+    {
+     "emitter": "flash",
+     "layer": "flare",
+     "count": 1,
+     "life": [
+      0.12,
+      0.12
+     ],
+     "size": [
+      0.8,
+      1.6
+     ],
+     "dir": "none",
+     "color": [
+      1,
+      0.85,
+      0.6
+     ]
+    }
+   ]
+  }
+ },
+ "cameraShake": {
+  "note": "shake BlueprintGeneratedClass assets not parsed; trauma by class-name level [INFERENCE]",
+  "levels": {
+   "lv1": 0.25,
+   "lv2": 0.4,
+   "lv3": 0.6,
+   "Roar": 0.5,
+   "TTTB": 0.45,
+   "Badao": 0.35,
+   "atk08": 0.45,
+   "default": 0.3
+  }
+ },
+ "layers": {
+  "liquid": {
+   "texture": "T_liquid_8x8_006",
+   "blend": "normal",
+   "max": 480,
+   "gain": 2.5,
+   "bright": 1.6
+  },
+  "ring": {
+   "texture": "T_Water_01",
+   "blend": "normal",
+   "ground": true,
+   "max": 64,
+   "gain": 3
+  },
+  "debris": {
+   "texture": "T_Concrete_ChunkSubUV_D",
+   "blend": "normal",
+   "max": 700
+  },
+  "smoke": {
+   "texture": "T_Smoke_Wisp",
+   "blend": "normal",
+   "max": 320,
+   "gain": 4
+  },
+  "glow": {
+   "texture": "T_Ring_001",
+   "blend": "additive",
+   "max": 64,
+   "gain": 2,
+   "bright": 2
+  },
+  "spark": {
+   "texture": "T_Streak_Soft_Trail_03",
+   "blend": "additive",
+   "max": 600,
+   "gain": 3,
+   "bright": 3,
+   "soft": true
+  },
+  "splash": {
+   "texture": "T_WaterSpark001",
+   "blend": "normal",
+   "max": 160,
+   "gain": 3,
+   "bright": 1.5
+  },
+  "wisp": {
+   "texture": "T_Fire_SmokeWisps_Tile_Dup",
+   "blend": "normal",
+   "max": 160,
+   "gain": 2.5,
+   "bright": 1.5,
+   "soft": true
+  },
+  "dot": {
+   "texture": "T_Dian_01",
+   "blend": "additive",
+   "max": 500,
+   "gain": 1.5,
+   "bright": 2.5,
+   "note": "M_Glow (T_Dian_01) glow dots"
+  },
+  "flare": {
+   "texture": "Glow_028",
+   "blend": "additive",
+   "max": 48,
+   "gain": 1.5,
+   "bright": 2,
+   "note": "M_kuosan_01_Inst4 / M_Lensflare_TB_SoftGlow soft glows"
+  },
+  "star": {
+   "texture": "T_atypical_027",
+   "blend": "additive",
+   "max": 24,
+   "gain": 1.5,
+   "bright": 2,
+   "note": "M_kuosan_01_Inst3 (heal)"
+  },
+  "puff": {
+   "texture": "T_SmokeMedium_Var06_D__8x8",
+   "blend": "normal",
+   "max": 260,
+   "gain": 1.6,
+   "bright": 1.0,
+   "note": "M_BaseColor_Smoke_01_DOF_Inst"
+  },
+  "dust8": {
+   "texture": "T_ImpactDust_01",
+   "blend": "normal",
+   "max": 260,
+   "gain": 1.6,
+   "bright": 1.0,
+   "note": "M_Howitzer_Smoke_Cheaper(_DOF) / Lunge smoke"
+  },
+  "wispy": {
+   "texture": "T_Plasma_Wisps",
+   "blend": "normal",
+   "max": 160,
+   "gain": 1.4,
+   "bright": 1.0,
+   "note": "M_Wispy_Pulse_Dense_Inst2 (death smoke)"
+  },
+  "hair": {
+   "texture": "T_swk_mao0001",
+   "blend": "normal",
+   "max": 400,
+   "gain": 1.8,
+   "bright": 1.4,
+   "note": "M_swk_mao01 monkey hairs"
+  },
+  "ring5": {
+   "texture": "T_Ring_005",
+   "blend": "additive",
+   "max": 32,
+   "gain": 1.2,
+   "bright": 1.5,
+   "note": "M_HFM_HuStone_Smoke2_Inst ring puff"
+  },
+  "gring": {
+   "texture": "T_Ring_005",
+   "blend": "additive",
+   "ground": true,
+   "max": 24,
+   "gain": 1.2,
+   "bright": 1.5,
+   "note": "M_pulse_02/03 chongji ground pulse planes"
+  },
+  "refract": {
+   "texture": "T_Radial_Refraction_Blur_N",
+   "blend": "normal",
+   "max": 24,
+   "gain": 1,
+   "bright": 0.0,
+   "distort": 0.035,
+   "note": "M_Radial_Blur_Refraction_Inst / M_HFM_HuStone_Smoke(2)_Inst refraction puffs"
+  }
+ },
+ "curves": {
+  "NG_HFM_Hu_Stone_Hand_Blood.Sand.Value": {
+   "lut": [
+    1.0,
+    0.9942,
+    0.9782,
+    0.9528,
+    0.9189,
+    0.8775,
+    0.8296,
+    0.7764,
+    0.7188,
+    0.6576,
+    0.594,
+    0.529,
+    0.4635,
+    0.3987,
+    0.3354,
+    0.2746,
+    0.2175,
+    0.165,
+    0.1181,
+    0.0775,
+    0.0448,
+    0.0208,
+    0.0061,
+    0.002
+   ],
+   "stride": 1,
+   "src": "NG_HFM_Hu_Stone_Hand_Blood / Sand / Value.Scale Factor.FloatCurve (LUT 53 samples)"
+  },
+  "NG_HFM_Hu_Stone_Hand_Blood.Smoke002.Scale Alpha": {
+   "lut": [
+    1.0,
+    0.8827,
+    0.7741,
+    0.6753,
+    0.585,
+    0.503,
+    0.4293,
+    0.3627,
+    0.3038,
+    0.2512,
+    0.2053,
+    0.1651,
+    0.1306,
+    0.1012,
+    0.0764,
+    0.0562,
+    0.0396,
+    0.0268,
+    0.0169,
+    0.0098,
+    0.005,
+    0.0019,
+    0.0005,
+    0.0
+   ],
+   "stride": 1,
+   "src": "NG_HFM_Hu_Stone_Hand_Blood / Smoke002 / Scale Alpha.FloatCurve (LUT 34 samples)"
+  },
+  "NG_HFM_HuStone_Quan02_Blood.P_GLOW.Color": {
+   "lut": [
+    1.0,
+    0.9534,
+    0.974,
+    1.0,
+    1.0,
+    0.9534,
+    0.974,
+    0.9417,
+    1.0,
+    0.9534,
+    0.974,
+    0.7979,
+    1.0,
+    0.9534,
+    0.974,
+    0.6106,
+    1.0,
+    0.9534,
+    0.974,
+    0.4214,
+    1.0,
+    0.9534,
+    0.974,
+    0.2722,
+    1.0,
+    0.9534,
+    0.974,
+    0.2032,
+    1.0,
+    0.9534,
+    0.974,
+    0.1893,
+    1.0,
+    0.9534,
+    0.974,
+    0.1773,
+    1.0,
+    0.9534,
+    0.974,
+    0.1653,
+    1.0,
+    0.9534,
+    0.974,
+    0.1533,
+    1.0,
+    0.9534,
+    0.974,
+    0.1412,
+    1.0,
+    0.9534,
+    0.974,
+    0.1292,
+    1.0,
+    0.9534,
+    0.974,
+    0.1172,
+    1.0,
+    0.9534,
+    0.974,
+    0.1052,
+    1.0,
+    0.9534,
+    0.974,
+    0.0932,
+    1.0,
+    0.9534,
+    0.974,
+    0.0812,
+    1.0,
+    0.9534,
+    0.974,
+    0.0691,
+    1.0,
+    0.9534,
+    0.974,
+    0.0572,
+    1.0,
+    0.9534,
+    0.974,
+    0.0451,
+    1.0,
+    0.9534,
+    0.974,
+    0.0331,
+    1.0,
+    0.9534,
+    0.974,
+    0.0211,
+    1.0,
+    0.9534,
+    0.974,
+    0.0091,
+    1.0,
+    0.9534,
+    0.974,
+    -0.003
+   ],
+   "stride": 4,
+   "src": "NG_HFM_HuStone_Quan02_Blood / P_GLOW / Color.ColorCurve (LUT 45 samples)"
+  },
+  "NG_HFM_HuStone_Quan02_Blood.P_GLOW.Value": {
+   "lut": [
+    0.0,
+    0.2035,
+    0.3953,
+    0.5514,
+    0.6476,
+    0.674,
+    0.692,
+    0.7101,
+    0.7283,
+    0.7464,
+    0.7645,
+    0.7826,
+    0.8007,
+    0.8188,
+    0.837,
+    0.8551,
+    0.8732,
+    0.8913,
+    0.9094,
+    0.9275,
+    0.9457,
+    0.9638,
+    0.9819,
+    1.0
+   ],
+   "stride": 1,
+   "src": "NG_HFM_HuStone_Quan02_Blood / P_GLOW / Value.Scale Factor.FloatCurve (LUT 42 samples)"
+  },
+  "NG_HFM_HuStone_Quan02_Blood.P_Penshe_niuqu001.Value": {
+   "lut": [
+    0.35,
+    0.3925,
+    0.4348,
+    0.4767,
+    0.5182,
+    0.559,
+    0.5989,
+    0.638,
+    0.6758,
+    0.7124,
+    0.7476,
+    0.7811,
+    0.8128,
+    0.8426,
+    0.8704,
+    0.8959,
+    0.919,
+    0.9395,
+    0.9573,
+    0.9722,
+    0.9842,
+    0.9928,
+    0.9982,
+    1.0
+   ],
+   "stride": 1,
+   "src": "NG_HFM_HuStone_Quan02_Blood / P_Penshe_niuqu001 / Value.Scale Factor.FloatCurve (LUT 48 samples)"
+  },
+  "NG_HFM_HuStone_Quan02_Blood.Refraction.Value": {
+   "lut": [
+    0.0,
+    0.2753,
+    0.5839,
+    0.7013,
+    0.7415,
+    0.778,
+    0.8109,
+    0.8404,
+    0.8667,
+    0.8898,
+    0.9103,
+    0.9279,
+    0.9432,
+    0.9561,
+    0.967,
+    0.9758,
+    0.983,
+    0.9887,
+    0.9929,
+    0.9959,
+    0.998,
+    0.9992,
+    0.9999,
+    1.0
+   ],
+   "stride": 1,
+   "src": "NG_HFM_HuStone_Quan02_Blood / Refraction / Value.Scale Factor.FloatCurve (LUT 47 samples)"
+  },
+  "NG_HFM_HuStone_Quan02_Blood.ShockwaveRing.Value": {
+   "lut": [
+    0.0,
+    0.1717,
+    0.3417,
+    0.4986,
+    0.6292,
+    0.7218,
+    0.7655,
+    0.7786,
+    0.7925,
+    0.8063,
+    0.8202,
+    0.834,
+    0.8478,
+    0.8616,
+    0.8755,
+    0.8893,
+    0.9032,
+    0.917,
+    0.9308,
+    0.9446,
+    0.9585,
+    0.9723,
+    0.9862,
+    1.0
+   ],
+   "stride": 1,
+   "src": "NG_HFM_HuStone_Quan02_Blood / ShockwaveRing / Value.Scale Factor.FloatCurve (LUT 54 samples)"
+  },
+  "NG_HFM_HuStone_Quan02.P_GLOW.Color": {
+   "lut": [
+    1.0,
+    0.9534,
+    0.974,
+    1.0,
+    1.0,
+    0.9534,
+    0.974,
+    0.9417,
+    1.0,
+    0.9534,
+    0.974,
+    0.7979,
+    1.0,
+    0.9534,
+    0.974,
+    0.6106,
+    1.0,
+    0.9534,
+    0.974,
+    0.4214,
+    1.0,
+    0.9534,
+    0.974,
+    0.2722,
+    1.0,
+    0.9534,
+    0.974,
+    0.2032,
+    1.0,
+    0.9534,
+    0.974,
+    0.1893,
+    1.0,
+    0.9534,
+    0.974,
+    0.1773,
+    1.0,
+    0.9534,
+    0.974,
+    0.1653,
+    1.0,
+    0.9534,
+    0.974,
+    0.1533,
+    1.0,
+    0.9534,
+    0.974,
+    0.1412,
+    1.0,
+    0.9534,
+    0.974,
+    0.1292,
+    1.0,
+    0.9534,
+    0.974,
+    0.1172,
+    1.0,
+    0.9534,
+    0.974,
+    0.1052,
+    1.0,
+    0.9534,
+    0.974,
+    0.0932,
+    1.0,
+    0.9534,
+    0.974,
+    0.0812,
+    1.0,
+    0.9534,
+    0.974,
+    0.0691,
+    1.0,
+    0.9534,
+    0.974,
+    0.0572,
+    1.0,
+    0.9534,
+    0.974,
+    0.0451,
+    1.0,
+    0.9534,
+    0.974,
+    0.0331,
+    1.0,
+    0.9534,
+    0.974,
+    0.0211,
+    1.0,
+    0.9534,
+    0.974,
+    0.0091,
+    1.0,
+    0.9534,
+    0.974,
+    -0.003
+   ],
+   "stride": 4,
+   "src": "NG_HFM_HuStone_Quan02 / P_GLOW / Color.ColorCurve (LUT 45 samples)"
+  },
+  "NG_HFM_HuStone_Quan02.P_GLOW.Value": {
+   "lut": [
+    0.0,
+    0.2035,
+    0.3953,
+    0.5514,
+    0.6476,
+    0.674,
+    0.692,
+    0.7101,
+    0.7283,
+    0.7464,
+    0.7645,
+    0.7826,
+    0.8007,
+    0.8188,
+    0.837,
+    0.8551,
+    0.8732,
+    0.8913,
+    0.9094,
+    0.9275,
+    0.9457,
+    0.9638,
+    0.9819,
+    1.0
+   ],
+   "stride": 1,
+   "src": "NG_HFM_HuStone_Quan02 / P_GLOW / Value.Scale Factor.FloatCurve (LUT 42 samples)"
+  },
+  "NG_HFM_HuStone_Quan02.P_Penshe_niuqu001.Value": {
+   "lut": [
+    0.35,
+    0.3925,
+    0.4348,
+    0.4767,
+    0.5182,
+    0.559,
+    0.5989,
+    0.638,
+    0.6758,
+    0.7124,
+    0.7476,
+    0.7811,
+    0.8128,
+    0.8426,
+    0.8704,
+    0.8959,
+    0.919,
+    0.9395,
+    0.9573,
+    0.9722,
+    0.9842,
+    0.9928,
+    0.9982,
+    1.0
+   ],
+   "stride": 1,
+   "src": "NG_HFM_HuStone_Quan02 / P_Penshe_niuqu001 / Value.Scale Factor.FloatCurve (LUT 48 samples)"
+  },
+  "NG_HFM_HuStone_Quan02.Refraction.Value": {
+   "lut": [
+    0.0,
+    0.2753,
+    0.5839,
+    0.7013,
+    0.7415,
+    0.778,
+    0.8109,
+    0.8404,
+    0.8667,
+    0.8898,
+    0.9103,
+    0.9279,
+    0.9432,
+    0.9561,
+    0.967,
+    0.9758,
+    0.983,
+    0.9887,
+    0.9929,
+    0.9959,
+    0.998,
+    0.9992,
+    0.9999,
+    1.0
+   ],
+   "stride": 1,
+   "src": "NG_HFM_HuStone_Quan02 / Refraction / Value.Scale Factor.FloatCurve (LUT 47 samples)"
+  },
+  "NG_HFM_HuStone_Quan02.ShockwaveRing.Value": {
+   "lut": [
+    0.0,
+    0.1717,
+    0.3417,
+    0.4986,
+    0.6292,
+    0.7218,
+    0.7655,
+    0.7786,
+    0.7925,
+    0.8063,
+    0.8202,
+    0.834,
+    0.8478,
+    0.8616,
+    0.8755,
+    0.8893,
+    0.9032,
+    0.917,
+    0.9308,
+    0.9446,
+    0.9585,
+    0.9723,
+    0.9862,
+    1.0
+   ],
+   "stride": 1,
+   "src": "NG_HFM_HuStone_Quan02 / ShockwaveRing / Value.Scale Factor.FloatCurve (LUT 54 samples)"
+  },
+  "NG_WuKong_Atk_Lv4_ZaDi.huoxing.Color": {
+   "lut": [
+    1.0,
+    0.471,
+    0.1546,
+    1.0,
+    1.0,
+    0.4545,
+    0.1469,
+    0.9967,
+    1.0,
+    0.4088,
+    0.1257,
+    0.9878,
+    1.0,
+    0.3444,
+    0.0958,
+    0.9736,
+    1.0,
+    0.2728,
+    0.0624,
+    0.9541,
+    1.0,
+    0.207,
+    0.0318,
+    0.93,
+    1.0,
+    0.1578,
+    0.0089,
+    0.9018,
+    1.0,
+    0.1396,
+    0.0005,
+    0.8695,
+    1.0,
+    0.1386,
+    0.0,
+    0.8339,
+    1.0,
+    0.1386,
+    0.0,
+    0.7955,
+    1.0,
+    0.1386,
+    0.0,
+    0.7542,
+    1.0,
+    0.1386,
+    0.0,
+    0.7107,
+    1.0,
+    0.1386,
+    0.0,
+    0.6654,
+    1.0,
+    0.1386,
+    0.0,
+    0.6187,
+    1.0,
+    0.1386,
+    0.0,
+    0.5711,
+    1.0,
+    0.1386,
+    0.0,
+    0.5227,
+    1.0,
+    0.1386,
+    0.0,
+    0.4743,
+    1.0,
+    0.1386,
+    0.0,
+    0.426,
+    1.0,
+    0.1386,
+    0.0,
+    0.3783,
+    1.0,
+    0.1386,
+    0.0,
+    0.3316,
+    1.0,
+    0.1386,
+    0.0,
+    0.2864,
+    1.0,
+    0.1386,
+    0.0,
+    0.2429,
+    1.0,
+    0.1386,
+    0.0,
+    0.2016,
+    1.0,
+    0.1386,
+    0.0,
+    0.1631,
+    1.0,
+    0.1386,
+    0.0,
+    0.1275,
+    1.0,
+    0.1386,
+    0.0,
+    0.0953,
+    1.0,
+    0.1386,
+    0.0,
+    0.0671,
+    1.0,
+    0.1386,
+    0.0,
+    0.043,
+    1.0,
+    0.1386,
+    0.0,
+    0.0235,
+    1.0,
+    0.1386,
+    0.0,
+    0.0093,
+    1.0,
+    0.1386,
+    0.0,
+    0.0003,
+    1.0,
+    0.1386,
+    0.0,
+    -0.003
+   ],
+   "stride": 4,
+   "src": "NG_WuKong_Atk_Lv4_ZaDi / huoxing / Color.ColorCurve (LUT 53 samples)"
+  },
+  "NG_WuKong_Atk_Lv4_ZaDi.kuosan01001.Value": {
+   "lut": [
+    0.0,
+    0.0057,
+    0.0216,
+    0.0468,
+    0.0802,
+    0.1214,
+    0.1687,
+    0.2216,
+    0.2788,
+    0.3396,
+    0.4027,
+    0.4674,
+    0.5326,
+    0.5973,
+    0.6604,
+    0.7212,
+    0.7784,
+    0.8313,
+    0.8786,
+    0.9198,
+    0.9532,
+    0.9784,
+    0.9943,
+    1.0
+   ],
+   "stride": 1,
+   "src": "NG_WuKong_Atk_Lv4_ZaDi / kuosan01001 / Value.Scale Factor.FloatCurve (LUT 53 samples)"
+  },
+  "NG_WuKong_Atk_Lv4_ZaDi.kuosan01001.Scale Alpha": {
+   "lut": [
+    1.0,
+    0.9943,
+    0.9784,
+    0.9532,
+    0.9198,
+    0.8786,
+    0.8313,
+    0.7784,
+    0.7212,
+    0.6604,
+    0.5973,
+    0.5326,
+    0.4674,
+    0.4027,
+    0.3396,
+    0.2788,
+    0.2216,
+    0.1687,
+    0.1214,
+    0.0802,
+    0.0468,
+    0.0216,
+    0.0057,
+    0.0
+   ],
+   "stride": 1,
+   "src": "NG_WuKong_Atk_Lv4_ZaDi / kuosan01001 / Scale Alpha.FloatCurve (LUT 53 samples)"
+  },
+  "NG_WuKong_Atk_Lv4_ZaDi.niuqu003.Value": {
+   "lut": [
+    0.0,
+    0.0026,
+    0.0159,
+    0.0389,
+    0.0711,
+    0.111,
+    0.1576,
+    0.2101,
+    0.2673,
+    0.3283,
+    0.3918,
+    0.4572,
+    0.5233,
+    0.5889,
+    0.6531,
+    0.715,
+    0.7734,
+    0.8273,
+    0.8757,
+    0.9177,
+    0.9522,
+    0.9779,
+    0.9941,
+    1.0
+   ],
+   "stride": 1,
+   "src": "NG_WuKong_Atk_Lv4_ZaDi / niuqu003 / Value.Scale Factor.FloatCurve (LUT 54 samples)"
+  },
+  "NG_wukong_Die_output.huoxing001.Scale Alpha": {
+   "lut": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "stride": 1,
+   "src": "NG_wukong_Die_output / huoxing001 / Scale Alpha.FloatCurve (LUT 1 samples)"
+  },
+  "NG_wukong_Die_output.NE_B1_BaseEmitter002.Value": {
+   "lut": [
+    1.0,
+    0.9436,
+    0.8245,
+    0.6971,
+    0.6155,
+    0.5966,
+    0.5912,
+    0.5859,
+    0.5805,
+    0.5751,
+    0.5698,
+    0.5644,
+    0.559,
+    0.5537,
+    0.5483,
+    0.5429,
+    0.5376,
+    0.5322,
+    0.5268,
+    0.5215,
+    0.5161,
+    0.5107,
+    0.5054,
+    0.5
+   ],
+   "stride": 1,
+   "src": "NG_wukong_Die_output / NE_B1_BaseEmitter002 / Value.Scale Factor.FloatCurve (LUT 28 samples)"
+  },
+  "NG_wukong_Die_output.NE_B1_BaseEmitter002.Scale Alpha": {
+   "lut": [
+    2.0,
+    1.9888,
+    1.957,
+    1.9066,
+    1.8395,
+    1.7575,
+    1.6626,
+    1.5569,
+    1.4423,
+    1.321,
+    1.1945,
+    1.0652,
+    0.9348,
+    0.8055,
+    0.679,
+    0.5577,
+    0.4431,
+    0.3374,
+    0.2425,
+    0.1605,
+    0.0934,
+    0.043,
+    0.0112,
+    0.0
+   ],
+   "stride": 1,
+   "src": "NG_wukong_Die_output / NE_B1_BaseEmitter002 / Scale Alpha.FloatCurve (LUT 75 samples)"
+  },
+  "NG_wukong_Die_output.niuqu001.Value": {
+   "lut": [
+    0.0,
+    0.1174,
+    0.2261,
+    0.3251,
+    0.4155,
+    0.4975,
+    0.5713,
+    0.638,
+    0.6968,
+    0.7495,
+    0.7953,
+    0.8354,
+    0.8699,
+    0.8992,
+    0.924,
+    0.9442,
+    0.9607,
+    0.9734,
+    0.9833,
+    0.9903,
+    0.9951,
+    0.9982,
+    0.9995,
+    1.0
+   ],
+   "stride": 1,
+   "src": "NG_wukong_Die_output / niuqu001 / Value.Scale Factor.FloatCurve (LUT 34 samples)"
+  },
+  "NG_wukong_Die_output.P_Mao006.Value": {
+   "lut": [
+    0.2526,
+    0.3003,
+    0.4132,
+    0.5466,
+    0.6555,
+    0.698,
+    0.7212,
+    0.7444,
+    0.7677,
+    0.7909,
+    0.8141,
+    0.8374,
+    0.8606,
+    0.8838,
+    0.9071,
+    0.9303,
+    0.9535,
+    0.9768,
+    1.0,
+    0.9533,
+    0.7131,
+    0.3956,
+    0.1187,
+    0.0
+   ],
+   "stride": 1,
+   "src": "NG_wukong_Die_output / P_Mao006 / Value.Scale Factor.FloatCurve (LUT 117 samples)"
+  },
+  "NG_WuKong_WeaponTrail.liang.Scale Alpha": {
+   "lut": [
+    1.0,
+    0.8882,
+    0.7843,
+    0.6891,
+    0.6016,
+    0.5217,
+    0.4492,
+    0.3833,
+    0.3245,
+    0.2714,
+    0.2248,
+    0.1834,
+    0.1473,
+    0.1162,
+    0.0895,
+    0.0672,
+    0.0485,
+    0.0338,
+    0.022,
+    0.0133,
+    0.007,
+    0.0029,
+    0.0007,
+    0.0
+   ],
+   "stride": 1,
+   "src": "NG_WuKong_WeaponTrail / liang / Scale Alpha.FloatCurve (LUT 34 samples)"
+  },
+  "NG_WuKong_WeaponTrail.liang001.Scale Alpha": {
+   "lut": [
+    1.0,
+    0.8882,
+    0.7843,
+    0.6891,
+    0.6016,
+    0.5217,
+    0.4492,
+    0.3833,
+    0.3245,
+    0.2714,
+    0.2248,
+    0.1834,
+    0.1473,
+    0.1162,
+    0.0895,
+    0.0672,
+    0.0485,
+    0.0338,
+    0.022,
+    0.0133,
+    0.007,
+    0.0029,
+    0.0007,
+    0.0
+   ],
+   "stride": 1,
+   "src": "NG_WuKong_WeaponTrail / liang001 / Scale Alpha.FloatCurve (LUT 34 samples)"
+  },
+  "NG_WuKong_WeaponTrail.niuqi.Index 0 Param 1": {
+   "lut": [
+    1.0,
+    0.9123,
+    0.8284,
+    0.7491,
+    0.6738,
+    0.603,
+    0.536,
+    0.4733,
+    0.4146,
+    0.3601,
+    0.3095,
+    0.2628,
+    0.2201,
+    0.1814,
+    0.1465,
+    0.1153,
+    0.0881,
+    0.0644,
+    0.0448,
+    0.0285,
+    0.0161,
+    0.0071,
+    0.0019,
+    0.0
+   ],
+   "stride": 1,
+   "src": "NG_WuKong_WeaponTrail / niuqi / Index 0 Param 1.FloatCurve (LUT 36 samples)"
+  },
+  "NG_WuKong_WeaponTrail_yellow.liang.Scale Alpha": {
+   "lut": [
+    1.0,
+    0.8882,
+    0.7843,
+    0.6891,
+    0.6016,
+    0.5217,
+    0.4492,
+    0.3833,
+    0.3245,
+    0.2714,
+    0.2248,
+    0.1834,
+    0.1473,
+    0.1162,
+    0.0895,
+    0.0672,
+    0.0485,
+    0.0338,
+    0.022,
+    0.0133,
+    0.007,
+    0.0029,
+    0.0007,
+    0.0
+   ],
+   "stride": 1,
+   "src": "NG_WuKong_WeaponTrail_yellow / liang / Scale Alpha.FloatCurve (LUT 34 samples)"
+  },
+  "NG_WuKong_WeaponTrail_yellow.liang001.Scale Alpha": {
+   "lut": [
+    1.0,
+    0.8882,
+    0.7843,
+    0.6891,
+    0.6016,
+    0.5217,
+    0.4492,
+    0.3833,
+    0.3245,
+    0.2714,
+    0.2248,
+    0.1834,
+    0.1473,
+    0.1162,
+    0.0895,
+    0.0672,
+    0.0485,
+    0.0338,
+    0.022,
+    0.0133,
+    0.007,
+    0.0029,
+    0.0007,
+    0.0
+   ],
+   "stride": 1,
+   "src": "NG_WuKong_WeaponTrail_yellow / liang001 / Scale Alpha.FloatCurve (LUT 34 samples)"
+  },
+  "NG_WuKong_WeaponTrail_yellow.niuqi.Index 0 Param 1": {
+   "lut": [
+    1.0,
+    0.9123,
+    0.8284,
+    0.7491,
+    0.6738,
+    0.603,
+    0.536,
+    0.4733,
+    0.4146,
+    0.3601,
+    0.3095,
+    0.2628,
+    0.2201,
+    0.1814,
+    0.1465,
+    0.1153,
+    0.0881,
+    0.0644,
+    0.0448,
+    0.0285,
+    0.0161,
+    0.0071,
+    0.0019,
+    0.0
+   ],
+   "stride": 1,
+   "src": "NG_WuKong_WeaponTrail_yellow / niuqi / Index 0 Param 1.FloatCurve (LUT 36 samples)"
+  },
+  "NG_WuKong_WeaponTrail_red.liang.Scale Alpha": {
+   "lut": [
+    1.0,
+    0.8882,
+    0.7843,
+    0.6891,
+    0.6016,
+    0.5217,
+    0.4492,
+    0.3833,
+    0.3245,
+    0.2714,
+    0.2248,
+    0.1834,
+    0.1473,
+    0.1162,
+    0.0895,
+    0.0672,
+    0.0485,
+    0.0338,
+    0.022,
+    0.0133,
+    0.007,
+    0.0029,
+    0.0007,
+    0.0
+   ],
+   "stride": 1,
+   "src": "NG_WuKong_WeaponTrail_red / liang / Scale Alpha.FloatCurve (LUT 34 samples)"
+  },
+  "NG_WuKong_WeaponTrail_red.liang001.Scale Alpha": {
+   "lut": [
+    1.0,
+    0.8882,
+    0.7843,
+    0.6891,
+    0.6016,
+    0.5217,
+    0.4492,
+    0.3833,
+    0.3245,
+    0.2714,
+    0.2248,
+    0.1834,
+    0.1473,
+    0.1162,
+    0.0895,
+    0.0672,
+    0.0485,
+    0.0338,
+    0.022,
+    0.0133,
+    0.007,
+    0.0029,
+    0.0007,
+    0.0
+   ],
+   "stride": 1,
+   "src": "NG_WuKong_WeaponTrail_red / liang001 / Scale Alpha.FloatCurve (LUT 34 samples)"
+  },
+  "NG_WuKong_WeaponTrail_red.niuqi.Index 0 Param 1": {
+   "lut": [
+    1.0,
+    0.9123,
+    0.8284,
+    0.7491,
+    0.6738,
+    0.603,
+    0.536,
+    0.4733,
+    0.4146,
+    0.3601,
+    0.3095,
+    0.2628,
+    0.2201,
+    0.1814,
+    0.1465,
+    0.1153,
+    0.0881,
+    0.0644,
+    0.0448,
+    0.0285,
+    0.0161,
+    0.0071,
+    0.0019,
+    0.0
+   ],
+   "stride": 1,
+   "src": "NG_WuKong_WeaponTrail_red / niuqi / Index 0 Param 1.FloatCurve (LUT 36 samples)"
+  }
+ },
+ "ghost": {
+  "source": "BAN_GSGhost -> DA_GhostActor_PreciseDodge_{F,B,L,R} (GhostActorClass BP_ShadowActor_WukongStatic, Scale 1); MatParams Globle_Opacity = C_Sunwukong_Ghost_PreciseDoge_Alpha",
+  "color": [
+   0.55,
+   0.62,
+   0.7
+  ],
+  "colorNote": "ghost material colour not exported (BP_ShadowActor_WukongStatic) [INFERENCE]",
+  "settings": {
+   "DA_GhostActor_PreciseDodge_F": {
+    "opacity": [
+     [
+      0.0,
+      0.75
+     ],
+     [
+      2.0,
+      0.0
+     ]
+    ]
+   },
+   "DA_GhostActor_PreciseDodge_B": {
+    "opacity": [
+     [
+      0.0,
+      0.75
+     ],
+     [
+      2.0,
+      0.0
+     ]
+    ]
+   },
+   "DA_GhostActor_PreciseDodge_L": {
+    "opacity": [
+     [
+      0.0,
+      0.75
+     ],
+     [
+      2.0,
+      0.0
+     ]
+    ]
+   },
+   "DA_GhostActor_PreciseDodge_R": {
+    "opacity": [
+     [
+      0.0,
+      0.75
+     ],
+     [
+      2.0,
+      0.0
+     ]
+    ]
+   }
+  }
+ },
+ "post": {
+  "source": "BAN_GSSpawnStaticMeshActor -> DA_JNSB_Benti_Vibration_{F,B,L,R}: Shape_Cube + JNSB_Post_wukong_Benti_Inst (MLP_JNSB, GlitchTiling 10, ShapeGlitchAmount 0.55), attached; curves C_JNSB_Benti_BlurAmount_WuKong / C_JNSB_Benti_TimeAmount_WuKong; Direction (-1,0,0)",
+  "glitchTiling": 10,
+  "shapeGlitch": 0.55,
+  "settings": {
+   "DA_JNSB_Benti_Vibration_F": {
+    "blur": [
+     [
+      0,
+      0.015
+     ],
+     [
+      0.05,
+      0.005
+     ],
+     [
+      0.6,
+      0.001
+     ],
+     [
+      1.16,
+      0.0
+     ]
+    ],
+    "glitch": [
+     [
+      0,
+      0.5
+     ],
+     [
+      0.05,
+      1.0
+     ],
+     [
+      0.8,
+      1.3
+     ],
+     [
+      1.17,
+      0.0
+     ]
+    ],
+    "dir": [
+     -1,
+     0,
+     0
+    ]
+   },
+   "DA_JNSB_Benti_Vibration_B": {
+    "blur": [
+     [
+      0,
+      0.015
+     ],
+     [
+      0.05,
+      0.005
+     ],
+     [
+      0.6,
+      0.001
+     ],
+     [
+      1.16,
+      0.0
+     ]
+    ],
+    "glitch": [
+     [
+      0,
+      0.5
+     ],
+     [
+      0.05,
+      1.0
+     ],
+     [
+      0.8,
+      1.3
+     ],
+     [
+      1.17,
+      0.0
+     ]
+    ],
+    "dir": [
+     -1,
+     0,
+     0
+    ]
+   },
+   "DA_JNSB_Benti_Vibration_L": {
+    "blur": [
+     [
+      0,
+      0.015
+     ],
+     [
+      0.05,
+      0.005
+     ],
+     [
+      0.6,
+      0.001
+     ],
+     [
+      1.16,
+      0.0
+     ]
+    ],
+    "glitch": [
+     [
+      0,
+      0.5
+     ],
+     [
+      0.05,
+      1.0
+     ],
+     [
+      0.8,
+      1.3
+     ],
+     [
+      1.17,
+      0.0
+     ]
+    ],
+    "dir": [
+     -1,
+     0,
+     0
+    ]
+   },
+   "DA_JNSB_Benti_Vibration_R": {
+    "blur": [
+     [
+      0,
+      0.015
+     ],
+     [
+      0.05,
+      0.005
+     ],
+     [
+      0.6,
+      0.001
+     ],
+     [
+      1.16,
+      0.0
+     ]
+    ],
+    "glitch": [
+     [
+      0,
+      0.5
+     ],
+     [
+      0.05,
+      1.0
+     ],
+     [
+      0.8,
+      1.3
+     ],
+     [
+      1.17,
+      0.0
+     ]
+    ],
+    "dir": [
+     -1,
+     0,
+     0
+    ]
+   }
+  }
+ },
+ "stone": {
+  "source": "tiger material notifies (BANS_DispLibTimedModifyMaterial / BANS_GSSetCurveValueToMesh / BANS_SetCurveValueToHair) + Unit_HFM_Hu_Stone_Fake + UDDConfig_HFM_Hu_Stone_01_dep01; see extract/notes/vfx.md",
+  "curves": {
+   "C_HFM_BadyRock_Input_Curve": [
+    [
+     0.0,
+     0.0
+    ],
+    [
+     0.4,
+     0.55
+    ],
+    [
+     0.7,
+     1.0
+    ]
+   ],
+   "C_HFM_BadyRock_Output_Curve": [
+    [
+     0.0,
+     1.0
+    ],
+    [
+     0.4,
+     0.0
+    ],
+    [
+     0.7,
+     0.0
+    ]
+   ],
+   "C_HFM_BadyRockHair_Input_Curve": [
+    [
+     0.0,
+     1.0
+    ],
+    [
+     0.3,
+     0.0
+    ],
+    [
+     1.0,
+     0.0
+    ]
+   ],
+   "C_HFM_BadyHair01_Curve_atk40": [
+    [
+     0.0,
+     1.0
+    ],
+    [
+     0.05,
+     0.0
+    ],
+    [
+     0.96,
+     0.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "C_Hu_Stone_Hide": [
+    [
+     0.0,
+     1.0
+    ],
+    [
+     0.3,
+     0.35
+    ],
+    [
+     1.0,
+     0.0
+    ]
+   ],
+   "C_Hu_Stone_Show": [
+    [
+     0.0,
+     0.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "C_HFM_HandStone02_Curve": [
+    [
+     0.0,
+     0.0
+    ],
+    [
+     0.2,
+     1.0
+    ],
+    [
+     0.7,
+     1.0
+    ]
+   ],
+   "C_HFM_HandStone_WPO_Curve": [
+    [
+     0.0,
+     0.0
+    ],
+    [
+     0.7,
+     1.0
+    ]
+   ]
+  },
+  "rock": {
+   "texture": "T_HFM_HuStone_D (ML_Stone Rock D, 512 px WebP in assets/vfx)",
+   "tintData": [
+    0.219,
+    0.186,
+    0.025
+   ],
+   "tintIntensity": 0.65,
+   "albedo": [
+    0.78,
+    0.72,
+    0.6
+   ],
+   "tiling": 20,
+   "albedoNote": "Rock D x lerp(1, tint, 0.65) is not reproduced exactly: albedo multiplier hand-tuned; UV tiling = M_SkinPacked Detail Tiling 20 [INFERENCE: rock layer uses the detail tiling]"
+  },
+  "decoy": {
+   "summon": 20220201,
+   "alive": 2.5,
+   "hp": 2880,
+   "meshOffset": [
+    -0.5,
+    0,
+    -3.4
+   ],
+   "spawnUp": 3.2,
+   "capsuleHalf": 3.4064,
+   "opacity": [
+    [
+     2.0,
+     1.0
+    ],
+    [
+     2.35,
+     0.5
+    ],
+    [
+     2.7007,
+     0.0
+    ]
+   ],
+   "opacityNote": "Timeline_0 CurveFloat_0 cubic (2.0 s 1 -> 2.7007 s 0); unit removed at 2.5 s",
+   "fx": [
+    [
+     "NG_HuStone_Rock_Body1",
+     0.0
+    ],
+    [
+     "NG_HuStone_Rock_Body2",
+     1.9
+    ]
+   ],
+   "hurt": {
+    "a": [
+     -0.6,
+     1.6,
+     0
+    ],
+    "b": [
+     3.8,
+     1.6,
+     0
+    ],
+    "r": 1.6,
+    "note": "Body1 hurt capsule r 179.65 / half 259.58 at (161,0,204) pitch -83.4 -> one horizontal capsule in mesh space (X fwd, Y up) [INFERENCE]"
+   },
+   "buffs": {
+    "202202": "ImmueDamage + BounceAttack (player rebound)",
+    "202203": "CantBeLock",
+    "202204": "BeAttacked -> tiger 202205 (1 s)"
+   },
+   "roughness": 0.8,
+   "tint": [
+    1,
+    1,
+    1
+   ],
+   "mesh": "web/assets/tiger/stone_decoy.glb (extract/vfx/decoy_mesh.mjs: HuStoneMesh_New1 simplified 43.7k -> 6.1k tris)"
+  },
+  "death": {
+   "fx": "NG_Common_die",
+   "dissolve": [
+    [
+     0.0,
+     1.0
+    ],
+    [
+     0.6,
+     0.5
+    ],
+    [
+     1.0,
+     0.375
+    ],
+    [
+     1.7,
+     0.0
+    ]
+   ],
+   "timeScale": 2.5,
+   "timeNote": "DBC_Common_Die_Dissolve_Big timing not decodable: curve stretched x2.5, starts when the die montage ends [INFERENCE]",
+   "slowmo": {
+    "total": 5.0,
+    "curve": [
+     [
+      0.0,
+      1.0
+     ],
+     [
+      0.3,
+      0.15
+     ],
+     [
+      4.6726,
+      0.125
+     ]
+    ],
+    "source": "FUStDefeatSlowTimeConfigDesc 202201 TotalTime 5, TimeDilationCurve DefeatSlowTime"
+   }
+  },
+  "playerDeath": {
+   "source": "AM_Wukong_die_* BANS_DispLibTimedModifyMaterial on MLB_dissolve_wukong_die_inst (Dissolve_Intensity 1 -> 0 over 5 s from ~4.1 s, Body_brightness_Glow 2 -> 0)",
+   "ember": [
+    3.0,
+    1.6,
+    0.7
+   ]
+  }
+ }
+}

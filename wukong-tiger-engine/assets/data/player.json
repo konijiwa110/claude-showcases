@@ -1,0 +1,4510 @@
+{
+ "schema": {
+  "meta": "generator and units",
+  "assumptions": "build used for the numbers: designer preset (level, equipment, talents, wine), focus assumption, desiredHp",
+  "stats": "hpMax, mpMax, staminaMax, attack, defense, critRate (1/10000), critMultiplier (1/10000 added to 1.3), dmgDef (1/10000), dmgAddition, tenacity, trueDamageRatio, gourdCharges, contributions [{from, attr, value}]",
+  "movement": "walk/run/sprint m/s, backwardRate, turnSpeed/bigTurnSpeed deg/s",
+  "stamina": "max, regenPerSec, regenBlockedDuringCostWindows (regen paused inside every staminaCost window), sprintPerSec, depletion",
+  "dodge": "chain [{skill, clips {F,B,L,R}, staminaCost, regenBlocked, iframe {start,end,buff}, timeline}], perfect {...}",
+  "lightCombo": "[{step, skill, clip, staminaCost, minStaminaToStart, damage {effectId: damage effect (see tiger.json effects)}, focusGain [{effect,value}], superArmor windows, timeline (montage summary incl. hits with effect ids, comboWindows with whitelist, dodgeWindows, comboKeyCache)}]",
+  "sprintLight": "same shape as a lightCombo entry",
+  "heavy": "{levels [{level, skill, clip, chargeStartSkill, chargeStartClip, chargeStartCost, staminaCost, damage, superArmor, timeline}], loopClip, loopStaminaCost (per loop pass), loopLength, charge {focusGainPerSec, focusGainStartsAfter, rule, consumesAllFocus, damageReductionWhileCharging}}",
+  "focus": "{activeConfig, configs {id: [{level, threshold, decayPerSec, protectTime (-1 never decays), normalMax}]}, perfectDodgeGain}",
+  "gourd": "{charges, wine, healPctOfHpMax, healFlat, clip, healTime s, chargeSpentTime s, timeline}",
+  "hitReactions": "rules mapping tiger hits to player reactions",
+  "reboundClips": "{skillId: clip played when the attack hits a BounceAttack target (tiger stone form)}",
+  "damageModel": "see tiger.json damageModel"
+ },
+ "meta": {
+  "generator": "extract/B1Data/build_combat.py",
+  "notes": "extract/notes/combat.md",
+  "units": "meters, seconds, degrees; times are montage-time seconds"
+ },
+ "assumptions": {
+  "preset": "RoleDataConfigDesc group 31 '黄风庙后期' (designer test build for late chapter 2)",
+  "level": 30,
+  "equipment": [
+   {
+    "id": 15008,
+    "name": "出云棍",
+    "slot": "Weapon"
+   },
+   {
+    "id": 19002,
+    "name": "定风珠",
+    "slot": "Fabao"
+   },
+   {
+    "id": 16002,
+    "name": "猫睛宝串",
+    "slot": "Accessory"
+   },
+   {
+    "id": 16003,
+    "name": "玛瑙罐",
+    "slot": "Accessory"
+   },
+   {
+    "id": 11201,
+    "name": "藏风兽面",
+    "slot": "Head"
+   },
+   {
+    "id": 11202,
+    "name": "藏风兽吞铠",
+    "slot": "Upwear"
+   },
+   {
+    "id": 11203,
+    "name": "藏风护臂",
+    "slot": "Arm"
+   },
+   {
+    "id": 11204,
+    "name": "藏风护腿",
+    "slot": "Foot"
+   },
+   {
+    "id": 18003,
+    "name": "仙药葫芦",
+    "slot": "Hulu"
+   }
+  ],
+  "talents": [
+   {
+    "id": 200103,
+    "name": "慧眼圆睁",
+    "level": 1
+   },
+   {
+    "id": 100101,
+    "name": "体健",
+    "level": 1
+   },
+   {
+    "id": 100102,
+    "name": "绵绵",
+    "level": 1
+   },
+   {
+    "id": 100103,
+    "name": "定息存神",
+    "level": 1
+   },
+   {
+    "id": 100106,
+    "name": "猿捷",
+    "level": 1
+   },
+   {
+    "id": 100107,
+    "name": "任翻腾 ",
+    "level": 1
+   },
+   {
+    "id": 100201,
+    "name": "直取",
+    "level": 1
+   },
+   {
+    "id": 100202,
+    "name": "接力",
+    "level": 1
+   },
+   {
+    "id": 100203,
+    "name": "冲霄",
+    "level": 1
+   },
+   {
+    "id": 100301,
+    "name": "五脏坚固",
+    "level": 3
+   },
+   {
+    "id": 100302,
+    "name": "气海充盈",
+    "level": 3
+   },
+   {
+    "id": 100304,
+    "name": "怒相厚积",
+    "level": 2
+   },
+   {
+    "id": 100502,
+    "name": "壮怀",
+    "level": 2
+   },
+   {
+    "id": 100504,
+    "name": "熟谙",
+    "level": 2
+   },
+   {
+    "id": 100504,
+    "name": "熟谙",
+    "level": 2
+   },
+   {
+    "id": 100601,
+    "name": "展足",
+    "level": 1
+   },
+   {
+    "id": 100602,
+    "name": "克刚",
+    "level": 1
+   },
+   {
+    "id": 100607,
+    "name": "识破",
+    "level": 1
+   },
+   {
+    "id": 100608,
+    "name": "贯索",
+    "level": 1
+   },
+   {
+    "id": 100609,
+    "name": "斩棍式",
+    "level": 1
+   },
+   {
+    "id": 100701,
+    "name": "立棍",
+    "level": 1
+   },
+   {
+    "id": 100702,
+    "name": "铁树",
+    "level": 1
+   },
+   {
+    "id": 100705,
+    "name": "风云转",
+    "level": 1
+   },
+   {
+    "id": 100801,
+    "name": "戳棍",
+    "level": 1
+   },
+   {
+    "id": 100802,
+    "name": "借力",
+    "level": 1
+   },
+   {
+    "id": 100807,
+    "name": "退寸进尺",
+    "level": 1
+   },
+   {
+    "id": 100901,
+    "name": "脆断",
+    "level": 1
+   },
+   {
+    "id": 100902,
+    "name": "瞬机",
+    "level": 1
+   },
+   {
+    "id": 101001,
+    "name": "纵横",
+    "level": 1
+   }
+  ],
+  "attrItems": [
+   1003,
+   1004,
+   1005
+  ],
+  "wine": 2002,
+  "focusTalents": "the preset lists no 棍势二/三/四段 (100501/100503/100505, cost 0 talent points); focus.activeConfig uses config 3 (all three) so heavy levels 0-4 are reachable; see combat.md",
+  "desiredHp": 435
+ },
+ "stats": {
+  "hpMax": 390,
+  "mpMax": 220,
+  "staminaMax": 250,
+  "attack": 60,
+  "defense": 132,
+  "critRate": 500,
+  "critMultiplier": 0,
+  "dmgDef": 200,
+  "dmgAddition": 0,
+  "tenacity": 0,
+  "trueDamageRatio": 0,
+  "gourdCharges": 6,
+  "contributions": [
+   {
+    "from": "EquipDesc 15008 出云棍",
+    "attr": "AtkBase",
+    "value": 60
+   },
+   {
+    "from": "EquipDesc 15008 出云棍",
+    "attr": "DefBase",
+    "value": 30
+   },
+   {
+    "from": "EquipDesc 19002 定风珠",
+    "attr": "DmgDefBase",
+    "value": 200
+   },
+   {
+    "from": "EquipDesc 16002 猫睛宝串",
+    "attr": "CritRateBase",
+    "value": 300
+   },
+   {
+    "from": "EquipDesc 16003 玛瑙罐",
+    "attr": "DefBase",
+    "value": 14
+   },
+   {
+    "from": "EquipDesc 11201 藏风兽面",
+    "attr": "DefBase",
+    "value": 18
+   },
+   {
+    "from": "EquipDesc 11202 藏风兽吞铠",
+    "attr": "DefBase",
+    "value": 35
+   },
+   {
+    "from": "EquipDesc 11203 藏风护臂",
+    "attr": "DefBase",
+    "value": 14
+   },
+   {
+    "from": "EquipDesc 11204 藏风护腿",
+    "attr": "DefBase",
+    "value": 21
+   },
+   {
+    "from": "EquipDesc 18003 仙药葫芦",
+    "attr": "BloodBottomNumMaxBase",
+    "value": 6
+   },
+   {
+    "from": "AttrItemDesc 1003",
+    "attr": "HpMaxBase",
+    "value": 60
+   },
+   {
+    "from": "AttrItemDesc 1004",
+    "attr": "MpMaxBase",
+    "value": 20
+   },
+   {
+    "from": "AttrItemDesc 1005",
+    "attr": "StaminaMaxBase",
+    "value": 20
+   },
+   {
+    "from": "TalentSDesc 100301 五脏坚固 L3",
+    "attr": "HpMaxBase",
+    "value": 30
+   },
+   {
+    "from": "TalentSDesc 100302 气海充盈 L3",
+    "attr": "StaminaMaxBase",
+    "value": 30
+   },
+   {
+    "from": "TalentSDesc 100304 怒相厚积 L2",
+    "attr": "CritRateBase",
+    "value": 200
+   }
+  ],
+  "source": "FUStUnitLevelUpDesc 9900001 + FUStPlayerCommDesc 10 + EquipDesc/EquipAttrDesc/AttrItemDesc/TalentSDesc (RoleAttrHelper.FillRoleExtAttr)"
+ },
+ "movement": {
+  "walk": 1.6,
+  "run": 6.5,
+  "sprint": 10.8,
+  "backwardRate": 0.8,
+  "turnSpeed": 270,
+  "bigTurnSpeed": 540,
+  "source": "FUStUnitCommDesc 10, FUStPlayerCommDesc 10"
+ },
+ "stamina": {
+  "max": 250,
+  "regenPerSec": 50,
+  "regenBlockedDuringCostWindows": true,
+  "sprintPerSec": 7.5,
+  "depletion": {
+   "buff": 129,
+   "noRegenSec": 1.5,
+   "staminaDepletedStateSec": 3.0,
+   "note": "at 0 stamina: buff 129 (1.5 s, regen x0) adds buff 130 for 3000 ms (SimpleState StaminaDepleted); casting any skill while depleted removes 129"
+  },
+  "costFormula": "cost = base x StaminaCostMultiper(1); actions need current stamina >= minStaminaToStart",
+  "source": "FUStPlayerCommDesc 10, BUS_StaminaComp, BUACStaminaCost, FUStBuffDesc 129/130"
+ },
+ "dodge": {
+  "chain": [
+   {
+    "skill": 10301,
+    "clips": {
+     "F": "AM_Wukong_Dodge_F_01_New",
+     "B": "AM_Wukong_Dodge_B_01_New",
+     "L": "AM_Wukong_Dodge_L_01_New",
+     "R": "AM_Wukong_Dodge_R_01_New"
+    },
+    "staminaCost": 20,
+    "regenBlocked": [
+     {
+      "start": 0.0001,
+      "end": 0.6333
+     }
+    ],
+    "iframe": {
+     "start": 0.0,
+     "end": 0.4,
+     "buff": 10106
+    },
+    "timeline": {
+     "length": 1.55,
+     "sections": [
+      {
+       "name": "Default",
+       "start": 0.0,
+       "next": null
+      }
+     ],
+     "buffs": [
+      {
+       "start": 0.0,
+       "end": 0.4,
+       "buff": 10106
+      },
+      {
+       "start": 0.1667,
+       "end": 0.3564,
+       "buff": 472
+      },
+      {
+       "start": 0.7,
+       "end": 0.9,
+       "buff": 1129
+      }
+     ],
+     "triggerEffects": [
+      {
+       "time": 0.3,
+       "effect": 910100
+      },
+      {
+       "time": 0.3,
+       "effect": 910101
+      }
+     ],
+     "comboWindows": [
+      {
+       "start": 0.7,
+       "end": 1.1692
+      }
+     ],
+     "attackRotation": [
+      {
+       "start": 0.0001,
+       "end": 0.1407,
+       "degPerSec": null
+      },
+      {
+       "start": 0.6016,
+       "end": 0.7781,
+       "degPerSec": 400.0
+      }
+     ],
+     "rootMotionScale": [
+      {
+       "start": 0.0,
+       "end": 0.4993,
+       "axis": "All",
+       "min": null,
+       "max": null,
+       "offset": 0.0,
+       "rangeLimited": false
+      }
+     ],
+     "attackState": [
+      {
+       "start": 0.0001,
+       "end": 0.8
+      }
+     ],
+     "staminaCost": [
+      {
+       "start": 0.0001,
+       "end": 0.6333,
+       "effect": 1030101
+      }
+     ],
+     "dodgeWindows": [
+      {
+       "start": 0.7,
+       "end": 1.1676
+      }
+     ],
+     "itemWindows": [
+      {
+       "start": 0.7333,
+       "end": 1.55
+      }
+     ],
+     "comboKeyCache": [
+      {
+       "start": 0.4,
+       "end": 0.8
+      }
+     ]
+    }
+   },
+   {
+    "skill": 10302,
+    "clips": {
+     "F": "AM_Wukong_Dodge_F_02",
+     "B": "AM_Wukong_Dodge_B_02",
+     "L": "AM_Wukong_Dodge_L_02",
+     "R": "AM_Wukong_Dodge_R_02"
+    },
+    "staminaCost": 30,
+    "regenBlocked": [
+     {
+      "start": 0.0001,
+      "end": 0.6667
+     }
+    ],
+    "iframe": {
+     "start": 0.0,
+     "end": 0.466,
+     "buff": 10108
+    },
+    "timeline": {
+     "length": 1.8833,
+     "sections": [
+      {
+       "name": "Default",
+       "start": 0.0,
+       "next": null
+      }
+     ],
+     "buffs": [
+      {
+       "start": 0.0,
+       "end": 0.4663,
+       "buff": 10108
+      },
+      {
+       "start": 0.1667,
+       "end": 0.4485,
+       "buff": 472
+      },
+      {
+       "start": 0.8,
+       "end": 1.0,
+       "buff": 1129
+      }
+     ],
+     "triggerEffects": [
+      {
+       "time": 0.2667,
+       "effect": 910100
+      },
+      {
+       "time": 0.2667,
+       "effect": 910101
+      }
+     ],
+     "comboWindows": [
+      {
+       "start": 0.7333,
+       "end": 0.8,
+       "whitelist": [
+        10885,
+        10890
+       ]
+      },
+      {
+       "start": 0.8017,
+       "end": 1.1661
+      }
+     ],
+     "attackRotation": [
+      {
+       "start": 0.0001,
+       "end": 0.146,
+       "degPerSec": null
+      },
+      {
+       "start": 0.5419,
+       "end": 0.7128,
+       "degPerSec": 400.0
+      }
+     ],
+     "rootMotionScale": [
+      {
+       "start": 0.0,
+       "end": 0.7037,
+       "axis": "AxisX",
+       "min": null,
+       "max": null,
+       "offset": 0.0,
+       "rangeLimited": false
+      }
+     ],
+     "attackState": [
+      {
+       "start": 0.0001,
+       "end": 0.9031
+      }
+     ],
+     "staminaCost": [
+      {
+       "start": 0.0001,
+       "end": 0.6667,
+       "effect": 1030201
+      }
+     ],
+     "dodgeWindows": [
+      {
+       "start": 0.7667,
+       "end": 1.1667
+      }
+     ],
+     "itemWindows": [
+      {
+       "start": 0.8834,
+       "end": 1.6333
+      }
+     ],
+     "comboKeyCache": [
+      {
+       "start": 0.0,
+       "end": 0.8
+      },
+      {
+       "start": 0.4333,
+       "end": 0.9
+      }
+     ]
+    }
+   },
+   {
+    "skill": 10303,
+    "clips": {
+     "F": "AM_Wukong_Dodge_F_03",
+     "B": "AM_Wukong_Dodge_B_03",
+     "L": "AM_Wukong_Dodge_L_03",
+     "R": "AM_Wukong_Dodge_R_03"
+    },
+    "staminaCost": 40,
+    "regenBlocked": [
+     {
+      "start": 0.0001,
+      "end": 0.8
+     }
+    ],
+    "iframe": {
+     "start": 0.0,
+     "end": 0.5,
+     "buff": 10109
+    },
+    "timeline": {
+     "length": 1.8667,
+     "sections": [
+      {
+       "name": "Default",
+       "start": 0.0,
+       "next": null
+      }
+     ],
+     "buffs": [
+      {
+       "start": 0.0,
+       "end": 0.532,
+       "buff": 10109
+      },
+      {
+       "start": 0.1667,
+       "end": 0.416,
+       "buff": 472
+      },
+      {
+       "start": 1.0333,
+       "end": 1.2667,
+       "buff": 1129
+      }
+     ],
+     "triggerEffects": [
+      {
+       "time": 0.2333,
+       "effect": 910100
+      },
+      {
+       "time": 0.2365,
+       "effect": 910101
+      }
+     ],
+     "comboWindows": [
+      {
+       "start": 1.0333,
+       "end": 1.2333,
+       "whitelist": [
+        10885,
+        10890
+       ]
+      },
+      {
+       "start": 1.1,
+       "end": 1.8459
+      }
+     ],
+     "attackRotation": [
+      {
+       "start": -0.0001,
+       "end": 0.111,
+       "degPerSec": null
+      },
+      {
+       "start": 0.5627,
+       "end": 0.7652,
+       "degPerSec": 400.0
+      }
+     ],
+     "attackState": [
+      {
+       "start": 0.0001,
+       "end": 1.2333
+      }
+     ],
+     "staminaCost": [
+      {
+       "start": 0.0001,
+       "end": 0.8,
+       "effect": 1030301
+      }
+     ],
+     "dodgeWindows": [
+      {
+       "start": 0.7333,
+       "end": 1.0
+      },
+      {
+       "start": 1.0,
+       "end": 1.8667
+      }
+     ],
+     "itemWindows": [
+      {
+       "start": 1.1667,
+       "end": 1.8667
+      }
+     ],
+     "comboKeyCache": [
+      {
+       "start": 0.0,
+       "end": 1.1333
+      },
+      {
+       "start": 0.7333,
+       "end": 1.2
+      }
+     ]
+    }
+   }
+  ],
+  "chainNote": "FUStRollSkillDesc: consecutive dodges advance 10301 -> 10302 -> 10303 -> 10301; directional clips only while locked on",
+  "perfect": {
+   "skill": 10311,
+   "clips": {
+    "F": "AM_Wukong_PreciseDodge_F_01",
+    "B": "AM_Wukong_PreciseDodge_B_01",
+    "L": "AM_Wukong_PreciseDodge_L_01",
+    "R": "AM_Wukong_PreciseDodge_R_01"
+   },
+   "toleranceSec": 0.03,
+   "trigger": "an enemy hit sweep or attackWarning shape overlaps the player's PreciseDodge capsule (r 0.9 m, half 1.6 m) -> window = 0.03 s refreshed every overlapping frame; dodge pressed while window > 0 -> perfect dodge (no stamina cost) instead of a roll",
+   "rewards": {
+    "invulnerableBuff": 117,
+    "invulnerableSec": 0.8,
+    "focusGain": 40,
+    "maxAwardsPerWindow": 1
+   },
+   "timeline": {
+    "length": 1.1667,
+    "sections": [
+     {
+      "name": "Default",
+      "start": 0.0,
+      "next": null
+     }
+    ],
+    "buffs": [
+     {
+      "start": 0.5006,
+      "end": 1.1667,
+      "buff": 1005
+     },
+     {
+      "start": 0.6333,
+      "end": 0.8333,
+      "buff": 1129
+     }
+    ],
+    "triggerEffects": [
+     {
+      "time": 0.2413,
+      "effect": 1099940
+     },
+     {
+      "time": 0.242,
+      "effect": 1031101
+     },
+     {
+      "time": 0.2431,
+      "effect": 1031111
+     },
+     {
+      "time": 0.2431,
+      "effect": 1031112
+     }
+    ],
+    "behaviorTags": [
+     {
+      "time": 0.2492,
+      "tag": "Wukong_PD"
+     }
+    ],
+    "comboWindows": [
+     {
+      "start": 0.6333,
+      "end": 1.1667
+     }
+    ],
+    "attackRotation": [
+     {
+      "start": 0.1017,
+      "end": 0.5984,
+      "degPerSec": 400.0
+     }
+    ],
+    "speedRate": [
+     {
+      "start": 0.2417,
+      "end": 0.5008,
+      "rate": 1.5
+     }
+    ],
+    "attackState": [
+     {
+      "start": 0.0,
+      "end": 0.7669
+     }
+    ],
+    "dodgeWindows": [
+     {
+      "start": 0.6,
+      "end": 1.1634
+     }
+    ],
+    "itemWindows": [
+     {
+      "start": 0.6333,
+      "end": 1.1667
+     }
+    ],
+    "comboKeyCache": [
+     {
+      "start": 0.2439,
+      "end": 0.7333
+     }
+    ]
+   },
+   "source": "BUS_PreciseDodgeComp, Unit_Player_Wukong PlayerExtendConfigComp, FUStBuffDesc 117/1019"
+  }
+ },
+ "lightCombo": [
+  {
+   "skill": 10801,
+   "clip": "AM_Wukong_ComboA_q1",
+   "staminaCost": 10,
+   "staminaCostEffect": [
+    1080151
+   ],
+   "regenBlocked": [
+    {
+     "start": 0.0,
+     "end": 0.9
+    }
+   ],
+   "minStaminaToStart": 1,
+   "damage": {
+    "1080101": {
+     "type": "damage",
+     "damageMult": 0.9,
+     "flatDamage": 0,
+     "hitWeight": 1,
+     "armorBreak": 0.1,
+     "armorBreakLevel": "【主角】轻棍连招/0段蓄力",
+     "damageType": 1,
+     "elementLevel": 0,
+     "element": 0,
+     "blockArmorHit": 72,
+     "damageImmuneLevel": 0,
+     "hitStop": {
+      "freeze": 0,
+      "slow": 0,
+      "slowRate": 0
+     },
+     "source": "FUStSkillEffectDesc 1080101: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】轻棍连招/0段蓄力'"
+    }
+   },
+   "focusGain": [
+    {
+     "effect": 1080191,
+     "value": 15
+    }
+   ],
+   "superArmor": [],
+   "timeline": {
+    "length": 2.3667,
+    "sections": [
+     {
+      "name": "Default",
+      "start": 0.0,
+      "next": "Jump_Fail"
+     }
+    ],
+    "hits": [
+     {
+      "start": 0.2333,
+      "end": 0.2826,
+      "effects": [
+       1080101,
+       1080104,
+       1080999,
+       1080504
+      ],
+      "shapes": [
+       {
+        "socket": "StickTip13",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_04",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_05",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_wei",
+        "radius": 0.5
+       },
+       {
+        "socket": "WeaponHit_05",
+        "radius": 0.5
+       }
+      ]
+     },
+     {
+      "start": 0.283,
+      "end": 0.3667,
+      "effects": [
+       1080101,
+       1080104,
+       1080999,
+       1080504
+      ],
+      "shapes": [
+       {
+        "socket": "StickTip13",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_04",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_05",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_wei",
+        "radius": 0.5
+       },
+       {
+        "socket": "WeaponHit_05",
+        "radius": 0.5
+       }
+      ]
+     }
+    ],
+    "buffs": [
+     {
+      "start": 0.0,
+      "end": 0.9,
+      "buff": 20101
+     },
+     {
+      "start": 0.3667,
+      "end": 0.9,
+      "buff": 1993
+     }
+    ],
+    "removeBuffs": [
+     {
+      "time": 0.0333,
+      "buffs": 1013
+     },
+     {
+      "time": 0.0333,
+      "buffs": 1014
+     },
+     {
+      "time": 0.0333,
+      "buffs": 1031
+     }
+    ],
+    "behaviorTags": [
+     {
+      "time": 0.0333,
+      "tag": "Q"
+     },
+     {
+      "time": 0.1333,
+      "tag": "dageGP"
+     }
+    ],
+    "comboWindows": [
+     {
+      "start": 0.4667,
+      "end": 1.0011,
+      "whitelist": [
+       10705,
+       10706,
+       10713,
+       10720,
+       10721,
+       10752,
+       10802,
+       10842,
+       10843
+      ]
+     }
+    ],
+    "attackRotation": [
+     {
+      "start": 0.0001,
+      "end": 0.2251,
+      "degPerSec": 1200.0
+     }
+    ],
+    "speedRate": [
+     {
+      "start": 0.3704,
+      "end": 0.7667,
+      "rate": 1.4
+     },
+     {
+      "start": 0.7667,
+      "end": 0.9,
+      "rate": 1.2
+     }
+    ],
+    "rootMotionScale": [
+     {
+      "start": 0.0333,
+      "end": 0.2796,
+      "axis": "AxisX",
+      "min": 0.1,
+      "max": 2.7,
+      "offset": -2.0,
+      "rangeLimited": true
+     }
+    ],
+    "attackWarning": [
+     {
+      "start": 0.2,
+      "end": 0.3008,
+      "shapes": [
+       {
+        "socket": "AW_ComboB_01",
+        "radius": 1.6
+       },
+       {
+        "socket": "AW_ComboB_02",
+        "radius": 1.6
+       }
+      ]
+     }
+    ],
+    "attackState": [
+     {
+      "start": 0.0,
+      "end": 0.9
+     }
+    ],
+    "staminaCost": [
+     {
+      "start": 0.0,
+      "end": 0.9,
+      "effect": 1080151
+     }
+    ],
+    "dodgeWindows": [
+     {
+      "start": 0.3667,
+      "end": 1.8989
+     }
+    ],
+    "itemWindows": [
+     {
+      "start": 0.8333,
+      "end": 1.9
+     }
+    ],
+    "comboKeyCache": [
+     {
+      "start": 0.2336,
+      "end": 0.5695
+     }
+    ]
+   },
+   "source": "FUStSkillSDesc 10801; montage AM_Wukong_ComboA_q1 notifies; FUStSkillEffectDesc rows listed",
+   "step": 1
+  },
+  {
+   "skill": 10802,
+   "clip": "AM_Wukong_ComboA_q2",
+   "staminaCost": 15,
+   "staminaCostEffect": [
+    1080251
+   ],
+   "regenBlocked": [
+    {
+     "start": 0.0,
+     "end": 1.1
+    }
+   ],
+   "minStaminaToStart": 1,
+   "damage": {
+    "1080201": {
+     "type": "damage",
+     "damageMult": 1.25,
+     "flatDamage": 0,
+     "hitWeight": 1,
+     "armorBreak": 0.1,
+     "armorBreakLevel": "【主角】轻棍连招/0段蓄力",
+     "damageType": 1,
+     "elementLevel": 0,
+     "element": 0,
+     "blockArmorHit": 100,
+     "damageImmuneLevel": 0,
+     "hitStop": {
+      "freeze": 0,
+      "slow": 0,
+      "slowRate": 0
+     },
+     "source": "FUStSkillEffectDesc 1080201: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】轻棍连招/0段蓄力'"
+    }
+   },
+   "focusGain": [
+    {
+     "effect": 1080291,
+     "value": 15
+    }
+   ],
+   "superArmor": [],
+   "timeline": {
+    "length": 2.3333,
+    "sections": [
+     {
+      "name": "Default",
+      "start": 0.0,
+      "next": null
+     }
+    ],
+    "hits": [
+     {
+      "start": 0.6201,
+      "end": 0.6617,
+      "effects": [
+       1080201,
+       1080104,
+       1080999,
+       1080504
+      ],
+      "shapes": [
+       {
+        "socket": "StickTip13",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_04",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_05",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_wei",
+        "radius": 0.5
+       },
+       {
+        "socket": "WeaponHit_05",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r",
+        "radius": 0.5
+       }
+      ]
+     },
+     {
+      "start": 0.6629,
+      "end": 0.7667,
+      "effects": [
+       1080201,
+       1080104,
+       1080999,
+       1080504
+      ],
+      "shapes": [
+       {
+        "socket": "StickTip13",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_04",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_05",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_wei",
+        "radius": 0.5
+       },
+       {
+        "socket": "WeaponHit_05",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r",
+        "radius": 0.5
+       }
+      ]
+     }
+    ],
+    "buffs": [
+     {
+      "start": 0.0,
+      "end": 1.6621,
+      "buff": 20102
+     },
+     {
+      "start": 0.7667,
+      "end": 1.2667,
+      "buff": 1993
+     }
+    ],
+    "behaviorTags": [
+     {
+      "time": 0.4667,
+      "tag": "Q"
+     },
+     {
+      "time": 0.5333,
+      "tag": "dageGP"
+     }
+    ],
+    "comboWindows": [
+     {
+      "start": 0.6,
+      "end": 0.8333,
+      "whitelist": [
+       10705,
+       10706
+      ]
+     },
+     {
+      "start": 0.8333,
+      "end": 1.2003,
+      "whitelist": [
+       10705,
+       10706,
+       10713,
+       10720,
+       10721,
+       10753,
+       10803,
+       10842,
+       10843
+      ]
+     }
+    ],
+    "attackRotation": [
+     {
+      "start": 0.0,
+      "end": 0.6634,
+      "degPerSec": 600.0
+     }
+    ],
+    "speedRate": [
+     {
+      "start": -0.0001,
+      "end": 0.5652,
+      "rate": 1.1
+     }
+    ],
+    "rootMotionScale": [
+     {
+      "start": 0.0,
+      "end": 0.331,
+      "axis": "AxisX",
+      "min": 0.1,
+      "max": 2.0,
+      "offset": -1.5,
+      "rangeLimited": true
+     },
+     {
+      "start": 0.3333,
+      "end": 0.566,
+      "axis": "AxisX",
+      "min": 0.1,
+      "max": 2.0,
+      "offset": -1.5,
+      "rangeLimited": true
+     }
+    ],
+    "attackWarning": [
+     {
+      "start": 0.6,
+      "end": 0.7007,
+      "shapes": [
+       {
+        "socket": "AttackWarning",
+        "radius": 2.0
+       }
+      ]
+     }
+    ],
+    "attackState": [
+     {
+      "start": 0.0,
+      "end": 1.1011
+     }
+    ],
+    "staminaCost": [
+     {
+      "start": 0.0,
+      "end": 1.1,
+      "effect": 1080251
+     }
+    ],
+    "dodgeWindows": [
+     {
+      "start": 0.4,
+      "end": 2.1952
+     }
+    ],
+    "itemWindows": [
+     {
+      "start": 1.0333,
+      "end": 1.2667
+     }
+    ],
+    "comboKeyCache": [
+     {
+      "start": 0.6,
+      "end": 0.9321
+     }
+    ]
+   },
+   "source": "FUStSkillSDesc 10802; montage AM_Wukong_ComboA_q2 notifies; FUStSkillEffectDesc rows listed",
+   "step": 2
+  },
+  {
+   "skill": 10803,
+   "clip": "AM_Wukong_ComboA_q3",
+   "staminaCost": 15,
+   "staminaCostEffect": [
+    1080351
+   ],
+   "regenBlocked": [
+    {
+     "start": 0.0001,
+     "end": 1.2
+    }
+   ],
+   "minStaminaToStart": 1,
+   "damage": {
+    "1080301": {
+     "type": "damage",
+     "damageMult": 1.0,
+     "flatDamage": 0,
+     "hitWeight": 1,
+     "armorBreak": 0.1,
+     "armorBreakLevel": "【主角】轻棍连招/0段蓄力",
+     "damageType": 1,
+     "elementLevel": 0,
+     "element": 0,
+     "blockArmorHit": 80,
+     "damageImmuneLevel": 0,
+     "hitStop": {
+      "freeze": 0,
+      "slow": 0,
+      "slowRate": 0
+     },
+     "source": "FUStSkillEffectDesc 1080301: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】轻棍连招/0段蓄力'"
+    },
+    "1080302": {
+     "type": "damage",
+     "damageMult": 1.0,
+     "flatDamage": 0,
+     "hitWeight": 1,
+     "armorBreak": 0.1,
+     "armorBreakLevel": "【主角】轻棍连招/0段蓄力",
+     "damageType": 1,
+     "elementLevel": 0,
+     "element": 0,
+     "blockArmorHit": 80,
+     "damageImmuneLevel": 0,
+     "hitStop": {
+      "freeze": 0,
+      "slow": 0,
+      "slowRate": 0
+     },
+     "source": "FUStSkillEffectDesc 1080302: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】轻棍连招/0段蓄力'"
+    }
+   },
+   "focusGain": [
+    {
+     "effect": 1080391,
+     "value": 10
+    }
+   ],
+   "superArmor": [],
+   "timeline": {
+    "length": 2.9333,
+    "sections": [
+     {
+      "name": "Default",
+      "start": 0.0,
+      "next": null
+     }
+    ],
+    "hits": [
+     {
+      "start": 0.2486,
+      "end": 0.4333,
+      "effects": [
+       1080301,
+       1080104,
+       1080999,
+       1080504
+      ],
+      "shapes": [
+       {
+        "socket": "StickTip13",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_04",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_05",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_wei",
+        "radius": 0.5
+       },
+       {
+        "socket": "WeaponHit_05",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r",
+        "radius": 0.5
+       }
+      ]
+     },
+     {
+      "start": 0.4333,
+      "end": 0.5996,
+      "effects": [
+       1080302,
+       1080104,
+       1080999,
+       1080504
+      ],
+      "shapes": [
+       {
+        "socket": "StickTip13",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_04",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_05",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_wei",
+        "radius": 0.5
+       },
+       {
+        "socket": "WeaponHit_05",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r",
+        "radius": 0.5
+       }
+      ]
+     }
+    ],
+    "buffs": [
+     {
+      "start": 0.0,
+      "end": 1.5749,
+      "buff": 20103
+     },
+     {
+      "start": 0.6,
+      "end": 1.2,
+      "buff": 1993
+     }
+    ],
+    "behaviorTags": [
+     {
+      "time": 0.0333,
+      "tag": "Q"
+     },
+     {
+      "time": 0.1333,
+      "tag": "dageGP"
+     }
+    ],
+    "comboWindows": [
+     {
+      "start": 0.7,
+      "end": 0.7667,
+      "whitelist": [
+       10705,
+       10706
+      ]
+     },
+     {
+      "start": 0.7667,
+      "end": 1.3,
+      "whitelist": [
+       10705,
+       10706,
+       10713,
+       10720,
+       10721,
+       10754,
+       10804,
+       10842,
+       10843
+      ]
+     }
+    ],
+    "attackRotation": [
+     {
+      "start": 0.0,
+      "end": 0.5951,
+      "degPerSec": 600.0
+     }
+    ],
+    "speedRate": [
+     {
+      "start": 0.0001,
+      "end": 0.7,
+      "rate": 1.2
+     }
+    ],
+    "rootMotionScale": [
+     {
+      "start": 0.0,
+      "end": 0.1333,
+      "axis": "AxisX",
+      "min": 0.01,
+      "max": 4.0,
+      "offset": -1.0,
+      "rangeLimited": true
+     },
+     {
+      "start": 0.3349,
+      "end": 0.5305,
+      "axis": "AxisX",
+      "min": 0.1,
+      "max": 2.0,
+      "offset": -1.5,
+      "rangeLimited": true
+     },
+     {
+      "start": 0.5341,
+      "end": 0.7577,
+      "axis": "AxisX",
+      "min": 0.1,
+      "max": 2.0,
+      "offset": -1.0,
+      "rangeLimited": true
+     }
+    ],
+    "attackWarning": [
+     {
+      "start": 0.2,
+      "end": 0.4985,
+      "shapes": [
+       {
+        "socket": "AttackWarning",
+        "radius": 2.0
+       }
+      ]
+     }
+    ],
+    "attackState": [
+     {
+      "start": 0.0,
+      "end": 1.2
+     }
+    ],
+    "staminaCost": [
+     {
+      "start": 0.0001,
+      "end": 1.2,
+      "effect": 1080351
+     }
+    ],
+    "dodgeWindows": [
+     {
+      "start": 0.3682,
+      "end": 1.2
+     }
+    ],
+    "itemWindows": [
+     {
+      "start": 0.8667,
+      "end": 1.2
+     }
+    ],
+    "comboKeyCache": [
+     {
+      "start": 0.4333,
+      "end": 0.8669
+     },
+     {
+      "start": 0.4333,
+      "end": 0.7
+     }
+    ]
+   },
+   "source": "FUStSkillSDesc 10803; montage AM_Wukong_ComboA_q3 notifies; FUStSkillEffectDesc rows listed",
+   "step": 3
+  },
+  {
+   "skill": 10804,
+   "clip": "AM_Wukong_ComboA_q4",
+   "staminaCost": 15,
+   "staminaCostEffect": [
+    1080451
+   ],
+   "regenBlocked": [
+    {
+     "start": 0.0001,
+     "end": 1.6667
+    }
+   ],
+   "minStaminaToStart": 1,
+   "damage": {
+    "1080401": {
+     "type": "damage",
+     "damageMult": 0.5,
+     "flatDamage": 0,
+     "hitWeight": 0,
+     "armorBreak": 0,
+     "armorBreakLevel": "无",
+     "damageType": 1,
+     "elementLevel": 0,
+     "element": 0,
+     "blockArmorHit": 0,
+     "damageImmuneLevel": 0,
+     "hitStop": {
+      "freeze": 0,
+      "slow": 0,
+      "slowRate": 0.1
+     },
+     "source": "FUStSkillEffectDesc 1080401: Float[2]/10000 x Atk, Int[1]=20 -> AttackStiff HitWeight 0, Str[0]='无'"
+    },
+    "1080402": {
+     "type": "damage",
+     "damageMult": 1.0,
+     "flatDamage": 0,
+     "hitWeight": 1,
+     "armorBreak": 0.1,
+     "armorBreakLevel": "【主角】轻棍连招/0段蓄力",
+     "damageType": 1,
+     "elementLevel": 0,
+     "element": 0,
+     "blockArmorHit": 80,
+     "damageImmuneLevel": 0,
+     "hitStop": {
+      "freeze": 0,
+      "slow": 0,
+      "slowRate": 0
+     },
+     "source": "FUStSkillEffectDesc 1080402: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】轻棍连招/0段蓄力'"
+    },
+    "1080411": {
+     "type": "damage",
+     "damageMult": 0.5,
+     "flatDamage": 0,
+     "hitWeight": 0,
+     "armorBreak": 0,
+     "armorBreakLevel": null,
+     "damageType": 1,
+     "elementLevel": 0,
+     "element": 0,
+     "blockArmorHit": 10,
+     "damageImmuneLevel": 0,
+     "hitStop": {
+      "freeze": 0,
+      "slow": 0,
+      "slowRate": 0.1
+     },
+     "source": "FUStSkillEffectDesc 1080411: Float[2]/10000 x Atk, Int[1]=20 -> AttackStiff HitWeight 0, Str[0]=''"
+    }
+   },
+   "focusGain": [
+    {
+     "effect": 1080491,
+     "value": 3
+    },
+    {
+     "effect": 1080492,
+     "value": 13
+    }
+   ],
+   "superArmor": [],
+   "timeline": {
+    "length": 2.6,
+    "sections": [
+     {
+      "name": "Default",
+      "start": 0.0,
+      "next": null
+     }
+    ],
+    "hits": [
+     {
+      "start": 0.2023,
+      "end": 0.3346,
+      "effects": [
+       1080401,
+       1080103,
+       1080104,
+       1080999,
+       1080504
+      ],
+      "shapes": [
+       {
+        "socket": "weapon_r_index_01",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_02",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_03",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_04",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_05",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_06",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_wei",
+        "radius": 0.5
+       }
+      ]
+     },
+     {
+      "start": 0.2569,
+      "end": 0.387,
+      "effects": [
+       1080411,
+       1080114
+      ],
+      "shapes": [
+       {
+        "socket": "weapon_r_index_01",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_02",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_03",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_04",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_05",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_06",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_wei",
+        "radius": 0.5
+       }
+      ]
+     },
+     {
+      "start": 0.3341,
+      "end": 0.4649,
+      "effects": [
+       1080401,
+       1080103,
+       1080104,
+       1080999,
+       1080504
+      ],
+      "shapes": [
+       {
+        "socket": "weapon_r_index_01",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_02",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_03",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_04",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_05",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_06",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_wei",
+        "radius": 0.5
+       }
+      ]
+     },
+     {
+      "start": 0.3962,
+      "end": 0.53,
+      "effects": [
+       1080411,
+       1080114
+      ],
+      "shapes": [
+       {
+        "socket": "weapon_r_index_01",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_02",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_03",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_04",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_05",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_06",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_wei",
+        "radius": 0.5
+       }
+      ]
+     },
+     {
+      "start": 0.4692,
+      "end": 0.6016,
+      "effects": [
+       1080401,
+       1080103,
+       1080104,
+       1080999,
+       1080504
+      ],
+      "shapes": [
+       {
+        "socket": "weapon_r_index_01",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_02",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_03",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_04",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_05",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_06",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_wei",
+        "radius": 0.5
+       }
+      ]
+     },
+     {
+      "start": 0.5333,
+      "end": 0.6638,
+      "effects": [
+       1080411,
+       1080114
+      ],
+      "shapes": [
+       {
+        "socket": "weapon_r_index_01",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_02",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_03",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_04",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_05",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_06",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_wei",
+        "radius": 0.5
+       }
+      ]
+     },
+     {
+      "start": 0.6032,
+      "end": 0.7343,
+      "effects": [
+       1080401,
+       1080103,
+       1080104,
+       1080999,
+       1080504
+      ],
+      "shapes": [
+       {
+        "socket": "weapon_r_index_01",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_02",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_03",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_04",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_05",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_06",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_wei",
+        "radius": 0.5
+       }
+      ]
+     },
+     {
+      "start": 1.0848,
+      "end": 1.1251,
+      "effects": [
+       1080402,
+       1080104,
+       1080999,
+       1080504
+      ],
+      "shapes": [
+       {
+        "socket": "StickTip13",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_04",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_05",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_wei",
+        "radius": 0.5
+       },
+       {
+        "socket": "WeaponHit_05",
+        "radius": 0.5
+       }
+      ]
+     },
+     {
+      "start": 1.1257,
+      "end": 1.2333,
+      "effects": [
+       1080402,
+       1080104,
+       1080999,
+       1080504
+      ],
+      "shapes": [
+       {
+        "socket": "StickTip13",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_04",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_r_index_05",
+        "radius": 0.5
+       },
+       {
+        "socket": "weapon_wei",
+        "radius": 0.5
+       },
+       {
+        "socket": "WeaponHit_05",
+        "radius": 0.5
+       }
+      ]
+     }
+    ],
+    "buffs": [
+     {
+      "start": 0.0036,
+      "end": 1.9676,
+      "buff": 20104
+     },
+     {
+      "start": 1.2358,
+      "end": 1.7358,
+      "buff": 1993
+     }
+    ],
+    "behaviorTags": [
+     {
+      "time": 0.0333,
+      "tag": "Q"
+     },
+     {
+      "time": 0.1,
+      "tag": "dageGP"
+     },
+     {
+      "time": 1.0,
+      "tag": "dageGP"
+     }
+    ],
+    "comboWindows": [
+     {
+      "start": 0.6006,
+      "end": 1.0008,
+      "whitelist": [
+       10705,
+       10706,
+       10713,
+       10720,
+       10721
+      ]
+     },
+     {
+      "start": 1.3,
+      "end": 1.7667,
+      "whitelist": [
+       10705,
+       10706,
+       10713,
+       10720,
+       10721,
+       10755,
+       10805,
+       10842,
+       10843
+      ]
+     }
+    ],
+    "attackRotation": [
+     {
+      "start": 0.0,
+      "end": 1.0,
+      "degPerSec": 480.0
+     },
+     {
+      "start": 1.0,
+      "end": 1.1371,
+      "degPerSec": 600.0
+     }
+    ],
+    "rootMotionScale": [
+     {
+      "start": 0.2667,
+      "end": 0.4969,
+      "axis": "AxisX",
+      "min": 0.1,
+      "max": 2.0,
+      "offset": -1.0,
+      "rangeLimited": true
+     },
+     {
+      "start": 0.5038,
+      "end": 0.9684,
+      "axis": "AxisX",
+      "min": 0.1,
+      "max": 2.0,
+      "offset": -1.0,
+      "rangeLimited": true
+     },
+     {
+      "start": 1.0,
+      "end": 1.1352,
+      "axis": "AxisX",
+      "min": 0.1,
+      "max": 2.5,
+      "offset": -2.0,
+      "rangeLimited": true
+     },
+     {
+      "start": 1.1457,
+      "end": 1.179,
+      "axis": "AxisX",
+      "min": 0.1,
+      "max": 2.5,
+      "offset": -2.0,
+      "rangeLimited": true
+     }
+    ],
+    "attackWarning": [
+     {
+      "start": 0.1691,
+      "end": 0.3357,
+      "shapes": [
+       {
+        "socket": "AW_ComboB_01",
+        "radius": 1.6
+       }
+      ]
+     },
+     {
+      "start": 0.4056,
+      "end": 0.5395,
+      "shapes": [
+       {
+        "socket": "AW_ComboB_01",
+        "radius": 1.6
+       }
+      ]
+     },
+     {
+      "start": 0.6024,
+      "end": 0.7369,
+      "shapes": [
+       {
+        "socket": "AW_ComboB_01",
+        "radius": 1.6
+       }
+      ]
+     },
+     {
+      "start": 1.0,
+      "end": 1.1333,
+      "shapes": [
+       {
+        "socket": "AW_ComboB_01",
+        "radius": 1.6
+       }
+      ]
+     }
+    ],
+    "attackState": [
+     {
+      "start": 0.0,
+      "end": 1.6679
+     }
+    ],
+    "staminaCost": [
+     {
+      "start": 0.0001,
+      "end": 1.6667,
+      "effect": 1080451
+     }
+    ],
+    "dodgeWindows": [
+     {
+      "start": 0.3333,
+      "end": 2.039
+     }
+    ],
+    "itemWindows": [
+     {
+      "start": 1.3333,
+      "end": 1.6667
+     }
+    ],
+    "comboKeyCache": [
+     {
+      "start": 1.0,
+      "end": 1.4
+     }
+    ]
+   },
+   "source": "FUStSkillSDesc 10804; montage AM_Wukong_ComboA_q4 notifies; FUStSkillEffectDesc rows listed",
+   "step": 4
+  },
+  {
+   "skill": 10805,
+   "clip": "AM_Wukong_ComboA_q5",
+   "staminaCost": 25,
+   "staminaCostEffect": [
+    1080551
+   ],
+   "regenBlocked": [
+    {
+     "start": 0.0,
+     "end": 1.5667
+    }
+   ],
+   "minStaminaToStart": 1,
+   "damage": {
+    "1080501": {
+     "type": "damage",
+     "damageMult": 3.0,
+     "flatDamage": 0,
+     "hitWeight": 2,
+     "armorBreak": 50,
+     "armorBreakLevel": "【主角】轻棍终结",
+     "damageType": 1,
+     "elementLevel": 0,
+     "element": 0,
+     "blockArmorHit": 240,
+     "damageImmuneLevel": 0,
+     "hitStop": {
+      "freeze": 0,
+      "slow": 0,
+      "slowRate": 0
+     },
+     "source": "FUStSkillEffectDesc 1080501: Float[2]/10000 x Atk, Int[1]=22 -> AttackStiff HitWeight 2, Str[0]='【主角】轻棍终结'"
+    }
+   },
+   "focusGain": [
+    {
+     "effect": 1080591,
+     "value": 40
+    }
+   ],
+   "superArmor": [
+    {
+     "start": -0.0,
+     "end": 1.0015,
+     "levelId": 1053,
+     "value": 50,
+     "name": "【主角】轻棍终结霸体"
+    }
+   ],
+   "timeline": {
+    "length": 3.2333,
+    "sections": [
+     {
+      "name": "Default",
+      "start": 0.0,
+      "next": null
+     }
+    ],
+    "hits": [
+     {
+      "start": 0.8,
+      "end": 0.9333,
+      "effects": [
+       1080501,
+       1080104,
+       1080998,
+       1080999,
+       1080504
+      ],
+      "shapes": [
+       {
+        "socket": "weapon_r_index_03",
+        "radius": 0.4
+       },
+       {
+        "socket": "weapon_r_index_04",
+        "radius": 0.4
+       },
+       {
+        "socket": "weapon_r_index_05",
+        "radius": 0.4
+       },
+       {
+        "socket": "StickTip4",
+        "radius": 0.4
+       },
+       {
+        "socket": "WeaponHit_05",
+        "radius": 0.4
+       },
+       {
+        "socket": "weapon_wei",
+        "radius": 0.6
+       }
+      ]
+     }
+    ],
+    "superArmor": [
+     {
+      "start": -0.0,
+      "end": 1.0015,
+      "levelId": 1053,
+      "value": 50,
+      "name": "【主角】轻棍终结霸体"
+     }
+    ],
+    "buffs": [
+     {
+      "start": 0.0,
+      "end": 0.1419,
+      "buff": 2032
+     },
+     {
+      "start": 0.0,
+      "end": 0.9333,
+      "buff": 1009
+     },
+     {
+      "start": 0.9333,
+      "end": 1.5667,
+      "buff": 1990
+     }
+    ],
+    "removeBuffs": [
+     {
+      "time": 0.9667,
+      "buffs": 1031
+     },
+     {
+      "time": 0.9667,
+      "buffs": 1029
+     }
+    ],
+    "triggerEffects": [
+     {
+      "time": 0.8667,
+      "effect": 1080506
+     }
+    ],
+    "behaviorTags": [
+     {
+      "time": 0.5,
+      "tag": "Q"
+     },
+     {
+      "time": 0.5823,
+      "tag": "Q5MJ"
+     },
+     {
+      "time": 0.6,
+      "tag": "Q5"
+     },
+     {
+      "time": 0.6333,
+      "tag": "YCWQ5"
+     },
+     {
+      "time": 0.7,
+      "tag": "dageGP"
+     }
+    ],
+    "comboWindows": [
+     {
+      "start": 1.3672,
+      "end": 1.6667,
+      "whitelist": [
+       10751,
+       10797,
+       10798,
+       10799,
+       10800,
+       10801,
+       10842,
+       10843
+      ]
+     }
+    ],
+    "attackRotation": [
+     {
+      "start": 0.0,
+      "end": 0.866,
+      "degPerSec": 600.0
+     }
+    ],
+    "speedRate": [
+     {
+      "start": 1.0225,
+      "end": 1.4576,
+      "rate": 1.2
+     }
+    ],
+    "rootMotionScale": [
+     {
+      "start": 0.0497,
+      "end": 0.6472,
+      "axis": "AxisX",
+      "min": 0.01,
+      "max": 2.0,
+      "offset": -4.0,
+      "rangeLimited": false
+     },
+     {
+      "start": 0.1656,
+      "end": 0.6419,
+      "axis": "AxisZ",
+      "min": 0.75,
+      "max": 1.1,
+      "offset": 0.0,
+      "rangeLimited": true
+     },
+     {
+      "start": 0.6532,
+      "end": 0.8766,
+      "axis": "AxisX",
+      "min": 0.01,
+      "max": 3.0,
+      "offset": -2.0,
+      "rangeLimited": false
+     },
+     {
+      "start": 0.6946,
+      "end": 0.8333,
+      "axis": "AxisZLanding",
+      "min": 1.0,
+      "max": 3.0,
+      "offset": 0.0,
+      "rangeLimited": false
+     }
+    ],
+    "attackWarning": [
+     {
+      "start": 0.7659,
+      "end": 0.8536,
+      "shapes": [
+       {
+        "socket": "AttackWarning_Heavy",
+        "radius": 2.5
+       }
+      ]
+     }
+    ],
+    "attackState": [
+     {
+      "start": 0.0,
+      "end": 1.5656
+     }
+    ],
+    "staminaCost": [
+     {
+      "start": 0.0,
+      "end": 1.5667,
+      "effect": 1080551
+     }
+    ],
+    "dodgeWindows": [
+     {
+      "start": 0.968,
+      "end": 1.568
+     }
+    ],
+    "itemWindows": [
+     {
+      "start": 1.335,
+      "end": 1.6683
+     }
+    ],
+    "comboKeyCache": [
+     {
+      "start": 1.2667,
+      "end": 1.4667
+     }
+    ]
+   },
+   "source": "FUStSkillSDesc 10805; montage AM_Wukong_ComboA_q5 notifies; FUStSkillEffectDesc rows listed",
+   "step": 5
+  }
+ ],
+ "sprintLight": {
+  "skill": 10800,
+  "clip": "AM_Wukong_ComboA_q1_sprint",
+  "staminaCost": 20,
+  "staminaCostEffect": [
+   1080051
+  ],
+  "regenBlocked": [
+   {
+    "start": 0.0,
+    "end": 1.1667
+   }
+  ],
+  "minStaminaToStart": 1,
+  "damage": {
+   "1080001": {
+    "type": "damage",
+    "damageMult": 2.0,
+    "flatDamage": 0,
+    "hitWeight": 1,
+    "armorBreak": 0.1,
+    "armorBreakLevel": "【主角】轻棍连招/0段蓄力",
+    "damageType": 1,
+    "elementLevel": 0,
+    "element": 0,
+    "blockArmorHit": 160,
+    "damageImmuneLevel": 0,
+    "hitStop": {
+     "freeze": 0,
+     "slow": 0,
+     "slowRate": 0
+    },
+    "source": "FUStSkillEffectDesc 1080001: Float[2]/10000 x Atk, Int[1]=21 -> AttackStiff HitWeight 1, Str[0]='【主角】轻棍连招/0段蓄力'"
+   }
+  },
+  "focusGain": [],
+  "superArmor": [
+   {
+    "start": 0.0,
+    "end": 0.6333,
+    "levelId": 1051,
+    "value": 0.1,
+    "name": "【主角】轻棍连招/蓄力0霸体"
+   }
+  ],
+  "timeline": {
+   "length": 2.6167,
+   "sections": [
+    {
+     "name": "Default",
+     "start": 0.0,
+     "next": null
+    }
+   ],
+   "hits": [
+    {
+     "start": 0.4809,
+     "end": 0.5206,
+     "effects": [
+      1080001,
+      1080104,
+      1080999,
+      1080504
+     ],
+     "shapes": [
+      {
+       "socket": "StickTip13",
+       "radius": 0.5
+      },
+      {
+       "socket": "weapon_r_index_04",
+       "radius": 0.5
+      },
+      {
+       "socket": "weapon_r_index_05",
+       "radius": 0.5
+      },
+      {
+       "socket": "weapon_wei",
+       "radius": 0.5
+      },
+      {
+       "socket": "WeaponHit_05",
+       "radius": 0.5
+      }
+     ]
+    },
+    {
+     "start": 0.5216,
+     "end": 0.6333,
+     "effects": [
+      1080001,
+      1080104,
+      1080999,
+      1080504
+     ],
+     "shapes": [
+      {
+       "socket": "StickTip13",
+       "radius": 0.5
+      },
+      {
+       "socket": "weapon_r_index_04",
+       "radius": 0.5
+      },
+      {
+       "socket": "weapon_r_index_05",
+       "radius": 0.5
+      },
+      {
+       "socket": "weapon_wei",
+       "radius": 0.5
+      },
+      {
+       "socket": "WeaponHit_05",
+       "radius": 0.5
+      }
+     ]
+    }
+   ],
+   "superArmor": [
+    {
+     "start": 0.0,
+     "end": 0.6333,
+     "levelId": 1051,
+     "value": 0.1,
+     "name": "【主角】轻棍连招/蓄力0霸体"
+    }
+   ],
+   "buffs": [
+    {
+     "start": 0.5069,
+     "end": 1.6824,
+     "buff": 20101
+    },
+    {
+     "start": 0.6333,
+     "end": 1.1667,
+     "buff": 1993
+    }
+   ],
+   "removeBuffs": [
+    {
+     "time": 0.0333,
+     "buffs": 1013
+    },
+    {
+     "time": 0.0333,
+     "buffs": 1014
+    }
+   ],
+   "behaviorTags": [
+    {
+     "time": 0.0333,
+     "tag": "Q"
+    },
+    {
+     "time": 0.3667,
+     "tag": "dageGP"
+    }
+   ],
+   "comboWindows": [
+    {
+     "start": 0.8,
+     "end": 1.2667,
+     "whitelist": [
+      10705,
+      10706,
+      10713,
+      10720,
+      10721,
+      10752,
+      10802,
+      10842,
+      10843
+     ]
+    }
+   ],
+   "attackRotation": [
+    {
+     "start": 0.0346,
+     "end": 0.5672,
+     "degPerSec": 600.0
+    }
+   ],
+   "speedRate": [
+    {
+     "start": 0.0,
+     "end": 0.4988,
+     "rate": 1.2
+    },
+    {
+     "start": 0.6333,
+     "end": 1.0568,
+     "rate": 1.4
+    }
+   ],
+   "rootMotionScale": [
+    {
+     "start": 0.0,
+     "end": 0.3333,
+     "axis": "AxisX",
+     "min": 0.01,
+     "max": 1.6,
+     "offset": -4.0,
+     "rangeLimited": true
+    },
+    {
+     "start": 0.3333,
+     "end": 0.509,
+     "axis": "AxisX",
+     "min": 0.01,
+     "max": 1.6,
+     "offset": -2.0,
+     "rangeLimited": false
+    }
+   ],
+   "attackWarning": [
+    {
+     "start": 0.4,
+     "end": 0.5317,
+     "shapes": [
+      {
+       "socket": "AW_ComboB_01",
+       "radius": 1.6
+      },
+      {
+       "socket": "AW_ComboB_02",
+       "radius": 1.6
+      }
+     ]
+    }
+   ],
+   "attackState": [
+    {
+     "start": 0.0,
+     "end": 1.1667
+    }
+   ],
+   "staminaCost": [
+    {
+     "start": 0.0,
+     "end": 1.1667,
+     "effect": 1080051
+    }
+   ],
+   "dodgeWindows": [
+    {
+     "start": 0.6333,
+     "end": 1.6807
+    }
+   ],
+   "comboKeyCache": [
+    {
+     "start": 0.5333,
+     "end": 0.9
+    }
+   ]
+  },
+  "source": "FUStSkillSDesc 10800; montage AM_Wukong_ComboA_q1_sprint notifies; FUStSkillEffectDesc rows listed"
+ },
+ "heavy": {
+  "levels": [
+   {
+    "skill": 10830,
+    "clip": "AM_Wukong_xuli_attack_0",
+    "staminaCost": 40,
+    "staminaCostEffect": [
+     1021051
+    ],
+    "regenBlocked": [
+     {
+      "start": 0.0,
+      "end": 1.7633
+     }
+    ],
+    "minStaminaToStart": 0,
+    "damage": {
+     "1021001": {
+      "type": "damage",
+      "damageMult": 2.5,
+      "flatDamage": 0,
+      "hitWeight": 2,
+      "armorBreak": 0.1,
+      "armorBreakLevel": "【主角】轻棍连招/0段蓄力",
+      "damageType": 1,
+      "elementLevel": 0,
+      "element": 0,
+      "blockArmorHit": 200,
+      "damageImmuneLevel": 0,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0,
+       "slowRate": 0
+      },
+      "source": "FUStSkillEffectDesc 1021001: Float[2]/10000 x Atk, Int[1]=22 -> AttackStiff HitWeight 2, Str[0]='【主角】轻棍连招/0段蓄力'"
+     }
+    },
+    "focusGain": [],
+    "superArmor": [
+     {
+      "start": 0.0001,
+      "end": 1.255,
+      "levelId": 1051,
+      "value": 0.1,
+      "name": "【主角】轻棍连招/蓄力0霸体"
+     }
+    ],
+    "timeline": {
+     "length": 3.5,
+     "sections": [
+      {
+       "name": "Default",
+       "start": 0.0,
+       "next": null
+      }
+     ],
+     "hits": [
+      {
+       "start": 1.034,
+       "end": 1.1667,
+       "effects": [
+        1021001,
+        910200,
+        1080998
+       ],
+       "shapes": [
+        {
+         "socket": "weapon_r_index_07",
+         "radius": 0.6
+        },
+        {
+         "socket": "weapon_r_index_05",
+         "radius": 0.5
+        },
+        {
+         "socket": "weapon_r_index_04",
+         "radius": 0.5
+        },
+        {
+         "socket": "weapon_r_index_03",
+         "radius": 0.5
+        },
+        {
+         "socket": "weapon_r_index_02",
+         "radius": 0.5
+        },
+        {
+         "socket": "WeaponHit_05",
+         "radius": 0.5
+        }
+       ]
+      }
+     ],
+     "superArmor": [
+      {
+       "start": 0.0001,
+       "end": 1.255,
+       "levelId": 1051,
+       "value": 0.1,
+       "name": "【主角】轻棍连招/蓄力0霸体"
+      }
+     ],
+     "buffs": [
+      {
+       "start": 0.0,
+       "end": 1.0667,
+       "buff": 247
+      },
+      {
+       "start": 0.0,
+       "end": 1.2,
+       "buff": 1003
+      },
+      {
+       "start": 0.0,
+       "end": 1.1667,
+       "buff": 2095
+      },
+      {
+       "start": 1.0,
+       "end": 1.1333,
+       "buff": 301304
+      },
+      {
+       "start": 1.1151,
+       "end": 1.9,
+       "buff": 1990
+      }
+     ],
+     "behaviorTags": [
+      {
+       "time": 0.5,
+       "tag": "xuli_a"
+      },
+      {
+       "time": 0.6342,
+       "tag": "XuliAMJ"
+      },
+      {
+       "time": 0.7333,
+       "tag": "xuli_a_attack"
+      },
+      {
+       "time": 0.9333,
+       "tag": "dageGP"
+      }
+     ],
+     "comboWindows": [
+      {
+       "start": 1.7333,
+       "end": 3.5
+      }
+     ],
+     "attackRotation": [
+      {
+       "start": 0.0,
+       "end": 1.0981,
+       "degPerSec": 600.0
+      }
+     ],
+     "speedRate": [
+      {
+       "start": 1.232,
+       "end": 1.5664,
+       "rate": 0.55
+      }
+     ],
+     "rootMotionScale": [
+      {
+       "start": 0.0667,
+       "end": 0.8835,
+       "axis": "AxisX",
+       "min": 0.1,
+       "max": 3.5,
+       "offset": -3.0,
+       "rangeLimited": false
+      },
+      {
+       "start": 0.2528,
+       "end": 0.8818,
+       "axis": "AxisZ",
+       "min": 1.0,
+       "max": 2.0,
+       "offset": 0.0,
+       "rangeLimited": false
+      },
+      {
+       "start": 0.8857,
+       "end": 1.0646,
+       "axis": "AxisZLanding",
+       "min": 1.0,
+       "max": 3.0,
+       "offset": 0.0,
+       "rangeLimited": false
+      },
+      {
+       "start": 0.8889,
+       "end": 1.0655,
+       "axis": "AxisX",
+       "min": 0.1,
+       "max": 2.0,
+       "offset": -2.0,
+       "rangeLimited": false
+      }
+     ],
+     "attackWarning": [
+      {
+       "start": 0.9667,
+       "end": 1.1,
+       "shapes": [
+        {
+         "socket": "AW_Xuli_01",
+         "radius": 1.8
+        }
+       ]
+      }
+     ],
+     "attackState": [
+      {
+       "start": 0.0,
+       "end": 1.8412
+      }
+     ],
+     "staminaCost": [
+      {
+       "start": 0.0,
+       "end": 1.7633,
+       "effect": 1021051
+      }
+     ],
+     "dodgeWindows": [
+      {
+       "start": 1.5,
+       "end": 3.4963
+      }
+     ],
+     "itemWindows": [
+      {
+       "start": 1.7333,
+       "end": 3.5
+      }
+     ],
+     "comboKeyCache": [
+      {
+       "start": 1.0333,
+       "end": 1.7333
+      }
+     ]
+    },
+    "source": "FUStSkillSDesc 10830; montage AM_Wukong_xuli_attack_0 notifies; FUStSkillEffectDesc rows listed",
+    "level": 0,
+    "chargeStartSkill": 10835,
+    "chargeStartClip": "AM_Wukong_xuli_start_0",
+    "chargeStartCost": 10,
+    "chargeStartSuperArmor": [
+     {
+      "start": 0.0333,
+      "end": 0.9,
+      "levelId": 1051,
+      "value": 0.1,
+      "name": "【主角】轻棍连招/蓄力0霸体"
+     }
+    ]
+   },
+   {
+    "skill": 10831,
+    "clip": "AM_Wukong_xuli_attack_1",
+    "staminaCost": 50,
+    "staminaCostEffect": [
+     1021151
+    ],
+    "regenBlocked": [
+     {
+      "start": 0.0,
+      "end": 1.7682
+     }
+    ],
+    "minStaminaToStart": 0,
+    "damage": {
+     "1021101": {
+      "type": "damage",
+      "damageMult": 5.5,
+      "flatDamage": 0,
+      "hitWeight": 2,
+      "armorBreak": 10,
+      "armorBreakLevel": "【主角】蓄力1",
+      "damageType": 1,
+      "elementLevel": 0,
+      "element": 0,
+      "blockArmorHit": 440,
+      "damageImmuneLevel": 0,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0,
+       "slowRate": 0
+      },
+      "source": "FUStSkillEffectDesc 1021101: Float[2]/10000 x Atk, Int[1]=22 -> AttackStiff HitWeight 2, Str[0]='【主角】蓄力1'"
+     }
+    },
+    "focusGain": [],
+    "superArmor": [
+     {
+      "start": 0.0,
+      "end": 1.3655,
+      "levelId": 1052,
+      "value": 10,
+      "name": "【主角】蓄力1霸体"
+     }
+    ],
+    "timeline": {
+     "length": 3.5,
+     "sections": [
+      {
+       "name": "Default",
+       "start": 0.0,
+       "next": null
+      }
+     ],
+     "hits": [
+      {
+       "start": 1.0341,
+       "end": 1.1667,
+       "effects": [
+        1021101,
+        910200,
+        1080998
+       ],
+       "shapes": [
+        {
+         "socket": "weapon_r_index_07",
+         "radius": 0.6
+        },
+        {
+         "socket": "weapon_r_index_05",
+         "radius": 0.5
+        },
+        {
+         "socket": "weapon_r_index_04",
+         "radius": 0.5
+        },
+        {
+         "socket": "weapon_r_index_03",
+         "radius": 0.5
+        },
+        {
+         "socket": "weapon_r_index_02",
+         "radius": 0.5
+        },
+        {
+         "socket": "WeaponHit_05",
+         "radius": 0.5
+        }
+       ]
+      }
+     ],
+     "superArmor": [
+      {
+       "start": 0.0,
+       "end": 1.3655,
+       "levelId": 1052,
+       "value": 10,
+       "name": "【主角】蓄力1霸体"
+      }
+     ],
+     "buffs": [
+      {
+       "start": 0.0,
+       "end": 1.0383,
+       "buff": 247
+      },
+      {
+       "start": 0.0,
+       "end": 1.1667,
+       "buff": 1003
+      },
+      {
+       "start": 0.0,
+       "end": 1.1667,
+       "buff": 2095
+      },
+      {
+       "start": 1.0,
+       "end": 1.1333,
+       "buff": 301304
+      },
+      {
+       "start": 1.1151,
+       "end": 1.9,
+       "buff": 1990
+      }
+     ],
+     "behaviorTags": [
+      {
+       "time": 0.5,
+       "tag": "xuli_a"
+      },
+      {
+       "time": 0.6342,
+       "tag": "XuliAMJ"
+      },
+      {
+       "time": 0.7379,
+       "tag": "xuli_a_attack"
+      },
+      {
+       "time": 0.9333,
+       "tag": "dageGP"
+      }
+     ],
+     "comboWindows": [
+      {
+       "start": 1.6333,
+       "end": 3.5
+      }
+     ],
+     "attackRotation": [
+      {
+       "start": 0.0,
+       "end": 1.0971,
+       "degPerSec": 600.0
+      }
+     ],
+     "speedRate": [
+      {
+       "start": 1.2322,
+       "end": 1.5651,
+       "rate": 0.6
+      }
+     ],
+     "rootMotionScale": [
+      {
+       "start": 0.0667,
+       "end": 0.9015,
+       "axis": "AxisX",
+       "min": 0.01,
+       "max": 3.5,
+       "offset": -3.0,
+       "rangeLimited": false
+      },
+      {
+       "start": 0.25,
+       "end": 0.9,
+       "axis": "AxisZ",
+       "min": 1.0,
+       "max": 2.0,
+       "offset": 0.0,
+       "rangeLimited": false
+      },
+      {
+       "start": 0.904,
+       "end": 1.1056,
+       "axis": "AxisX",
+       "min": 0.1,
+       "max": 2.0,
+       "offset": -2.0,
+       "rangeLimited": false
+      },
+      {
+       "start": 0.9053,
+       "end": 1.0187,
+       "axis": "AxisZLanding",
+       "min": 1.0,
+       "max": 3.0,
+       "offset": 0.0,
+       "rangeLimited": false
+      }
+     ],
+     "attackWarning": [
+      {
+       "start": 0.9665,
+       "end": 1.1,
+       "shapes": [
+        {
+         "socket": "AW_Xuli_01",
+         "radius": 1.8
+        }
+       ]
+      }
+     ],
+     "attackState": [
+      {
+       "start": 0.0,
+       "end": 1.7657
+      }
+     ],
+     "staminaCost": [
+      {
+       "start": 0.0,
+       "end": 1.7682,
+       "effect": 1021151
+      }
+     ],
+     "focus": [
+      {
+       "time": 1.1,
+       "chargeLevelDelta": -99
+      }
+     ],
+     "dodgeWindows": [
+      {
+       "start": 1.5,
+       "end": 3.4963
+      }
+     ],
+     "itemWindows": [
+      {
+       "start": 1.6333,
+       "end": 3.5
+      }
+     ],
+     "comboKeyCache": [
+      {
+       "start": 1.0333,
+       "end": 1.6333
+      }
+     ]
+    },
+    "source": "FUStSkillSDesc 10831; montage AM_Wukong_xuli_attack_1 notifies; FUStSkillEffectDesc rows listed",
+    "level": 1,
+    "chargeStartSkill": 10836,
+    "chargeStartClip": "AM_Wukong_xuli_start_1",
+    "chargeStartCost": 10,
+    "chargeStartSuperArmor": [
+     {
+      "start": 0.0333,
+      "end": 0.9,
+      "levelId": 1052,
+      "value": 10,
+      "name": "【主角】蓄力1霸体"
+     }
+    ]
+   },
+   {
+    "skill": 10832,
+    "clip": "AM_Wukong_xuli_attack_2",
+    "staminaCost": 75,
+    "staminaCostEffect": [
+     1021251
+    ],
+    "regenBlocked": [
+     {
+      "start": 0.0001,
+      "end": 1.9383
+     }
+    ],
+    "minStaminaToStart": 0,
+    "damage": {
+     "1021201": {
+      "type": "damage",
+      "damageMult": 8.75,
+      "flatDamage": 0,
+      "hitWeight": 2,
+      "armorBreak": 100,
+      "armorBreakLevel": "【主角】蓄力2",
+      "damageType": 1,
+      "elementLevel": 0,
+      "element": 0,
+      "blockArmorHit": 700,
+      "damageImmuneLevel": 0,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0,
+       "slowRate": 0
+      },
+      "source": "FUStSkillEffectDesc 1021201: Float[2]/10000 x Atk, Int[1]=22 -> AttackStiff HitWeight 2, Str[0]='【主角】蓄力2'"
+     }
+    },
+    "focusGain": [],
+    "superArmor": [
+     {
+      "start": 0.0001,
+      "end": 1.5323,
+      "levelId": 1054,
+      "value": 100,
+      "name": "【主角】蓄力2霸体"
+     }
+    ],
+    "timeline": {
+     "length": 3.8167,
+     "sections": [
+      {
+       "name": "Default",
+       "start": 0.0,
+       "next": null
+      }
+     ],
+     "hits": [
+      {
+       "start": 1.266,
+       "end": 1.4,
+       "effects": [
+        1021201,
+        910200,
+        1090998,
+        1090996,
+        1080998
+       ],
+       "shapes": [
+        {
+         "socket": "weapon_r_index_07",
+         "radius": 0.6
+        },
+        {
+         "socket": "weapon_r_index_05",
+         "radius": 0.5
+        },
+        {
+         "socket": "weapon_r_index_04",
+         "radius": 0.5
+        },
+        {
+         "socket": "weapon_r_index_03",
+         "radius": 0.5
+        },
+        {
+         "socket": "weapon_r_index_02",
+         "radius": 0.5
+        },
+        {
+         "socket": "WeaponHit_05",
+         "radius": 0.5
+        }
+       ]
+      }
+     ],
+     "superArmor": [
+      {
+       "start": 0.0001,
+       "end": 1.5323,
+       "levelId": 1054,
+       "value": 100,
+       "name": "【主角】蓄力2霸体"
+      }
+     ],
+     "buffs": [
+      {
+       "start": 0.0,
+       "end": 1.4,
+       "buff": 1003
+      },
+      {
+       "start": 0.0,
+       "end": 1.2978,
+       "buff": 247
+      },
+      {
+       "start": 0.0,
+       "end": 1.4,
+       "buff": 2095
+      },
+      {
+       "start": 1.2333,
+       "end": 1.4,
+       "buff": 301304
+      },
+      {
+       "start": 1.3667,
+       "end": 2.1516,
+       "buff": 1990
+      }
+     ],
+     "behaviorTags": [
+      {
+       "time": 0.6663,
+       "tag": "XuliATK"
+      },
+      {
+       "time": 0.7,
+       "tag": "xuli_a"
+      },
+      {
+       "time": 0.8666,
+       "tag": "XuliAMJ"
+      },
+      {
+       "time": 0.96,
+       "tag": "xuli_a_attack"
+      },
+      {
+       "time": 1.1667,
+       "tag": "dageGP"
+      }
+     ],
+     "comboWindows": [
+      {
+       "start": 1.8667,
+       "end": 3.8426
+      }
+     ],
+     "attackRotation": [
+      {
+       "start": 0.0,
+       "end": 1.3337,
+       "degPerSec": 600.0
+      }
+     ],
+     "speedRate": [
+      {
+       "start": 1.4637,
+       "end": 1.7637,
+       "rate": 0.5
+      }
+     ],
+     "rootMotionScale": [
+      {
+       "start": 0.0667,
+       "end": 1.0575,
+       "axis": "AxisX",
+       "min": 0.01,
+       "max": 3.5,
+       "offset": -3.0,
+       "rangeLimited": false
+      },
+      {
+       "start": 1.0333,
+       "end": 1.2542,
+       "axis": "AxisZLanding",
+       "min": 1.0,
+       "max": 3.0,
+       "offset": 0.0,
+       "rangeLimited": false
+      },
+      {
+       "start": 1.0585,
+       "end": 1.324,
+       "axis": "AxisX",
+       "min": 0.1,
+       "max": 2.0,
+       "offset": -2.0,
+       "rangeLimited": false
+      }
+     ],
+     "attackWarning": [
+      {
+       "start": 1.1988,
+       "end": 1.3332,
+       "shapes": [
+        {
+         "socket": "AW_Xuli_01",
+         "radius": 1.8
+        }
+       ]
+      }
+     ],
+     "attackState": [
+      {
+       "start": 0.0,
+       "end": 1.9667
+      }
+     ],
+     "staminaCost": [
+      {
+       "start": 0.0001,
+       "end": 1.9383,
+       "effect": 1021251
+      }
+     ],
+     "focus": [
+      {
+       "time": 1.3333,
+       "chargeLevelDelta": -99
+      }
+     ],
+     "dodgeWindows": [
+      {
+       "start": 1.8426,
+       "end": 3.8389
+      }
+     ],
+     "itemWindows": [
+      {
+       "start": 1.8667,
+       "end": 3.8426
+      }
+     ],
+     "comboKeyCache": [
+      {
+       "start": 1.3759,
+       "end": 1.8667
+      }
+     ]
+    },
+    "source": "FUStSkillSDesc 10832; montage AM_Wukong_xuli_attack_2 notifies; FUStSkillEffectDesc rows listed",
+    "level": 2,
+    "chargeStartSkill": 10837,
+    "chargeStartClip": "AM_Wukong_xuli_start_2",
+    "chargeStartCost": 10,
+    "chargeStartSuperArmor": [
+     {
+      "start": 0.0333,
+      "end": 0.9,
+      "levelId": 1054,
+      "value": 100,
+      "name": "【主角】蓄力2霸体"
+     }
+    ]
+   },
+   {
+    "skill": 10833,
+    "clip": "AM_Wukong_xuli_attack_3",
+    "staminaCost": 100,
+    "staminaCostEffect": [
+     1021351
+    ],
+    "regenBlocked": [
+     {
+      "start": 0.0001,
+      "end": 2.6981
+     }
+    ],
+    "minStaminaToStart": 0,
+    "damage": {
+     "1021301": {
+      "type": "damage",
+      "damageMult": 11.0,
+      "flatDamage": 0,
+      "hitWeight": 5,
+      "armorBreak": 500,
+      "armorBreakLevel": "【主角】蓄力3",
+      "damageType": 1,
+      "elementLevel": 0,
+      "element": 0,
+      "blockArmorHit": 880,
+      "damageImmuneLevel": 2,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0,
+       "slowRate": 0
+      },
+      "source": "FUStSkillEffectDesc 1021301: Float[2]/10000 x Atk, Int[1]=25 -> AttackStiff HitWeight 5, Str[0]='【主角】蓄力3'"
+     }
+    },
+    "focusGain": [],
+    "superArmor": [
+     {
+      "start": 0.0001,
+      "end": 1.8866,
+      "levelId": 1055,
+      "value": 500,
+      "name": "【主角】蓄力3霸体"
+     }
+    ],
+    "timeline": {
+     "length": 4.25,
+     "sections": [
+      {
+       "name": "Default",
+       "start": 0.0,
+       "next": null
+      }
+     ],
+     "hits": [
+      {
+       "start": 1.7,
+       "end": 1.8333,
+       "effects": [
+        1021301,
+        910200,
+        1090999,
+        1090997,
+        1080998
+       ],
+       "shapes": [
+        {
+         "socket": "weapon_r_index_07",
+         "radius": 0.6
+        },
+        {
+         "socket": "weapon_r_index_05",
+         "radius": 0.5
+        },
+        {
+         "socket": "weapon_r_index_04",
+         "radius": 0.5
+        },
+        {
+         "socket": "weapon_r_index_03",
+         "radius": 0.5
+        },
+        {
+         "socket": "weapon_r_index_02",
+         "radius": 0.5
+        },
+        {
+         "socket": "WeaponHit_05",
+         "radius": 0.5
+        }
+       ]
+      }
+     ],
+     "superArmor": [
+      {
+       "start": 0.0001,
+       "end": 1.8866,
+       "levelId": 1055,
+       "value": 500,
+       "name": "【主角】蓄力3霸体"
+      }
+     ],
+     "buffs": [
+      {
+       "start": 0.0,
+       "end": 1.8322,
+       "buff": 247
+      },
+      {
+       "start": 0.0,
+       "end": 1.8667,
+       "buff": 1003
+      },
+      {
+       "start": 0.0,
+       "end": 1.8333,
+       "buff": 2095
+      },
+      {
+       "start": 0.5225,
+       "end": 1.9895,
+       "buff": 311
+      },
+      {
+       "start": 1.6667,
+       "end": 1.8,
+       "buff": 301304
+      },
+      {
+       "start": 1.8,
+       "end": 2.5849,
+       "buff": 1990
+      }
+     ],
+     "triggerEffects": [
+      {
+       "time": 1.7667,
+       "effect": 1021302
+      }
+     ],
+     "behaviorTags": [
+      {
+       "time": 0.3333,
+       "tag": "XuliSXF"
+      },
+      {
+       "time": 0.3515,
+       "tag": "xuli_3_S"
+      },
+      {
+       "time": 0.6646,
+       "tag": "XuliATK"
+      },
+      {
+       "time": 0.995,
+       "tag": "XuliAMJS"
+      },
+      {
+       "time": 1.1,
+       "tag": "xuli_a"
+      },
+      {
+       "time": 1.4,
+       "tag": "xuli_a_attack"
+      },
+      {
+       "time": 1.5,
+       "tag": "XuliAHPZ"
+      },
+      {
+       "time": 1.6,
+       "tag": "dageGP"
+      }
+     ],
+     "comboWindows": [
+      {
+       "start": 2.4815,
+       "end": 4.2481
+      }
+     ],
+     "attackRotation": [
+      {
+       "start": 0.0,
+       "end": 1.7499,
+       "degPerSec": 600.0
+      }
+     ],
+     "speedRate": [
+      {
+       "start": 1.9017,
+       "end": 2.3017,
+       "rate": 0.4
+      }
+     ],
+     "rootMotionScale": [
+      {
+       "start": 0.0,
+       "end": 0.6667,
+       "axis": "AxisX",
+       "min": 0.01,
+       "max": 5.0,
+       "offset": -4.0,
+       "rangeLimited": false
+      },
+      {
+       "start": 0.1698,
+       "end": 0.9474,
+       "axis": "AxisZ",
+       "min": 1.0,
+       "max": 1.5,
+       "offset": 0.0,
+       "rangeLimited": false
+      },
+      {
+       "start": 0.6667,
+       "end": 1.5,
+       "axis": "AxisX",
+       "min": 0.01,
+       "max": 6.0,
+       "offset": -3.0,
+       "rangeLimited": false
+      },
+      {
+       "start": 1.2333,
+       "end": 1.7339,
+       "axis": "AxisZLanding",
+       "min": 1.0,
+       "max": 3.0,
+       "offset": 0.0,
+       "rangeLimited": false
+      },
+      {
+       "start": 1.5,
+       "end": 1.7,
+       "axis": "AxisX",
+       "min": 0.01,
+       "max": 6.0,
+       "offset": -2.0,
+       "rangeLimited": false
+      }
+     ],
+     "attackWarning": [
+      {
+       "start": 1.5998,
+       "end": 1.7667,
+       "shapes": [
+        {
+         "socket": "AW_Xuli_01",
+         "radius": 2.0
+        }
+       ]
+      }
+     ],
+     "attackState": [
+      {
+       "start": 0.0,
+       "end": 2.6984
+      }
+     ],
+     "staminaCost": [
+      {
+       "start": 0.0001,
+       "end": 2.6981,
+       "effect": 1021351
+      }
+     ],
+     "focus": [
+      {
+       "time": 1.7667,
+       "chargeLevelDelta": -99
+      }
+     ],
+     "dodgeWindows": [
+      {
+       "start": 2.2481,
+       "end": 4.2444
+      }
+     ],
+     "itemWindows": [
+      {
+       "start": 2.4815,
+       "end": 4.2481
+      }
+     ],
+     "comboKeyCache": [
+      {
+       "start": 1.7667,
+       "end": 2.4815
+      }
+     ]
+    },
+    "source": "FUStSkillSDesc 10833; montage AM_Wukong_xuli_attack_3 notifies; FUStSkillEffectDesc rows listed",
+    "level": 3,
+    "chargeStartSkill": 10838,
+    "chargeStartClip": "AM_Wukong_xuli_start_3",
+    "chargeStartCost": 10,
+    "chargeStartSuperArmor": [
+     {
+      "start": 0.0333,
+      "end": 0.9,
+      "levelId": 1055,
+      "value": 500,
+      "name": "【主角】蓄力3霸体"
+     }
+    ]
+   },
+   {
+    "skill": 10834,
+    "clip": "AM_Wukong_xuli_attack_4",
+    "staminaCost": 100,
+    "staminaCostEffect": [
+     1021451
+    ],
+    "regenBlocked": [
+     {
+      "start": 0.0,
+      "end": 3.3261
+     }
+    ],
+    "minStaminaToStart": 0,
+    "damage": {
+     "1021401": {
+      "type": "damage",
+      "damageMult": 14.5,
+      "flatDamage": 0,
+      "hitWeight": 5,
+      "armorBreak": 1000,
+      "armorBreakLevel": "【主角】蓄力4",
+      "damageType": 1,
+      "elementLevel": 0,
+      "element": 0,
+      "blockArmorHit": 1500,
+      "damageImmuneLevel": 2,
+      "hitStop": {
+       "freeze": 0,
+       "slow": 0,
+       "slowRate": 0
+      },
+      "source": "FUStSkillEffectDesc 1021401: Float[2]/10000 x Atk, Int[1]=25 -> AttackStiff HitWeight 5, Str[0]='【主角】蓄力4'"
+     }
+    },
+    "focusGain": [],
+    "superArmor": [
+     {
+      "start": 0.0,
+      "end": 2.2518,
+      "levelId": 1056,
+      "value": 1000,
+      "name": "【主角】蓄力4霸体"
+     }
+    ],
+    "timeline": {
+     "length": 4.6667,
+     "sections": [
+      {
+       "name": "Default",
+       "start": 0.0,
+       "next": null
+      }
+     ],
+     "hits": [
+      {
+       "start": 2.2,
+       "end": 2.2667,
+       "effects": [
+        1021401,
+        910200,
+        1090999,
+        1090997,
+        1080998
+       ],
+       "shapes": [
+        {
+         "socket": "StickTip11",
+         "radius": 0.8
+        },
+        {
+         "socket": "weapon_r_index_06",
+         "radius": 0.8
+        },
+        {
+         "socket": "weapon_r_index_05",
+         "radius": 0.8
+        },
+        {
+         "socket": "weapon_r_index_04",
+         "radius": 0.8
+        },
+        {
+         "socket": "weapon_r_index_02",
+         "radius": 0.8
+        }
+       ]
+      },
+      {
+       "start": 2.2667,
+       "end": 2.3333,
+       "effects": [
+        1021401,
+        910200,
+        1090999,
+        1090997,
+        1080998
+       ],
+       "shapes": [
+        {
+         "socket": "FX_XuLi_Atk4_ZaDi",
+         "radius": 4.0
+        }
+       ]
+      }
+     ],
+     "superArmor": [
+      {
+       "start": 0.0,
+       "end": 2.2518,
+       "levelId": 1056,
+       "value": 1000,
+       "name": "【主角】蓄力4霸体"
+      }
+     ],
+     "buffs": [
+      {
+       "start": 0.0,
+       "end": 2.4936,
+       "buff": 247
+      },
+      {
+       "start": 0.0,
+       "end": 2.3333,
+       "buff": 2095
+      },
+      {
+       "start": 0.0,
+       "end": 2.4333,
+       "buff": 1003
+      },
+      {
+       "start": 0.5834,
+       "end": 2.4891,
+       "buff": 311
+      },
+      {
+       "start": 2.2667,
+       "end": 3.0516,
+       "buff": 1990
+      }
+     ],
+     "triggerEffects": [
+      {
+       "time": 2.3,
+       "effect": 1021302
+      }
+     ],
+     "behaviorTags": [
+      {
+       "time": 0.7823,
+       "tag": "xuli_4_S"
+      },
+      {
+       "time": 0.9922,
+       "tag": "MJSL5"
+      },
+      {
+       "time": 1.6632,
+       "tag": "XuliAMJS"
+      },
+      {
+       "time": 1.7501,
+       "tag": "xuli_a"
+      },
+      {
+       "time": 1.9,
+       "tag": "xuli_a_attack"
+      },
+      {
+       "time": 2.0,
+       "tag": "XuliAHPZ"
+      }
+     ],
+     "comboWindows": [
+      {
+       "start": 2.922,
+       "end": 4.6887
+      }
+     ],
+     "attackRotation": [
+      {
+       "start": 0.0,
+       "end": 2.2532,
+       "degPerSec": 600.0
+      }
+     ],
+     "speedRate": [
+      {
+       "start": 2.3973,
+       "end": 2.6973,
+       "rate": 0.5
+      }
+     ],
+     "rootMotionScale": [
+      {
+       "start": 0.2404,
+       "end": 1.7392,
+       "axis": "AxisX",
+       "min": 0.01,
+       "max": 6.0,
+       "offset": -6.0,
+       "rangeLimited": false
+      },
+      {
+       "start": 1.7469,
+       "end": 2.2956,
+       "axis": "AxisX",
+       "min": 0.01,
+       "max": 6.0,
+       "offset": -4.0,
+       "rangeLimited": false
+      },
+      {
+       "start": 2.2006,
+       "end": 2.2978,
+       "axis": "AxisZLanding",
+       "min": 1.0,
+       "max": 2.5,
+       "offset": 0.0,
+       "rangeLimited": false
+      }
+     ],
+     "attackWarning": [
+      {
+       "start": 2.0658,
+       "end": 2.265,
+       "shapes": [
+        {
+         "socket": "AW_Xuli_01",
+         "radius": 2.5
+        }
+       ]
+      }
+     ],
+     "attackState": [
+      {
+       "start": 0.0,
+       "end": 3.1679
+      }
+     ],
+     "staminaCost": [
+      {
+       "start": 0.0,
+       "end": 3.3261,
+       "effect": 1021451
+      }
+     ],
+     "focus": [
+      {
+       "time": 2.2667,
+       "chargeLevelDelta": -99
+      }
+     ],
+     "dodgeWindows": [
+      {
+       "start": 2.6887,
+       "end": 4.6849
+      }
+     ],
+     "itemWindows": [
+      {
+       "start": 2.922,
+       "end": 4.6887
+      }
+     ],
+     "comboKeyCache": [
+      {
+       "start": 2.2072,
+       "end": 2.922
+      }
+     ]
+    },
+    "source": "FUStSkillSDesc 10834; montage AM_Wukong_xuli_attack_4 notifies; FUStSkillEffectDesc rows listed",
+    "level": 4,
+    "chargeStartSkill": 10839,
+    "chargeStartClip": "AM_Wukong_xuli_start_4",
+    "chargeStartCost": 10,
+    "chargeStartSuperArmor": [
+     {
+      "start": 0.0333,
+      "end": 0.9,
+      "levelId": 1056,
+      "value": 1000,
+      "name": "【主角】蓄力4霸体"
+     }
+    ]
+   }
+  ],
+  "loopClip": "AM_Wukong_xuli_loop",
+  "loopStaminaCost": 15,
+  "loopLength": 1.1333,
+  "charge": {
+   "focusGainPerSec": 55.0,
+   "focusGainStartsAfter": 0.7,
+   "rule": "hold heavy: start clip = xuli_start_<current focus level>; from 0.7 s into the start stage buff 246 adds 5.5 focus every 0.1 s (reason ByChargeSkill, capped at the first normalMax level); each focus level reached = charge level +1; release plays xuli_attack_<charge level>",
+   "consumesAllFocus": true,
+   "damageReductionWhileCharging": 0.2,
+   "source": "FUStChargeSkillSDesc 10835-10839, CLC_xuli, FUStBuffDesc 246/247/1003"
+  },
+  "source": "FUStSkillSDesc 10830-10839"
+ },
+ "focus": {
+  "activeConfig": 3,
+  "configs": {
+   "0": [
+    {
+     "level": 0,
+     "threshold": 0,
+     "decayPerSec": 0,
+     "protectTime": -1,
+     "normalMax": false
+    },
+    {
+     "level": 1,
+     "threshold": 100,
+     "decayPerSec": 0,
+     "protectTime": -1,
+     "normalMax": false
+    }
+   ],
+   "1": [
+    {
+     "level": 0,
+     "threshold": 0,
+     "decayPerSec": 0,
+     "protectTime": -1,
+     "normalMax": false
+    },
+    {
+     "level": 1,
+     "threshold": 100,
+     "decayPerSec": 0,
+     "protectTime": -1,
+     "normalMax": false
+    },
+    {
+     "level": 2,
+     "threshold": 210,
+     "decayPerSec": 0,
+     "protectTime": -1,
+     "normalMax": false
+    }
+   ],
+   "2": [
+    {
+     "level": 0,
+     "threshold": 0,
+     "decayPerSec": 0,
+     "protectTime": -1,
+     "normalMax": false
+    },
+    {
+     "level": 1,
+     "threshold": 100,
+     "decayPerSec": 0,
+     "protectTime": -1,
+     "normalMax": false
+    },
+    {
+     "level": 2,
+     "threshold": 210,
+     "decayPerSec": 0,
+     "protectTime": -1,
+     "normalMax": false
+    },
+    {
+     "level": 3,
+     "threshold": 330,
+     "decayPerSec": 0,
+     "protectTime": -1,
+     "normalMax": false
+    }
+   ],
+   "3": [
+    {
+     "level": 0,
+     "threshold": 0,
+     "decayPerSec": 0,
+     "protectTime": -1,
+     "normalMax": false
+    },
+    {
+     "level": 1,
+     "threshold": 100,
+     "decayPerSec": 0,
+     "protectTime": -1,
+     "normalMax": false
+    },
+    {
+     "level": 2,
+     "threshold": 210,
+     "decayPerSec": 0,
+     "protectTime": -1,
+     "normalMax": false
+    },
+    {
+     "level": 3,
+     "threshold": 330,
+     "decayPerSec": 10,
+     "protectTime": 0,
+     "normalMax": true
+    },
+    {
+     "level": 4,
+     "threshold": 480,
+     "decayPerSec": 100,
+     "protectTime": 10,
+     "normalMax": false
+    }
+   ],
+   "4": [
+    {
+     "level": 0,
+     "threshold": 0,
+     "decayPerSec": 0,
+     "protectTime": -1,
+     "normalMax": false
+    },
+    {
+     "level": 1,
+     "threshold": 100,
+     "decayPerSec": 0,
+     "protectTime": -1,
+     "normalMax": false
+    },
+    {
+     "level": 2,
+     "threshold": 210,
+     "decayPerSec": 0,
+     "protectTime": -1,
+     "normalMax": false
+    },
+    {
+     "level": 3,
+     "threshold": 330,
+     "decayPerSec": 10,
+     "protectTime": 0,
+     "normalMax": true
+    },
+    {
+     "level": 4,
+     "threshold": 480,
+     "decayPerSec": 10,
+     "protectTime": 10,
+     "normalMax": false
+    },
+    {
+     "level": 5,
+     "threshold": 880,
+     "decayPerSec": 100,
+     "protectTime": 10,
+     "normalMax": false
+    }
+   ]
+  },
+  "perfectDodgeGain": 40,
+  "source": "FUStPotentialEnergyConfigDesc ResID 10, BUS_PotentialEnergyCompImpl"
+ },
+ "gourd": {
+  "charges": 6,
+  "wine": 2002,
+  "healPctOfHpMax": 0.32,
+  "healFlat": 25,
+  "clip": "AM_Wukong_heyao_01",
+  "healTime": 1.0,
+  "chargeSpentTime": 1.0,
+  "timeline": {
+   "length": 4.2,
+   "sections": [
+    {
+     "name": "Default",
+     "start": 0.0,
+     "next": null
+    }
+   ],
+   "buffs": [
+    {
+     "start": 0.0,
+     "end": 1.5,
+     "buff": 221
+    },
+    {
+     "start": 0.0,
+     "end": 1.5,
+     "buff": 1126
+    },
+    {
+     "start": 0.0,
+     "end": 2.8667,
+     "buff": 131
+    },
+    {
+     "start": 1.0,
+     "end": 1.5,
+     "buff": 2704
+    },
+    {
+     "start": 1.0,
+     "end": 1.5333,
+     "buff": 1092
+    },
+    {
+     "start": 1.0,
+     "end": 1.5429,
+     "buff": 2505
+    },
+    {
+     "start": 1.4215,
+     "end": 1.7333,
+     "buff": 2814
+    },
+    {
+     "start": 1.5,
+     "end": 2.6667,
+     "buff": 239
+    }
+   ],
+   "removeBuffs": [
+    {
+     "time": 0.9667,
+     "buffs": 92310
+    },
+    {
+     "time": 0.9667,
+     "buffs": 92311
+    },
+    {
+     "time": 0.9667,
+     "buffs": 92312
+    },
+    {
+     "time": 0.9667,
+     "buffs": 92307
+    },
+    {
+     "time": 0.9667,
+     "buffs": 92330
+    },
+    {
+     "time": 0.9667,
+     "buffs": 92308
+    },
+    {
+     "time": 0.9667,
+     "buffs": 92309
+    },
+    {
+     "time": 0.9667,
+     "buffs": 92321
+    },
+    {
+     "time": 0.9667,
+     "buffs": 92323
+    }
+   ],
+   "behaviorTags": [
+    {
+     "time": 0.1577,
+     "tag": "heyao"
+    }
+   ],
+   "comboWindows": [
+    {
+     "start": 1.5,
+     "end": 4.2
+    }
+   ],
+   "speedRate": [
+    {
+     "start": 1.5,
+     "end": 2.5,
+     "rate": 1.5
+    },
+    {
+     "start": 2.7,
+     "end": 3.3333,
+     "rate": 0.8
+    }
+   ],
+   "attackState": [
+    {
+     "start": 0.0,
+     "end": 3.1
+    }
+   ],
+   "staminaCost": [
+    {
+     "start": 1.0,
+     "end": 1.2667,
+     "effect": 1090251
+    }
+   ],
+   "dodgeWindows": [
+    {
+     "start": 1.2667,
+     "end": 4.2
+    }
+   ],
+   "itemWindows": [
+    {
+     "start": 1.5,
+     "end": 4.2
+    }
+   ]
+  },
+  "source": "EquipAttrDesc (gourd) BloodBottomNumMaxBase, ConsumeDesc 2002 -> FUStBuffDesc 92002"
+ },
+ "hitReactions": {
+  "stiffLevel": "stiffLevel = tiger effect.hitWeight - player tenacity (0)",
+  "superArmor": "player montage superArmor windows: incoming effect.armorBreak (monster 打断 values) is subtracted from the window value; > 0 left -> no reaction",
+  "clipsByStiffLevel": "see wukong spec extra.actions.hitByStiffLevel (UBAConfig_Wukong_dep01, PlayerAssets)",
+  "source": "BUS_BeAttackedComp, UBAConfig_Wukong_dep01"
+ },
+ "reboundClips": {
+  "10801": "AM_wukong_tandao_q1",
+  "10802": "AM_wukong_tandao_q2",
+  "10803": "AM_wukong_tandao_q1",
+  "10804": "AM_wukong_tandao_q2",
+  "10805": "AM_wukong_tandao_q5",
+  "10830": "AM_wukong_tandao_xuli",
+  "10831": "AM_wukong_tandao_xuli",
+  "10832": "AM_wukong_tandao_xuli",
+  "10833": null,
+  "10834": null
+ },
+ "damageModel": "same as tiger.json damageModel"
+}

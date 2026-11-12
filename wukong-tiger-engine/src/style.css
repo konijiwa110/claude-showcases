@@ -1,0 +1,129 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #000; color: #e9e2d0;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "SimSun", "Songti SC", serif; user-select: none; -webkit-user-select: none;
+  -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; touch-action: none; overscroll-behavior: none; }
+#app, #app canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+.hidden { display: none !important; }
+
+.bar { position: relative; height: 10px; background: rgba(0,0,0,.55); border: 1px solid rgba(220,200,160,.35); overflow: hidden; }
+.bar .fill, .bar .fill-lag { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; transform-origin: left; }
+.bar .fill-lag { background: #c9b48a; transition: width .6s ease .35s; }
+.bar.thin { height: 4px; }
+.bar.mid { height: 6px; margin-top: 4px; }
+
+#hud { position: fixed; inset: 0; pointer-events: none; }
+#boss { position: absolute; left: 50%; bottom: 14%; width: 40%; transform: translateX(-50%); }
+#boss-name { font-size: 22px; letter-spacing: 6px; text-shadow: 0 0 6px #000; margin-bottom: 6px; }
+#boss-hp .fill { background: linear-gradient(#e8e0cb, #b7ab8f); }
+#boss-poise { margin-top: 3px; width: 60%; }
+#boss-poise .fill { background: #d9a441; }
+
+#player { position: absolute; left: 3%; bottom: 7%; width: 26%; }
+#p-hp .fill { background: linear-gradient(#efe9da, #c6bda6); }
+#p-mp .fill { background: #4f79c4; }
+#p-st .fill { background: #d8b45a; }
+
+#focus { position: absolute; right: 4%; bottom: 8%; width: 160px; text-align: right; }
+#focus .pips { display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 6px; }
+#focus .pip { width: 16px; height: 16px; transform: rotate(45deg); border: 1px solid #d8c9a0; background: rgba(0,0,0,.5); }
+#focus .pip.on { background: #f2d58c; box-shadow: 0 0 10px #f2d58c; }
+#p-focus .fill { background: #f2d58c; }
+
+/* skill slots (spells / transformation / spirit / stance): hud.addSlot / setSlot */
+#skills { position: absolute; right: 4%; bottom: 15%; display: flex; gap: 10px; justify-content: flex-end; align-items: flex-end; }
+.slot { position: relative; width: 54px; height: 54px; border: 1px solid rgba(216,201,160,.6); background: rgba(10,8,6,.62);
+  display: flex; align-items: center; justify-content: center; font-size: 15px; letter-spacing: 1px; text-shadow: 0 0 4px #000; }
+.slot .cd { position: absolute; inset: 0; background: conic-gradient(rgba(0,0,0,.72) calc(var(--cd, 0) * 360deg), transparent 0); }
+.slot .label { position: relative; }
+.slot .key { position: absolute; left: 3px; top: 1px; font: 11px monospace; color: #f2d58c; }
+.slot .text { position: absolute; right: 3px; bottom: 1px; font: 11px monospace; }
+.slot.notready .label { opacity: .45; }
+.slot.active { border-color: #f2d58c; box-shadow: 0 0 12px rgba(242,213,140,.75); }
+
+/* extra player gauges (transformation / spirit energy): hud.addGauge / setGauge */
+#gauges .gauge { display: flex; align-items: center; gap: 6px; margin-top: 4px; font-size: 12px; text-shadow: 0 0 4px #000; }
+#gauges .gauge .bar { flex: 1; height: 6px; }
+
+#gourd { position: absolute; left: 3%; bottom: 12%; display: flex; align-items: center; gap: 8px; font-size: 18px; text-shadow: 0 0 4px #000; }
+#gourd .icon { width: 34px; height: 34px; border-radius: 50%; border: 1px solid #c9b48a; display: flex; align-items: center; justify-content: center; background: rgba(60,30,10,.7); }
+
+#lock-marker { position: absolute; width: 14px; height: 14px; margin: -7px 0 0 -7px; border: 2px solid #fff; border-radius: 50%; box-shadow: 0 0 6px #fff; }
+
+#dmg-layer { position: absolute; inset: 0; }
+.dmg { position: absolute; font-size: 20px; font-weight: bold; color: #fff; text-shadow: 0 0 4px #000, 0 0 2px #000; animation: dmg 0.9s ease-out forwards; }
+.dmg.player { color: #ff6b5a; }
+.dmg.crit { color: #ffd76a; font-size: 26px; }
+@keyframes dmg { from { opacity: 1; transform: translate(-50%, 0); } to { opacity: 0; transform: translate(-50%, -50px); } }
+
+#toast { position: absolute; top: 18%; width: 100%; text-align: center; font-size: 26px; letter-spacing: 8px; text-shadow: 0 0 8px #000; opacity: 0; transition: opacity .3s; }
+#toast.show { opacity: 1; }
+
+#help { position: absolute; right: 2%; top: 2%; font-size: 13px; line-height: 1.8; background: rgba(0,0,0,.35); padding: 8px 12px; border-left: 2px solid #c9b48a; }
+#help b { color: #f2d58c; font-weight: normal; }
+#fps { position: absolute; left: 6px; top: 4px; font: 11px monospace; opacity: .6; }
+
+#loading { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: radial-gradient(ellipse at center, #2a2116 0%, #070605 75%); z-index: 10; }
+#loading .title { font-size: clamp(30px, 8vmin, 56px); letter-spacing: clamp(8px, 2.6vmin, 18px); }
+#loading .subtitle { font-size: clamp(14px, 3vmin, 20px); letter-spacing: clamp(3px, 1.2vmin, 8px); margin: clamp(6px, 1.6vmin, 12px) 0 clamp(18px, 5vmin, 40px); opacity: .8; }
+.bar.wide { width: max(40%, 240px); height: 6px; }
+#load-bar .fill { background: #c9b48a; width: 0%; }
+#load-text { margin-top: 12px; font-size: 14px; opacity: .75; font-family: monospace, serif; }
+#load-start { margin-top: 26px; font-size: 22px; letter-spacing: 6px; cursor: pointer; animation: pulse 1.6s infinite; }
+#load-pick { margin-top: 22px; max-width: 34em; padding: 0 20px; text-align: center; font-size: 14px; line-height: 1.8; opacity: .85; }
+#load-pick p { margin: 0 0 6px; }
+#load-pick a { color: #c9b48a; }
+#load-pick code { font-family: monospace, serif; }
+#load-pick label { display: inline-block; margin-top: 16px; padding: 8px 24px; font-size: 18px; letter-spacing: 6px;
+  border: 1px solid rgba(220,200,160,.5); cursor: pointer; }
+#load-pick label:hover { background: rgba(220,200,160,.12); }
+@keyframes pulse { 50% { opacity: .4; } }
+
+#endscreen { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9;
+  background: rgba(0,0,0,.55); }
+#endscreen .big { font-size: clamp(44px, 10vmin, 72px); letter-spacing: clamp(10px, 3vmin, 20px); }
+#endscreen.victory .big { color: #f2d58c; text-shadow: 0 0 20px #a0782a; }
+#endscreen.defeat .big { color: #b8261c; text-shadow: 0 0 20px #400; }
+#endscreen .small { margin-top: 10px; font-size: 20px; letter-spacing: 4px; }
+#endscreen .hint { margin-top: 40px; font-size: 15px; opacity: .7; }
+
+/* ---------------------------------------------------------------- touch (phones / tablets): touch.js, --u = control scale */
+#touch, #load-hint, #rotate { display: none; }
+body.touch #touch { display: block; position: absolute; inset: 0; pointer-events: auto; touch-action: none; }
+.tbtn { position: absolute; transform: translate(-50%, -50%); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(216,201,160,.55); background: rgba(10,8,6,.45); font-size: calc(15px * var(--u, 1)); letter-spacing: 1px; text-shadow: 0 0 4px #000; }
+#t-light { width: calc(84px * var(--u, 1)); height: calc(84px * var(--u, 1)); font-size: calc(19px * var(--u, 1)); }
+#t-heavy, #t-dodge { width: calc(62px * var(--u, 1)); height: calc(62px * var(--u, 1)); }
+#t-lock { width: calc(44px * var(--u, 1)); height: calc(44px * var(--u, 1)); font-size: calc(12px * var(--u, 1)); }
+#t-sys { position: absolute; top: max(10px, env(safe-area-inset-top)); right: max(12px, env(safe-area-inset-right)); display: flex; gap: 8px; }
+#t-sys .tbtn { position: static; transform: none; height: calc(30px * var(--u, 1)); padding: 0 12px; border-radius: 999px; font-size: 12px; opacity: .8; }
+.tbtn.pressed, body.touch .slot.pressed, body.touch #gourd.pressed .icon { background: rgba(242,213,140,.32); border-color: #f2d58c; }
+#t-stick { position: absolute; width: calc(120px * var(--u, 1)); height: calc(120px * var(--u, 1)); transform: translate(-50%, -50%); border-radius: 50%;
+  border: 1px solid rgba(216,201,160,.35); background: rgba(10,8,6,.25); opacity: .5; transition: opacity .2s; }
+#t-stick.active { opacity: 1; transition: none; }
+#t-stick.sprint { border-color: #f2d58c; box-shadow: 0 0 14px rgba(242,213,140,.6); }
+#t-stick .knob { position: absolute; left: 50%; top: 50%; width: calc(52px * var(--u, 1)); height: calc(52px * var(--u, 1));
+  margin: calc(-26px * var(--u, 1)) 0 0 calc(-26px * var(--u, 1)); border-radius: 50%; background: rgba(233,226,208,.3); border: 1px solid rgba(233,226,208,.6); }
+
+/* HUD around the thumbs: bars to the top, skill slots + gourd join the right-hand button arc (touch.js layout) */
+body.touch #boss { top: max(8px, env(safe-area-inset-top)); bottom: auto; width: 44%; }
+body.touch #boss-name { font-size: 15px; letter-spacing: 4px; margin-bottom: 3px; }
+body.touch #player { left: max(14px, env(safe-area-inset-left)); top: max(14px, env(safe-area-inset-top)); bottom: auto; width: 24%; }
+body.touch #focus { left: 50%; right: auto; bottom: max(10px, env(safe-area-inset-bottom)); width: 140px; transform: translateX(-50%); text-align: center; }
+body.touch #focus .pips { justify-content: center; }
+body.touch #skills { inset: 0; display: block; }
+body.touch .slot { position: absolute; transform: translate(-50%, -50%); width: calc(46px * var(--u, 1)); height: calc(46px * var(--u, 1));
+  border-radius: 50%; overflow: hidden; font-size: calc(13px * var(--u, 1)); }
+body.touch .slot .key { display: none; }
+body.touch .slot .text { right: 0; left: 0; bottom: 2px; text-align: center; font-size: 10px; }
+body.touch #gourd { bottom: auto; transform: translate(-50%, -50%); }
+body.touch #gourd .icon { width: calc(50px * var(--u, 1)); height: calc(50px * var(--u, 1)); font-size: calc(17px * var(--u, 1)); }
+body.touch #gourd-count { position: absolute; right: -4px; bottom: -4px; font-size: 14px; }
+body.touch #help, body.touch .kbd { display: none; }
+body.touch #fps { top: auto; bottom: 2px; left: max(6px, env(safe-area-inset-left)); }
+
+body.touch #load-hint { display: block; margin-top: 10px; padding: 0 20px; text-align: center; font-size: 13px; opacity: .6; }
+#rotate { position: fixed; inset: 0; z-index: 20; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  background: #070605; font-size: 16px; letter-spacing: 3px; }
+#rotate .big { font-size: 34px; letter-spacing: 12px; }
+@media (orientation: portrait) { body.touch #hud:not(.hidden) ~ #rotate { display: flex; } }

@@ -1,0 +1,238 @@
+{
+ "id": "HFM02_WoHuSi_TigerVanguard",
+ "originUE": [
+  -59563.0,
+  28408.0,
+  -151.0
+ ],
+ "units": "metres, Y up, right-handed; web = (ue.x, ue.z, ue.y) * 0.01 relative to originUE",
+ "yawConvention": "yaw = rotation about +Y in radians (= -UE yaw); facing = (cos yaw, 0, -sin yaw) = the actor's UE +X axis",
+ "bounds": {
+  "min": [
+   -420.52,
+   -144.57,
+   -347.08
+  ],
+  "max": [
+   309.78,
+   215.24,
+   482.26
+  ]
+ },
+ "playerSpawn": {
+  "pos": [
+   0.0,
+   -1.237,
+   0.0
+  ],
+  "yaw": -1.59626,
+  "facing": [
+   -0.02546,
+   0.0,
+   0.99968
+  ],
+  "source": "GM teleport point for 虎先锋 (LevelId 20, HFM02) UE (-59563, 28408, -151), dropped to the collision floor; facing the boss spawn"
+ },
+ "bossSpawn": {
+  "pos": [
+   -1.226,
+   -6.343,
+   48.157
+  ],
+  "yaw": 1.68932,
+  "facing": [
+   -0.11825,
+   0.0,
+   -0.99298
+  ],
+  "unit": "Unit_HFM_Hu_Stone_01 (BehaviorGraphTemplateID 202201)",
+  "source": "HFM02_Temple_Monster.umap:TAMER_hfm_hu_stone_01_C_0 at UE (-59685.6, 33223.7, -450.1) yaw -96.79°, dropped to the collision floor"
+ },
+ "playArea": {
+  "center": [
+   0.274,
+   -6.419,
+   38.657
+  ],
+  "radius": 16.26,
+  "walkableRect": {
+   "min": [
+    -37.73,
+    21.66
+   ],
+   "max": [
+    35.77,
+    74.66
+   ],
+   "areaM2": 2968,
+   "note": "XZ bounds of the flood-filled boss-level floor (the circle is the largest one inside it)"
+  },
+  "source": "largest circle inside the walkable collision floor at the boss's floor level (±0.35 m), flood-filled from the boss spawn on a 0.5 m grid, containing the boss spawn with ≥6 m margin; enclosed obstacles < 40 m2 (rocks, braziers) count as inside",
+  "verification": {
+   "raysInside": 441,
+   "raysHitFloor": 441,
+   "floorMin": -6.546,
+   "floorMax": -6.028
+  }
+ },
+ "sun": {
+  "direction": [
+   0.77028,
+   -0.63631,
+   -0.0421
+  ],
+  "color": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "intensity": 10.0,
+  "units": "direction = light travel direction; intensity in lux",
+  "source": "CLSSplinePrismVolume_0 DirectionalLightComponent RelativeRotation (pitch -39.517, yaw -3.128, roll -20.165) decoded from the raw export; color/intensity not decodable (usmap mismatch for DirectionalLightComponent) -> UE DirectionalLight defaults"
+ },
+ "sky": {
+  "color": [
+   0.7451,
+   0.851,
+   1.0
+  ],
+  "skyLightCubemap": "TextureCube'HDRI_01'",
+  "skyLightCubemapAngle": 149.76001,
+  "skyLightIntensityMultiplier": 2.0,
+  "source": "CLSSplinePrismVolume_0 SkyAtmosphereComponent.RayleighScattering (tint), SkyLightComponent, CustomVariableComponent"
+ },
+ "fog": {
+  "color": [
+   0.3608,
+   0.3255,
+   0.2863
+  ],
+  "near": 0.0,
+  "far": 619.8,
+  "density": 0.005813,
+  "ue": {
+   "FogDensity": 0.0484,
+   "FogHeightFalloff": 0.08096,
+   "SecondFogData": {
+    "FogDensity": 0.038,
+    "FogHeightFalloff": 0.736632
+   },
+   "VolumetricFogAlbedo": {
+    "B": 73,
+    "G": 83,
+    "R": 92,
+    "A": 255,
+    "Hex": "5C5349"
+   },
+   "VolumetricFogDistance": 20000.0
+  },
+  "source": "CLSSplinePrismVolume_0 ExponentialHeightFogComponent: extinction FogDensity/1000 per cm = 0.00484/m; far = 95% opacity distance (3/k); density = three.js FogExp2 value matching UE's 50% distance; color = VolumetricFogAlbedo (inscattering luminance is 0 in the level)"
+ },
+ "markers": {
+  "introTrigger": {
+   "center": [
+    -0.053,
+    0.828,
+    -4.817
+   ],
+   "halfExtents": [
+    6.585,
+    2.16,
+    10.96
+   ],
+   "yaw": -1.58827,
+   "source": "HFM02_Volume.umap:BP_OverlapBoxForSeq_C_1.Box",
+   "note": "BP_OverlapBoxForSeq: entering starts the 虎先锋 intro sequence (PointA/PointB at the boss)"
+  },
+  "forceFightBox": {
+   "center": [
+    -1.039,
+    -0.398,
+    33.654
+   ],
+   "halfExtents": [
+    31.262,
+    5.438,
+    5.64
+   ],
+   "yaw": -0.0,
+   "source": "HFM02_Volume.umap:ForceFightControllerBox_C_35.BoxCollision",
+   "note": "ForceFightControllerBox (EnterCollisionArea, player filter)"
+  },
+  "meditationRebirthPos": {
+   "pos": [
+    30.351,
+    -6.932,
+    -22.952
+   ],
+   "yaw": -2.59301,
+   "source": "HFM02_Temple_Item.umap:HFM_MeditationPoint_01_C_1.PlayerRebirthPos"
+  }
+ },
+ "collision": {
+  "file": "collision.bin",
+  "vertices": 821958,
+  "triangles": 846228,
+  "radiusM": 90.0,
+  "content": "hidden collision-proxy meshes (bHiddenInGame Cube actors), visible static meshes whose BodyInstance collides (most temple render meshes are NoCollision in the game; foliage/breakables/small props excluded), landscape, BlockingVolume brushes"
+ },
+ "sources": [
+  "HFM02_Cave_Map.umap",
+  "HFM02_Cave_Map_WCTile_Far_1_0_768m.umap",
+  "HFM02_Cave_Map_WCTile_Instancing_Far_Merged_0_0_0_115m.umap",
+  "HFM02_Cave_Map_WCTile_Medium_2_1_256m.umap",
+  "HFM02_Cave_Map_WCTile_Near_4_2_128m.umap",
+  "HFM02_Desert_Map.umap",
+  "HFM02_Desert_Map_WCTile_Far_0_0_768m.umap",
+  "HFM02_Desert_Map_WCTile_Instancing_Fallback_Merged_0_0_0_94m.umap",
+  "HFM02_Desert_Map_WCTile_Instancing_Far_Merged_0_0_0_354m.umap",
+  "HFM02_Desert_Map_WCTile_Instancing_Medium_Merged_1_0_0_213m.umap",
+  "HFM02_Desert_Map_WCTile_Medium_1_1_256m.umap",
+  "HFM02_Desert_Map_WCTile_Medium_1_2_256m.umap",
+  "HFM02_Desert_Map_WCTile_Near_2_2_128m.umap",
+  "HFM02_MountainVillage_Map.umap",
+  "HFM02_MountainVillage_Map_WCTile_Far_1_0_768m.umap",
+  "HFM02_MountainVillage_Map_WCTile_Far_1_0_768m_1.umap",
+  "HFM02_MountainVillage_Map_WCTile_Far_2_0_768m.umap",
+  "HFM02_MountainVillage_Map_WCTile_Instancing_Fallback_0_0_0_667m.umap",
+  "HFM02_MountainVillage_Map_WCTile_Instancing_Medium_Merged_0_2_0_476m.umap",
+  "HFM02_MountainVillage_Map_WCTile_Medium_4_1_256m.umap",
+  "HFM02_MountainVillage_Map_WCTile_Near_8_3_128m.umap",
+  "HFM02_MountainVillage_Map_WCTile_Near_9_3_128m.umap",
+  "HFM02_SandSkiing_Map.umap",
+  "HFM02_SandSkiing_Map_WCTile_Far_1_0_768m.umap",
+  "HFM02_SandSkiing_Map_WCTile_Far_1_0_768m_1.umap",
+  "HFM02_SandSkiing_Map_WCTile_Instancing_Far_1_0_0_396m.umap",
+  "HFM02_SandSkiing_Map_WCTile_Instancing_Medium_2_1_0_185m.umap",
+  "HFM02_Temple_Bloodpool.umap",
+  "HFM02_Temple_Item.umap",
+  "HFM02_Temple_Map.umap",
+  "HFM02_Temple_Map_WCTile_0_0_512m.umap",
+  "HFM02_Temple_Map_WCTile_2_1_128m.umap",
+  "HFM02_Temple_Map_WCTile_2_2_128m.umap",
+  "HFM02_Temple_Map_WCTile_Far_0_0_768m.umap",
+  "HFM02_Temple_Map_WCTile_Far_1_0_768m.umap",
+  "HFM02_Temple_Map_WCTile_Far_1_0_768m_1.umap",
+  "HFM02_Temple_Map_WCTile_Instancing_Fallback_Merged_0_0_0_298m.umap",
+  "HFM02_Temple_Map_WCTile_Instancing_Far_Merged_1_0_0_295m.umap",
+  "HFM02_Temple_Map_WCTile_Instancing_Medium_2_0_0_107m.umap",
+  "HFM02_Temple_Map_WCTile_Instancing_Medium_Merged_1_0_0_408m.umap",
+  "HFM02_Temple_Map_WCTile_Instancing_Near_4_1_0_66m.umap",
+  "HFM02_Temple_Map_WCTile_Instancing_Near_4_2_0_66m.umap",
+  "HFM02_Temple_Map_WCTile_Medium_3_1_256m.umap",
+  "HFM02_Temple_Map_WCTile_Medium_3_2_256m.umap",
+  "HFM02_Temple_Map_WCTile_Medium_4_1_256m.umap",
+  "HFM02_Temple_Map_WCTile_Near_6_2_128m.umap",
+  "HFM02_Temple_Map_WCTile_Near_6_3_128m.umap",
+  "HFM02_Temple_Map_WCTile_Near_6_4_128m.umap",
+  "HFM02_Temple_Map_WCTile_Near_7_1_128m.umap",
+  "HFM02_Temple_Map_WCTile_Near_7_2_128m.umap",
+  "HFM02_Temple_Map_WCTile_Near_7_3_128m.umap",
+  "HFM02_Temple_Map_WCTile_Near_7_4_128m.umap",
+  "HFM02_Temple_Map_WCTile_Near_8_2_128m.umap",
+  "HFM02_Volume (blocking volumes, markers)",
+  "HFM02_GrayBox_HFM (blocking volumes)",
+  "HFM02_Temple_Monster (boss spawner)",
+  "HFM02_PersistentLevel (rebirth shrine)"
+ ]
+}
